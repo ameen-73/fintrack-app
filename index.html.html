@@ -455,7 +455,7 @@
             renderDashboard();
         }
 
-        // Attempt to read custom configuration from storage or environment
+        // Attempt to read custom configuration from storage, environment, or use hardcoded user default
         function getFirebaseConfig() {
             // First check user's custom config saved locally
             const customConfig = localStorage.getItem('fintrack_custom_firebase_config');
@@ -476,7 +476,16 @@
                 }
             }
 
-            return null;
+            // Hardcoded production default config from user's provided SDK parameters
+            return {
+                apiKey: "AIzaSyDqNUfyt_WXHakEAUqEFcV-IaPPs5_3EEQ",
+                authDomain: "fintrack-550c9.firebaseapp.com",
+                projectId: "fintrack-550c9",
+                storageBucket: "fintrack-550c9.firebasestorage.app",
+                messagingSenderId: "139345819660",
+                appId: "1:139345819660:web:cb6eba8739ff4cf387d629",
+                measurementId: "G-K7V67TGWRR"
+            };
         }
 
         // Initialize user session & Auth setup
@@ -488,10 +497,13 @@
                     return;
                 }
 
-                // Show active config in settings text area if custom
+                // Show active config in settings text area if custom is saved
                 const customConfigRaw = localStorage.getItem('fintrack_custom_firebase_config');
                 if (customConfigRaw) {
                     firebaseConfigInput.value = customConfigRaw;
+                } else {
+                    // Populate with the integrated default so user can view/copy it
+                    firebaseConfigInput.value = JSON.stringify(config, null, 2);
                 }
 
                 const app = initializeApp(config);
