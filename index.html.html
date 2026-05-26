@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinTrack - Neon Serverless SQL Finance</title>
+    <title>FinTrack - Email SQL Multi-Device Sync</title>
+    <!-- Tailwind CSS for modern design token styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Playfair Display & Inter matching Screenshot (133).png -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -18,7 +20,9 @@
             }
         }
     </script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for premium vector analytics representations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -28,7 +32,7 @@
             background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #4a3530;
+            background: #4a2015;
             border-radius: 4px;
         }
         .app-container {
@@ -38,266 +42,292 @@
         button, select, input {
             touch-action: manipulation;
         }
+        .loading-shimmer {
+            background: linear-gradient(90deg, #120c0a 25%, #1c1411 50%, #120c0a 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body class="bg-[#060404] text-stone-100 font-sans antialiased flex justify-center min-h-screen">
 
     <div class="app-container w-full bg-[#0c0807] flex flex-col justify-between shadow-2xl relative border-x border-[#241715]">
         
-        <header class="bg-[#120c0a]/95 backdrop-blur-md sticky top-0 z-40 px-5 py-4 border-b border-[#241715]">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2.5" onclick="window.toggleSyncModal(true)" class="cursor-pointer">
-                    <div class="w-9 h-9 bg-[#00e599] rounded-xl flex items-center justify-center shadow-lg shadow-[#00e599]/20">
-                        <i data-lucide="database" class="w-5 h-5 text-black"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-base font-bold text-white tracking-tight">FinTrack</h1>
-                        <span id="cloudStatus" class="text-[9px] text-amber-500 font-bold tracking-wider uppercase flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Connecting...
-                        </span>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button id="dbAuthBtn" onclick="window.toggleSyncModal(true)" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#00e599] relative flex items-center gap-1.5 text-xs font-semibold" title="Neon Database Settings">
-                        <i data-lucide="settings" class="w-4 h-4"></i>
-                        <span id="dbUserLabel" class="max-w-[80px] truncate">Neon SQL</span>
-                    </button>
-                    <input type="month" id="monthFilter" 
-                           class="bg-[#1c1411] hover:bg-[#281d19] text-white text-xs font-semibold rounded-xl px-2.5 py-2 border border-[#2c1d1a] focus:outline-none focus:ring-2 focus:ring-[#00e599] transition-all cursor-pointer">
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-grow overflow-y-auto px-5 py-6 space-y-6 pb-28">
-
-            <div id="neonConfigBanner" class="hidden bg-[#140e0c] rounded-2xl p-4 border border-[#00e599]/20 flex flex-col gap-3">
-                <div class="flex items-start gap-3">
-                    <div class="p-2 bg-[#00e599]/10 text-[#00e599] rounded-xl mt-0.5">
-                        <i data-lucide="server" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-stone-200">Serverless Neon SQL Engine</h4>
-                        <p class="text-[10px] text-stone-400 mt-0.5">Using pre-configured pooled HTTP gateway connection parameters to interface directly with your AWS ap-southeast-1 database cluster.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-[#111c18] to-[#0c0807] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#00e599]/30">
-                <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#00e599]/5 rounded-full blur-2xl"></div>
-                
-                <p class="text-xs font-semibold text-emerald-200/80 uppercase tracking-wider">Remaining Balance</p>
-                <h2 id="netBalance" class="text-3xl font-extrabold text-white mt-1.5 tracking-tight font-sans">₹0.00</h2>
-                
-                <div class="grid grid-cols-2 gap-4 mt-6 pt-5 border-t border-white/10">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/10">
-                            <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <p class="text-[11px] text-emerald-200/70 font-medium">Monthly Income</p>
-                            <p id="totalIncome" class="text-sm font-bold text-emerald-400">₹0.00</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/10">
-                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <p class="text-[11px] text-emerald-200/70 font-medium">Total Expenses</p>
-                            <p id="totalExpenses" class="text-sm font-bold text-rose-400">₹0.00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
-                        <i data-lucide="pie-chart" class="w-4 h-4 text-[#00e599]"></i> Analytics Breakdown
-                    </h3>
-                </div>
-                <div class="relative w-full h-44 flex items-center justify-center">
-                    <canvas id="balanceChart" class="max-w-full hidden z-10"></canvas>
-                    <div id="noChartData" class="absolute inset-0 flex flex-col items-center justify-center bg-[#140e0c] text-stone-500 text-xs text-center space-y-1">
-                        <i data-lucide="bar-chart-3" class="w-8 h-8 text-stone-600"></i>
-                        <span>No synchronized SQL rows to visualize this month</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
-                <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
-                    <i data-lucide="plus-circle" class="w-4 h-4 text-[#00e599]"></i> Neon Input Ledger
-                </h3>
-                
-                <form id="transactionForm" class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Description</label>
-                        <input type="text" id="desc" required placeholder="e.g. Work pay, Groceries, Utility bill" 
-                               class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Amount (₹)</label>
-                            <input type="number" id="amount" step="0.01" required placeholder="0.00" 
-                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Type</label>
-                            <select id="type" 
-                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 transition-all cursor-pointer">
-                                <option value="income" class="bg-[#140e0c]">Income (+)</option>
-                                <option value="expense" class="bg-[#140e0c]">Expense (-)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Category</label>
-                            <select id="category" 
-                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 transition-all cursor-pointer">
-                                <option value="salary">Salary / Job</option>
-                                <option value="food">Food & Diners</option>
-                                <option value="utilities">Bills & Power</option>
-                                <option value="shopping">Shopping</option>
-                                <option value="transport">Transport</option>
-                                <option value="leisure">Entertainment</option>
-                                <option value="other">Miscellaneous</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Date</label>
-                            <input type="date" id="date" required 
-                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 transition-all cursor-pointer">
-                        </div>
-                    </div>
-
-                    <button type="submit" 
-                            class="w-full bg-[#00e599] hover:bg-[#00c685] text-black font-bold py-3.5 rounded-xl transition-all duration-150 text-sm shadow-lg shadow-[#00e599]/10 flex items-center justify-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Add SQL Row Entry
-                    </button>
-                </form>
-            </div>
-
-            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+        <!-- Main Workspace Frame -->
+        <div id="mainWorkspace" class="flex-grow flex flex-col justify-between pb-24">
+            
+            <!-- Dynamic Header matching top bar in Screenshot (133).png -->
+            <header class="bg-[#0c0807]/95 backdrop-blur-md sticky top-0 z-40 px-5 py-4 border-b border-[#241715]">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
-                        <i data-lucide="receipt" class="w-4 h-4 text-[#00e599]"></i> Monthly Register
-                    </h3>
+                    <div class="flex items-center space-x-2.5">
+                        <!-- Red-orange wallet icon wrapper -->
+                        <div class="w-9 h-9 bg-[#f05123] rounded-xl flex items-center justify-center shadow-lg shadow-[#f05123]/20">
+                            <i data-lucide="wallet" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <h1 class="text-sm font-bold text-white tracking-tight">FinTrack</h1>
+                                <span id="statusIndicatorDot" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                            </div>
+                            <span id="headerStatusSubtitle" class="text-[9px] text-amber-500 font-bold tracking-wider uppercase">
+                                LOCAL STORAGE MODE
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right Calendar / Filter controls -->
                     <div class="flex items-center gap-2">
-                        <button onclick="window.syncNeon()" class="p-1.5 text-stone-400 hover:text-[#00e599] hover:bg-[#1c1411] rounded-lg transition-all" title="Force Refresh Neon SQL">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        <!-- Sign Out Button -->
+                        <button id="logoutBtn" onclick="window.handleLogout()" class="hidden p-2 bg-[#1c1411] hover:bg-rose-950 text-stone-400 hover:text-rose-400 rounded-lg transition" title="Sign Out">
+                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                         </button>
-                        <button onclick="window.exportCSV()" class="p-1.5 text-stone-400 hover:text-white hover:bg-[#1c1411] rounded-lg transition-all" title="Export to CSV">
-                            <i data-lucide="download" class="w-4 h-4"></i>
-                        </button>
-                        <span id="recordCount" class="text-[10px] bg-[#1a2c26] text-[#00e599] font-bold px-2 py-0.5 rounded-full">0 entries</span>
+                        <input type="month" id="monthFilter" 
+                               class="bg-[#1c1411] hover:bg-[#281d19] text-white text-xs font-semibold rounded-xl px-2.5 py-2 border border-[#2c1d1a] focus:outline-none focus:ring-2 focus:ring-[#f05123] transition-all cursor-pointer">
                     </div>
                 </div>
+            </header>
 
-                <div class="relative">
-                    <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-stone-600"></i>
-                    <input type="text" id="recordSearch" placeholder="Search entries..." 
-                           class="w-full pl-9 pr-4 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#00e599] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
-                </div>
+            <main class="flex-grow overflow-y-auto px-5 py-5 space-y-5">
 
-                <div id="transactionList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1">
+                <!-- Cloud Unresponsive Banner (Matches Screenshot (134).png warning banner perfectly) -->
+                <div id="unresponsiveBanner" class="hidden bg-[#1a110e] border border-[#4a2015] rounded-xl p-3.5 flex items-start gap-3 transition-all duration-300">
+                    <div class="p-1.5 bg-[#f05123]/15 text-[#f05123] rounded-lg">
+                        <i data-lucide="bell" class="w-4 h-4"></i>
                     </div>
-            </div>
-
-            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
-                <div class="flex items-start gap-3">
-                    <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
-                        <i data-lucide="share-2" class="w-5 h-5"></i>
-                    </div>
-                    <div class="space-y-0.5">
-                        <h4 class="text-sm font-bold text-stone-200 font-serif">Get Report on WhatsApp</h4>
-                        <p class="text-[11px] text-stone-400">Send an organized text breakdown of this month's budget register directly to your WhatsApp personal chat or family groups.</p>
-                    </div>
-                </div>
-                
-                <div class="space-y-3 pt-2">
                     <div>
-                        <label class="block text-[9px] font-bold text-stone-500 uppercase tracking-wider mb-1">Send to Phone (Optional)</label>
-                        <input type="tel" id="whatsappPhone" placeholder="e.g. 919876543210 (Country code first)" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-emerald-500">
+                        <h4 class="text-xs font-bold text-stone-200">Cloud system is not responsive</h4>
+                        <p class="text-[10px] text-stone-400 mt-0.5">Operating in Local Sandbox mode. Try again shortly.</p>
                     </div>
-                    <button onclick="window.generateWhatsAppReport()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all">
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.437.002 9.861-4.416 9.863-9.852.001-2.632-1.021-5.105-2.88-6.967C16.38 1.926 13.912.904 11.284.903c-5.44 0-9.863 4.418-9.865 9.854-.001 1.554.434 3.074 1.258 4.409l-.999 3.647 3.738-.979z"/>
-                        </svg>
-                        Export Monthly Report to WhatsApp
-                    </button>
                 </div>
-            </div>
 
-        </main>
-
-        <div id="toastMessage" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50">
-            <div class="w-5 h-5 bg-[#00e599]/20 rounded-full flex items-center justify-center">
-                <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#00e599]"></i>
-            </div>
-            <span id="toastText">Updating table context...</span>
-        </div>
-
-        <footer class="bg-[#120c0a] border-t border-[#241715] px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-40 backdrop-blur-md">
-            <div>
-                <p class="text-[9px] text-stone-500 uppercase font-bold tracking-wider">All-Time Balance</p>
-                <p id="allTimeBalance" class="text-sm font-bold text-[#00e599]">₹0.00</p>
-            </div>
-            <button onclick="window.triggerResetConfirmation()" class="text-xs font-semibold text-stone-500 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-[#1c1411]">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Clear Workspace
-            </button>
-        </footer>
-
-        <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6 overflow-y-auto py-8">
-            <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl my-auto">
-                <div class="flex justify-between items-start">
-                    <div class="p-3 bg-[#00e599]/10 text-[#00e599] rounded-2xl">
-                        <i data-lucide="database" class="w-6 h-6"></i>
+                <!-- Email Account Login Banner (Matches style of Google banner in Screenshot (133).png but now Email/Password based) -->
+                <div id="emailAuthBanner" class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 bg-[#f05123]/10 text-[#f05123] rounded-xl mt-0.5">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-stone-200">Email Database Synchronizer</h4>
+                            <p class="text-[11px] text-stone-400 leading-relaxed">Log in or create a credentials sync token to access your ledgers instantly across multiple systems.</p>
+                        </div>
                     </div>
-                    <button onclick="window.toggleSyncModal(false)" class="text-stone-500 hover:text-white transition">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                <div>
-                    <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Neon Endpoint Status</h4>
-                    <p class="text-xs text-stone-400 mt-1 font-sans">Active Serverless HTTP Gateway configured to your targeted database cluster.</p>
+
+                    <!-- Toggle tabs for Auth card -->
+                    <div class="flex border-b border-[#1f1412] text-xs">
+                        <button id="tabLogin" onclick="window.setAuthTab('login')" class="flex-1 pb-2 text-[#f05123] border-b-2 border-[#f05123] font-bold">Log In</button>
+                        <button id="tabRegister" onclick="window.setAuthTab('register')" class="flex-1 pb-2 text-stone-500 font-semibold hover:text-stone-300">Sign Up</button>
+                    </div>
+
+                    <!-- Compact Auth Forms -->
+                    <form id="authForm" onsubmit="window.handleAuthSubmit(event)" class="space-y-3">
+                        <div>
+                            <input type="email" id="authEmail" required placeholder="your.email@gmail.com" 
+                                   class="w-full px-3 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#f05123] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="authPassword" required placeholder="Enter password (min. 6 chars)" 
+                                   class="w-full px-3 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#f05123] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
+                        </div>
+                        <button type="submit" id="authSubmitBtn" 
+                                class="w-full bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-stone-200 text-xs font-semibold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                            <i data-lucide="key-round" class="w-3.5 h-3.5 text-[#f05123]"></i>
+                            <span id="authSubmitText">Access Sync Workspace</span>
+                        </button>
+                    </form>
                 </div>
 
-                <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl space-y-2 text-left">
+                <!-- Logged In User State Information -->
+                <div id="userSyncStatusCard" class="hidden bg-[#101b17] border border-[#164e3a] text-[#00e599] text-[10px] py-2 px-3 rounded-xl flex items-center justify-between font-medium">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#00e599] animate-ping"></span>
+                        <span id="activeUserLabel">Logged in as: visitor@gmail.com</span>
+                    </span>
+                    <span id="lastSyncStamp" class="text-[9px] text-stone-500">Synced just now</span>
+                </div>
+
+                <!-- Balance & Ledger Summary Area -->
+                <div class="bg-gradient-to-br from-[#d44016] to-[#1e1311] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#f05123]/30">
+                    <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#f05123]/10 rounded-full blur-2xl"></div>
+                    
+                    <p class="text-[10px] font-bold text-orange-200/80 uppercase tracking-wider">Remaining Balance</p>
+                    <h2 id="netBalance" class="text-3xl font-extrabold text-white mt-1.5 tracking-tight font-sans">₹0.00</h2>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-6 pt-5 border-t border-white/10">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/10">
+                                <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-orange-200/70 font-medium">Monthly Income</p>
+                                <p id="totalIncome" class="text-sm font-bold text-emerald-400">₹0.00</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/10">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-orange-200/70 font-medium">Total Expenses</p>
+                                <p id="totalExpenses" class="text-sm font-bold text-rose-400">₹0.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graph breakdown -->
+                <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-sm">
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-[#f05123]"></i> Analytics Breakdown
+                        </h3>
+                    </div>
+                    <div class="relative w-full h-44 flex items-center justify-center">
+                        <canvas id="balanceChart" class="max-w-full hidden z-10"></canvas>
+                        <div id="noChartData" class="absolute inset-0 flex flex-col items-center justify-center bg-[#140e0c] text-stone-500 text-xs text-center space-y-1">
+                            <i data-lucide="bar-chart-3" class="w-8 h-8 text-stone-600"></i>
+                            <span>No sync data to visualize yet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Area -->
+                <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+                    <h3 class="text-xs font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-sm">
+                        <i data-lucide="plus-circle" class="w-4 h-4 text-[#f05123]"></i> Cloud Input Ledger
+                    </h3>
+                    
+                    <form id="transactionForm" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Description</label>
+                            <input type="text" id="desc" required placeholder="e.g. Work pay, Groceries, Electricity bill" 
+                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Amount (₹)</label>
+                                <input type="number" id="amount" step="0.01" required placeholder="0.00" 
+                                       class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Type</label>
+                                <select id="type" 
+                                        class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer font-sans">
+                                    <option value="income" class="bg-[#140e0c]">Income (+)</option>
+                                    <option value="expense" class="bg-[#140e0c]">Expense (-)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Category</label>
+                                <select id="category" 
+                                        class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer font-sans">
+                                    <option value="salary">Salary / Job</option>
+                                    <option value="food">Food & Diners</option>
+                                    <option value="utilities">Bills & Power</option>
+                                    <option value="shopping">Shopping</option>
+                                    <option value="transport">Transport</option>
+                                    <option value="leisure">Entertainment</option>
+                                    <option value="other">Miscellaneous</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Date</label>
+                                <input type="date" id="date" required 
+                                       class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
+                            </div>
+                        </div>
+
+                        <button type="submit" 
+                                class="w-full bg-[#f05123] hover:bg-[#d44016] text-white font-bold py-3.5 rounded-xl transition-all duration-150 text-sm shadow-lg shadow-[#f05123]/10 flex items-center justify-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add SQL Row Entry
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Ledger Register List -->
+                <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                     <div class="flex items-center justify-between">
-                        <span class="text-[10px] text-[#00e599] font-bold uppercase tracking-wider">Database Environment</span>
-                        <span id="neonIndicator" class="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-[#00e599]/20 text-[#00e599]">Configured</span>
+                        <h3 class="text-xs font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-sm">
+                            <i data-lucide="receipt" class="w-4 h-4 text-[#f05123]"></i> Monthly Register
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <button onclick="window.syncNeon(false)" class="p-1.5 text-stone-400 hover:text-[#f05123] hover:bg-[#1c1411] rounded-lg transition-all" title="Force Refresh Neon SQL">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="window.exportCSV()" class="p-1.5 text-stone-400 hover:text-white hover:bg-[#1c1411] rounded-lg transition-all" title="Export to CSV">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                            </button>
+                            <span id="recordCount" class="text-[10px] bg-[#241715] text-[#f05123] font-bold px-2 py-0.5 rounded-full">0 entries</span>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-stone-600"></i>
+                        <input type="text" id="recordSearch" placeholder="Search entries..." 
+                               class="w-full pl-9 pr-4 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#f05123] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
+                    </div>
+
+                    <div id="transactionList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1">
+                        <!-- Loaded dynamically from database or local sandboxes -->
+                    </div>
+                </div>
+
+                <!-- WhatsApp Share tool -->
+                <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
+                            <i data-lucide="share-2" class="w-5 h-5"></i>
+                        </div>
+                        <div class="space-y-0.5">
+                            <h4 class="text-xs font-bold text-stone-200 font-serif">Get Report on WhatsApp</h4>
+                            <p class="text-[10px] text-stone-400 leading-relaxed">Send an organized text breakdown of this month's budget register directly to your WhatsApp personal chat or family groups.</p>
+                        </div>
                     </div>
                     
-                    <div class="space-y-1 mt-1 text-[11px]">
-                        <p class="text-stone-400"><span class="text-stone-500 font-medium">Host:</span> ep-dark-base-ao06jwnu-pooler</p>
-                        <p class="text-stone-400"><span class="text-stone-500 font-medium">Region:</span> AWS ap-southeast-1</p>
-                        <p class="text-stone-400"><span class="text-stone-500 font-medium">Target DB:</span> neondb</p>
+                    <div class="space-y-3 pt-2">
+                        <div>
+                            <label class="block text-[9px] font-bold text-stone-500 uppercase tracking-wider mb-1">Send to Phone (Optional)</label>
+                            <input type="tel" id="whatsappPhone" placeholder="e.g. 919876543210 (Country code first)" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2.5 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <button onclick="window.generateWhatsAppReport()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.437.002 9.861-4.416 9.863-9.852.001-2.632-1.021-5.105-2.88-6.967C16.38 1.926 13.912.904 11.284.903c-5.44 0-9.863 4.418-9.865 9.854-.001 1.554.434 3.074 1.258 4.409l-.999 3.647 3.738-.979z"/>
+                            </svg>
+                            Export Monthly Report to WhatsApp
+                        </button>
                     </div>
                 </div>
 
-                <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
-                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Active Isolation User Space Key</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="syncKeyDisplay" readonly class="flex-1 bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none" value="...">
-                        <button onclick="window.copySyncKey()" class="px-3 bg-[#00e599] hover:bg-[#00c685] text-black text-xs font-bold rounded-xl transition">Copy</button>
-                    </div>
+            </main>
+
+            <!-- Footer controls -->
+            <footer class="bg-[#0c0807] border-t border-[#241715] px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-40 backdrop-blur-md">
+                <div>
+                    <p class="text-[9px] text-stone-500 uppercase font-bold tracking-wider">All-Time Balance</p>
+                    <p id="allTimeBalance" class="text-sm font-bold text-[#f05123]">₹0.00</p>
                 </div>
-            </div>
+                <button onclick="window.triggerResetConfirmation()" class="text-xs font-semibold text-stone-500 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-[#1c1411]">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Clear Register
+                </button>
+            </footer>
         </div>
 
+        <!-- Data Deletion Confirm Modal -->
         <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6">
             <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
                 <div class="p-3 bg-rose-500/10 text-rose-400 w-fit rounded-2xl">
                     <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h4 class="text-base font-bold text-stone-100 font-serif">Wipe SQL Financial Register rows?</h4>
-                    <p class="text-xs text-stone-400 mt-1">This will permanently issue a DELETE statement query for your active isolation context parameter row instances. This action cannot be undone.</p>
+                    <h4 class="text-base font-bold text-stone-100 font-serif">Wipe Register Rows?</h4>
+                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all financial entries mapped to your storage view. This action cannot be undone.</p>
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button onclick="window.closeConfirmation()" class="flex-1 py-2.5 bg-[#1c1411] hover:bg-[#281d19] text-xs font-bold text-stone-300 rounded-xl transition-all">Cancel</button>
@@ -309,132 +339,150 @@
     </div>
 
     <script>
-        // Runtime application storage scopes
-        let transactions = JSON.parse(localStorage.getItem('fintrack_neon_local_backup')) || [];
+        // Runtime state scopes
+        let transactions = [];
         let analyticsChart = null;
         let isNeonConnected = false;
+        let authTabState = 'login'; // 'login' or 'register'
+        let currentUser = localStorage.getItem('fintrack_logged_user') || null; // email string or null
+        let autoSyncIntervalId = null;
 
-        // Auto generation of individual unique workspace identity tag codes
-        if (!localStorage.getItem('fintrack_neon_space_id')) {
-            const secureTag = 'space_' + Math.random().toString(36).substring(2, 12);
-            localStorage.setItem('fintrack_neon_space_id', secureTag);
-        }
-        let currentWorkspaceSpaceId = localStorage.getItem('fintrack_neon_space_id');
-
-        // Neon hardcoded extraction parameters from your direct production credentials 
+        // Connection parameters resolved from your exact PostgreSQL connection details
         const neonApiEndpointUrl = 'https://ep-dark-base-ao06jwnu-pooler.c-2.ap-southeast-1.aws.neon.tech/v1/sql';
         const neonAuthTokenKey = 'npg_R8l6wuoPWOXM';
 
         const categoryMeta = {
             salary: { emoji: '💰', color: 'emerald', text: 'Salary & Jobs' },
             food: { emoji: '🍔', color: 'amber', text: 'Food & Diners' },
-            utilities: { emoji: '⚡', color: 'blue', text: 'Bills & Utilities' },
+            utilities: { emoji: '⚡', color: 'blue', text: 'Bills & Power' },
             shopping: { emoji: '🛍️', color: 'fuchsia', text: 'Shopping' },
             transport: { emoji: '🚗', color: 'sky', text: 'Transport' },
             leisure: { emoji: '🎟️', color: 'purple', text: 'Leisure & Ent.' },
             other: { emoji: '📦', color: 'slate', text: 'Miscellaneous' }
         };
 
-        // DOM target bindings
-        const form = document.getElementById('transactionForm');
-        const descInput = document.getElementById('desc');
-        const amountInput = document.getElementById('amount');
-        const typeInput = document.getElementById('type');
-        const categoryInput = document.getElementById('category');
-        const dateInput = document.getElementById('date');
-        const monthFilterInput = document.getElementById('monthFilter');
-        const searchInput = document.getElementById('recordSearch');
+        // SHA-256 local secure cryptographic password hashing before transporting keys
+        async function hashPassword(rawPassword) {
+            const encoder = new TextEncoder();
+            const dataBytes = encoder.encode(rawPassword);
+            const digestBuffer = await crypto.subtle.digest('SHA-256', dataBytes);
+            const byteArray = Array.from(new Uint8Array(digestBuffer));
+            return byteArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
 
-        const netBalanceEl = document.getElementById('netBalance');
-        const totalIncomeEl = document.getElementById('totalIncome');
-        const totalExpensesEl = document.getElementById('totalExpenses');
-        const transactionListEl = document.getElementById('transactionList');
-        const allTimeBalanceEl = document.getElementById('allTimeBalance');
-        const recordCountEl = document.getElementById('recordCount');
-        const cloudStatusEl = document.getElementById('cloudStatus');
-        const dbUserLabel = document.getElementById('dbUserLabel');
-        const neonConfigBanner = document.getElementById('neonConfigBanner');
-        const neonIndicator = document.getElementById('neonIndicator');
-        const syncModal = document.getElementById('syncModal');
-        const confirmModal = document.getElementById('confirmModal');
-
-        // Preset active chronological inputs
-        const rightNow = new Date();
-        const year = rightNow.getFullYear();
-        const month = String(rightNow.getMonth() + 1).padStart(2, '0');
-        const day = String(rightNow.getDate()).padStart(2, '0');
-
-        dateInput.value = `${year}-${month}-${day}`;
-        monthFilterInput.value = `${year}-${month}`;
-
+        // Programmatic fallback for toast creation
         function triggerToast(message) {
-            const toastMessage = document.getElementById('toastMessage');
+            let toastMessage = document.getElementById('toastMessage');
+            if (!toastMessage) {
+                toastMessage = document.createElement('div');
+                toastMessage.id = 'toastMessage';
+                toastMessage.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50';
+                toastMessage.innerHTML = `
+                    <div class="w-5 h-5 bg-[#f05123]/20 rounded-full flex items-center justify-center">
+                        <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#f05123]"></i>
+                    </div>
+                    <span id="toastText"></span>
+                `;
+                document.body.appendChild(toastMessage);
+                lucide.createIcons();
+            }
             const toastText = document.getElementById('toastText');
-            toastText.innerText = message;
+            if (toastText) {
+                toastText.innerText = message;
+            }
             toastMessage.style.opacity = '1';
             setTimeout(() => { toastMessage.style.opacity = '0'; }, 2500);
         }
 
-        // Standard setup configurations updates
-        function updateStandaloneModeView(statusMessage) {
-            isNeonConnected = false;
-            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Local Sandbox`;
-            cloudStatusEl.className = "text-[9px] text-amber-400 font-bold tracking-wider uppercase flex items-center gap-1";
-            
-            neonIndicator.innerText = "Offline Cache";
-            neonIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-400";
-            dbUserLabel.innerText = "Setup Neon";
-            document.getElementById('syncKeyDisplay').value = currentWorkspaceSpaceId;
-            renderDashboard();
-        }
-
-        // Run HTTP Database API request engine setup
+        // Safe HTTP execution pipeline wrapped in full error recovery
         async function runNeonQueryExchange(rawSqlStatementQuery, queryParameters = []) {
-            const exchangePayload = {
-                sql: rawSqlStatementQuery,
-                params: queryParameters
-            };
+            try {
+                const exchangePayload = {
+                    sql: rawSqlStatementQuery,
+                    params: queryParameters
+                };
 
-            const webResponseStream = await fetch(neonApiEndpointUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${neonAuthTokenKey}`
-                },
-                body: JSON.stringify(exchangePayload)
-            });
+                const webResponseStream = await fetch(neonApiEndpointUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${neonAuthTokenKey}`
+                    },
+                    body: JSON.stringify(exchangePayload)
+                });
 
-            if (!webResponseStream.ok) {
-                const faultText = await webResponseStream.text();
-                throw new Error(`Neon Exception: ${faultText}`);
+                if (!webResponseStream.ok) {
+                    const faultText = await webResponseStream.text();
+                    throw new Error(faultText);
+                }
+
+                return await webResponseStream.json();
+            } catch (err) {
+                throw new Error("Unable to establish remote handshakes with the Neon SQL Server.");
             }
-
-            return await webResponseStream.json();
         }
 
-        // Core syncing module matching application execution flow constraints
-        async function fetchAndSyncNeonData() {
+        // Create initial tables matching Postgres patterns
+        async function initializeDatabaseSchema() {
             try {
-                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span> SQL Sync...`;
-                
-                // Initialize missing ledger relations storage tables structure automatically if missing
-                const initializationQuerySchema = `
+                const migrationQueries = `
+                    CREATE TABLE IF NOT EXISTS fintrack_users (
+                        email TEXT PRIMARY KEY,
+                        password_hash TEXT,
+                        created_at BIGINT
+                    );
                     CREATE TABLE IF NOT EXISTS fintrack_ledger (
                         id TEXT PRIMARY KEY,
+                        username TEXT,
                         description TEXT,
                         amount NUMERIC,
                         type TEXT,
                         category TEXT,
                         date TEXT,
-                        user_space TEXT
+                        timestamp BIGINT
                     );
                 `;
-                await runNeonQueryExchange(initializationQuerySchema);
+                await runNeonQueryExchange(migrationQueries);
+                isNeonConnected = true;
+                document.getElementById('unresponsiveBanner').classList.add('hidden');
+                updateCloudStatusVisuals(true);
+            } catch (err) {
+                console.warn("Database schemas migration failure: ", err);
+                isNeonConnected = false;
+                document.getElementById('unresponsiveBanner').classList.remove('hidden');
+                updateCloudStatusVisuals(false);
+                triggerToast("Connected in Offline Local Storage Mode.");
+            }
+        }
 
-                // Target isolation rows mapped matching user workspace tokens
-                const selectionQueryStatement = `SELECT id, description, amount, type, category, date FROM fintrack_ledger WHERE user_space = $1;`;
-                const queryResultSet = await runNeonQueryExchange(selectionQueryStatement, [currentWorkspaceSpaceId]);
-                
+        function updateCloudStatusVisuals(connected) {
+            const statusIndicatorDot = document.getElementById('statusIndicatorDot');
+            const headerStatusSubtitle = document.getElementById('headerStatusSubtitle');
+            
+            if (connected && currentUser) {
+                statusIndicatorDot.className = "w-1.5 h-1.5 rounded-full bg-[#f05123] animate-pulse";
+                headerStatusSubtitle.className = "text-[9px] text-[#f05123] font-bold tracking-wider uppercase";
+                headerStatusSubtitle.innerText = "ANONYMOUS SYNC";
+            } else {
+                statusIndicatorDot.className = "w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse";
+                headerStatusSubtitle.className = "text-[9px] text-amber-500 font-bold tracking-wider uppercase";
+                headerStatusSubtitle.innerText = "LOCAL STORAGE MODE";
+            }
+        }
+
+        // Pull dataset rows mapped specifically under the currentUser profile email
+        async function fetchAndSyncNeonData(silentFlag = false) {
+            if (!isNeonConnected || !currentUser) {
+                const storeKey = currentUser ? ('fintrack_local_ledger_' + currentUser) : 'fintrack_local_ledger';
+                transactions = JSON.parse(localStorage.getItem(storeKey)) || [];
+                renderDashboard();
+                return;
+            }
+
+            try {
+                const selectQuery = `SELECT id, description, amount, type, category, date, timestamp FROM fintrack_ledger WHERE username = $1;`;
+                const queryResultSet = await runNeonQueryExchange(selectQuery, [currentUser]);
+
                 if (queryResultSet && queryResultSet.rows) {
                     transactions = queryResultSet.rows.map(row => ({
                         id: row.id,
@@ -442,39 +490,267 @@
                         amount: parseFloat(row.amount),
                         type: row.type,
                         category: row.category,
-                        date: row.date
+                        date: row.date,
+                        timestamp: parseInt(row.timestamp)
                     }));
                 }
-
-                // Update mirror fallback local registers mapping caches
-                localStorage.setItem('fintrack_neon_local_backup', JSON.stringify(transactions));
                 
-                isNeonConnected = true;
-                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-[#00e599]"></span> Neon AWS Cloud`;
-                cloudStatusEl.className = "text-[9px] text-[#00e599] font-bold tracking-wider uppercase flex items-center gap-1";
-                neonIndicator.innerText = "Connected";
-                neonIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-[#00e599]/20 text-[#00e599]";
-                dbUserLabel.innerText = "Neon Active";
+                document.getElementById('unresponsiveBanner').classList.add('hidden');
+                
+                // Track real-time synchronize success timestamp logs
+                const timestampStamp = new Date().toLocaleTimeString();
+                document.getElementById('lastSyncStamp').innerText = `Synced at ${timestampStamp}`;
                 
                 renderDashboard();
             } catch (err) {
-                console.error("Neon communication error:", err);
-                triggerToast("Neon API database mismatch.");
-                updateStandaloneModeView("Handshake connection failure event.");
+                console.error("Fetch syncing operation failed:", err);
+                const storeKey = currentUser ? ('fintrack_local_ledger_' + currentUser) : 'fintrack_local_ledger';
+                transactions = JSON.parse(localStorage.getItem(storeKey)) || [];
+                document.getElementById('unresponsiveBanner').classList.remove('hidden');
+                renderDashboard();
             }
         }
 
-        // Functional rendering interface update methods executed internally in memory structures
+        // Automated multi-device sync pooling setup
+        function startSyncPoolingEngine() {
+            stopSyncPoolingEngine();
+            if (currentUser && isNeonConnected) {
+                autoSyncIntervalId = setInterval(() => {
+                    fetchAndSyncNeonData(true);
+                }, 5000); // Poll database indexes for updates every 5 seconds
+            }
+        }
+
+        function stopSyncPoolingEngine() {
+            if (autoSyncIntervalId) {
+                clearInterval(autoSyncIntervalId);
+                autoSyncIntervalId = null;
+            }
+        }
+
+        // Set Tab Mode Auth controls
+        window.setAuthTab = function(targetTab) {
+            authTabState = targetTab;
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const submitBtnText = document.getElementById('authSubmitText');
+
+            if (targetTab === 'login') {
+                tabLogin.className = "flex-1 pb-2 text-[#f05123] border-b-2 border-[#f05123] font-bold";
+                tabRegister.className = "flex-1 pb-2 text-stone-500 font-semibold hover:text-stone-300";
+                submitBtnText.innerText = "Access Sync Workspace";
+            } else {
+                tabRegister.className = "flex-1 pb-2 text-[#f05123] border-b-2 border-[#f05123] font-bold";
+                tabLogin.className = "flex-1 pb-2 text-stone-500 font-semibold hover:text-stone-300";
+                submitBtnText.innerText = "Create & Sync Database Account";
+            }
+        };
+
+        // Form pipeline submission implementation targeting Neon Postgres queries row writes
+        window.handleAuthSubmit = async function(event) {
+            event.preventDefault();
+            const emailValue = document.getElementById('authEmail').value.trim().toLowerCase();
+            const passwordValue = document.getElementById('authPassword').value;
+
+            if (!emailValue || !passwordValue) {
+                triggerToast("Missing field parameters.");
+                return;
+            }
+
+            if (passwordValue.length < 6) {
+                triggerToast("Password must be at least 6 characters.");
+                return;
+            }
+
+            if (!isNeonConnected) {
+                triggerToast("Neon Database offline. Cannot authenticate profile.");
+                return;
+            }
+
+            try {
+                const submitBtn = document.getElementById('authSubmitBtn');
+                submitBtn.disabled = true;
+                triggerToast("Authenticating credentials...");
+
+                const passwordHashHex = await hashPassword(passwordValue);
+
+                if (authTabState === 'login') {
+                    // Pull verified details
+                    const loginQueryStr = `SELECT email, password_hash FROM fintrack_users WHERE email = $1;`;
+                    const result = await runNeonQueryExchange(loginQueryStr, [emailValue]);
+
+                    if (result && result.rows && result.rows.length > 0) {
+                        const dbUserRow = result.rows[0];
+                        if (dbUserRow.password_hash === passwordHashHex) {
+                            triggerToast("Access Granted. Synchronizing space...");
+                            performLoginState(emailValue);
+                        } else {
+                            triggerToast("Incorrect password provided.");
+                            submitBtn.disabled = false;
+                        }
+                    } else {
+                        triggerToast("Email not registered yet. Toggle to Sign Up tab.");
+                        submitBtn.disabled = false;
+                    }
+                } else {
+                    // Check if email already registered
+                    const checkQueryStr = `SELECT email FROM fintrack_users WHERE email = $1;`;
+                    const checkResult = await runNeonQueryExchange(checkQueryStr, [emailValue]);
+
+                    if (checkResult && checkResult.rows && checkResult.rows.length > 0) {
+                        triggerToast("Account exists. Try logging in.");
+                        submitBtn.disabled = false;
+                    } else {
+                        // Register new user
+                        const insertUserQueryStr = `INSERT INTO fintrack_users (email, password_hash, created_at) VALUES ($1, $2, $3);`;
+                        await runNeonQueryExchange(insertUserQueryStr, [emailValue, passwordHashHex, Date.now()]);
+                        triggerToast("Account created successfully!");
+                        performLoginState(emailValue);
+                    }
+                }
+            } catch (err) {
+                console.error("Auth Exception Handled:", err);
+                triggerToast("Neon Authentication communication fault.");
+                document.getElementById('authSubmitBtn').disabled = false;
+            }
+        };
+
+        function performLoginState(email) {
+            currentUser = email;
+            localStorage.setItem('fintrack_logged_user', email);
+
+            // Toggle Visuals
+            document.getElementById('emailAuthBanner').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            
+            const userBadgeCard = document.getElementById('userSyncStatusCard');
+            userBadgeCard.classList.remove('hidden');
+            document.getElementById('activeUserLabel').innerText = `Sync: ${email}`;
+
+            // Reset Form Inputs
+            document.getElementById('authEmail').value = '';
+            document.getElementById('authPassword').value = '';
+            document.getElementById('authSubmitBtn').disabled = false;
+
+            updateCloudStatusVisuals(true);
+            fetchAndSyncNeonData();
+            startSyncPoolingEngine();
+        }
+
+        window.handleLogout = function() {
+            stopSyncPoolingEngine();
+            currentUser = null;
+            localStorage.removeItem('fintrack_logged_user');
+
+            document.getElementById('emailAuthBanner').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('userSyncStatusCard').classList.add('hidden');
+
+            triggerToast("Logged out of synced profile.");
+            updateCloudStatusVisuals(false);
+
+            transactions = JSON.parse(localStorage.getItem('fintrack_local_ledger')) || [];
+            renderDashboard();
+        };
+
+        async function commitFormSubmissionData(event) {
+            event.preventDefault();
+
+            const descInput = document.getElementById('desc');
+            const amountInput = document.getElementById('amount');
+            const typeInput = document.getElementById('type');
+            const categoryInput = document.getElementById('category');
+            const dateInput = document.getElementById('date');
+
+            const uniqueRowId = 'row_' + Date.now() + Math.random().toString(36).substring(2, 6);
+            const itemPayloadData = {
+                id: uniqueRowId,
+                description: descInput.value.trim(),
+                amount: parseFloat(amountInput.value) || 0,
+                type: typeInput.value,
+                category: categoryInput.value,
+                date: dateInput.value,
+                timestamp: Date.now()
+            };
+
+            if (isNeonConnected && currentUser) {
+                try {
+                    const insertStatementSql = `
+                        INSERT INTO fintrack_ledger (id, username, description, amount, type, category, date, timestamp)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+                    `;
+                    await runNeonQueryExchange(insertStatementSql, [
+                        itemPayloadData.id,
+                        currentUser,
+                        itemPayloadData.description,
+                        itemPayloadData.amount,
+                        itemPayloadData.type,
+                        itemPayloadData.category,
+                        itemPayloadData.date,
+                        itemPayloadData.timestamp
+                    ]);
+                    triggerToast("Row stored safely in Neon DB.");
+                    await fetchAndSyncNeonData(true);
+                } catch (err) {
+                    console.warn("Neon SQL commit failed. Writing to offline local state:", err);
+                    saveToLocalStorage(itemPayloadData);
+                }
+            } else {
+                saveToLocalStorage(itemPayloadData);
+            }
+
+            descInput.value = '';
+            amountInput.value = '';
+        }
+
+        function saveToLocalStorage(record) {
+            transactions.push(record);
+            const storeKey = currentUser ? ('fintrack_local_ledger_' + currentUser) : 'fintrack_local_ledger';
+            localStorage.setItem(storeKey, JSON.stringify(transactions));
+            triggerToast("Saved safely inside Local Storage.");
+            renderDashboard();
+        }
+
+        async function issueDeleteRowTransaction(id) {
+            if (isNeonConnected && currentUser) {
+                try {
+                    const removalQueryString = `DELETE FROM fintrack_ledger WHERE id = $1 AND username = $2;`;
+                    await runNeonQueryExchange(removalQueryString, [id, currentUser]);
+                    triggerToast("Dropped entry from Cloud.");
+                    await fetchAndSyncNeonData(true);
+                } catch (err) {
+                    console.warn("Cloud connection drops deletion. Performing locally:");
+                    deleteLocalTransaction(id);
+                }
+            } else {
+                deleteLocalTransaction(id);
+            }
+        }
+
+        function deleteLocalTransaction(id) {
+            transactions = transactions.filter(t => t.id !== id);
+            const storeKey = currentUser ? ('fintrack_local_ledger_' + currentUser) : 'fintrack_local_ledger';
+            localStorage.setItem(storeKey, JSON.stringify(transactions));
+            triggerToast("Row removed from local space.");
+            renderDashboard();
+        }
+
         function renderDashboard() {
+            const monthFilterInput = document.getElementById('monthFilter');
+            const searchInput = document.getElementById('recordSearch');
+            const transactionListEl = document.getElementById('transactionList');
+
             const pickedMonthContext = monthFilterInput.value; 
             const trackingSearchParameterStr = searchInput.value.trim().toLowerCase();
 
             let displayedSetArray = [...transactions];
 
+            // Filter entries by Month
             if (pickedMonthContext) {
                 displayedSetArray = displayedSetArray.filter(t => t.date && t.date.startsWith(pickedMonthContext));
             }
 
+            // Filter entries by Search Term
             if (trackingSearchParameterStr) {
                 displayedSetArray = displayedSetArray.filter(t => 
                     (t.description && t.description.toLowerCase().includes(trackingSearchParameterStr)) ||
@@ -482,7 +758,7 @@
                 );
             }
 
-            // In-Memory chronological list sorting processes
+            // Chronological Sorting (Newest First)
             displayedSetArray.sort((alpha, beta) => new Date(beta.date) - new Date(alpha.date));
 
             let computedMonthlyIncome = 0;
@@ -503,11 +779,11 @@
 
             const internalNetDiff = computedMonthlyIncome - computedMonthlyExpense;
 
-            netBalanceEl.innerText = `₹${internalNetDiff.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            totalIncomeEl.innerText = `₹${computedMonthlyIncome.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            totalExpensesEl.innerText = `₹${computedMonthlyExpense.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            allTimeBalanceEl.innerText = `₹${computedAllTimeBalanceTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-            recordCountEl.innerText = `${displayedSetArray.length} rows`;
+            document.getElementById('netBalance').innerText = `₹${internalNetDiff.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('totalIncome').innerText = `₹${computedMonthlyIncome.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('totalExpenses').innerText = `₹${computedMonthlyExpense.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('allTimeBalance').innerText = `₹${computedAllTimeBalanceTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('recordCount').innerText = `${displayedSetArray.length} entries`;
 
             transactionListEl.innerHTML = '';
 
@@ -515,7 +791,7 @@
                 transactionListEl.innerHTML = `
                     <div class="text-center py-8 text-stone-600 text-xs flex flex-col items-center justify-center space-y-2">
                         <i data-lucide="folder-open" class="w-6 h-6 stroke-[1.5]"></i>
-                        <span>No records located inside this active filter parameter context.</span>
+                        <span>No records located inside this active view filter.</span>
                     </div>
                 `;
                 lucide.createIcons();
@@ -566,7 +842,6 @@
             updateChartsLayout(categoriesChartDistributionMap, computedMonthlyIncome, computedMonthlyExpense);
         }
 
-        // Render updates to Chart.js interface safely
         function updateChartsLayout(categoryExpensesMap, incomeValue, expenseValue) {
             const graphCanvas = document.getElementById('balanceChart');
             const noChartPlaceholder = document.getElementById('noChartData');
@@ -588,11 +863,12 @@
             if (keyIndicators.length > 0) {
                 calculatedLabels = keyIndicators;
                 renderedValuesData = Object.values(categoryExpensesMap);
-                thematicBackgroundColors = ['#00e599', '#34d399', '#60a5fa', '#f472b6', '#38bdf8', '#c084fc', '#94a3b8'];
+                // Vibrant warm orange tones corresponding to Screenshot (133).png
+                thematicBackgroundColors = ['#f05123', '#d44016', '#fb923c', '#fdba74', '#ea580c', '#c2410c', '#a8a29e'];
             } else {
                 calculatedLabels = ['Income Total', 'Expenses Outflow'];
                 renderedValuesData = [incomeValue, expenseValue];
-                thematicBackgroundColors = ['#10b981', '#f43f5e'];
+                thematicBackgroundColors = ['#10b981', '#f05123'];
             }
 
             if (analyticsChart) {
@@ -628,84 +904,6 @@
             });
         }
 
-        // Form pipeline submission implementation targeting Neon Postgres queries row writes
-        async function commitFormSubmissionData(event) {
-            event.preventDefault();
-
-            const uniqueRowId = 'row_' + Date.now() + Math.random().toString(36).substring(2, 6);
-            const itemPayloadData = {
-                id: uniqueRowId,
-                description: descInput.value.trim(),
-                amount: parseFloat(amountInput.value) || 0,
-                type: typeInput.value,
-                category: categoryInput.value,
-                date: dateInput.value
-            };
-
-            if (isNeonConnected) {
-                try {
-                    const insertStatementSql = `
-                        INSERT INTO fintrack_ledger (id, description, amount, type, category, date, user_space)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7);
-                    `;
-                    await runNeonQueryExchange(insertStatementSql, [
-                        itemPayloadData.id,
-                        itemPayloadData.description,
-                        itemPayloadData.amount,
-                        itemPayloadData.type,
-                        itemPayloadData.category,
-                        itemPayloadData.date,
-                        currentWorkspaceSpaceId
-                    ]);
-                    triggerToast("Row entry appended to Neon Postgres.");
-                    await fetchAndSyncNeonData();
-                } catch (err) {
-                    console.error("Neon write error:", err);
-                    triggerToast("SQL Insertion error.");
-                }
-            } else {
-                transactions.push(itemPayloadData);
-                localStorage.setItem('fintrack_neon_local_backup', JSON.stringify(transactions));
-                triggerToast("Row stored inside local fallback cache sandbox.");
-                renderDashboard();
-            }
-
-            descInput.value = '';
-            amountInput.value = '';
-        }
-
-        // Delete execution paths alignment
-        async function issueDeleteRowTransaction(id) {
-            if (isNeonConnected) {
-                try {
-                    const removalQueryString = `DELETE FROM fintrack_ledger WHERE id = $1 AND user_space = $2;`;
-                    await runNeonQueryExchange(removalQueryString, [id, currentWorkspaceSpaceId]);
-                    triggerToast("Row dropped from Neon SQL.");
-                    await fetchAndSyncNeonData();
-                } catch (err) {
-                    console.error("SQL deletion fault:", err);
-                    triggerToast("Failed dropping table row.");
-                }
-            } else {
-                transactions = transactions.filter(t => t.id !== id);
-                localStorage.setItem('fintrack_neon_local_backup', JSON.stringify(transactions));
-                triggerToast("Row removed from local execution frame cache.");
-                renderDashboard();
-            }
-        }
-
-        window.copySyncKey = function() {
-            const displayFieldRef = document.getElementById('syncKeyDisplay');
-            displayFieldRef.select();
-            navigator.clipboard.writeText(displayFieldRef.value);
-            triggerToast("Isolation user space string token path assigned to clipboard.");
-        };
-
-        window.syncNeon = function() {
-            fetchAndSyncNeonData();
-            triggerToast("SQL query pulled requested row updates.");
-        };
-
         window.exportCSV = function() {
             if (transactions.length === 0) {
                 triggerToast("No current matrix row elements ready to export.");
@@ -721,19 +919,19 @@
             const dataBlobElement = new Blob([bufferPayload], { type: 'text/csv;charset=utf-8;' });
             const anchorTriggerElement = document.createElement('a');
             anchorTriggerElement.href = URL.createObjectURL(dataBlobElement);
-            anchorTriggerElement.setAttribute('download', `Neon_Ledger_Export_${monthFilterInput.value}.csv`);
+            anchorTriggerElement.setAttribute('download', `Ledger_Export_${document.getElementById('monthFilter').value}.csv`);
             document.body.appendChild(anchorTriggerElement);
             anchorTriggerElement.click();
             document.body.removeChild(anchorTriggerElement);
-            triggerToast("SQL dynamic tables export file downloaded.");
+            triggerToast("Data export file downloaded.");
         };
 
         window.generateWhatsAppReport = function() {
-            const pickedMonthContext = monthFilterInput.value;
+            const pickedMonthContext = document.getElementById('monthFilter').value;
             let currentSet = transactions.filter(item => item.date && item.date.startsWith(pickedMonthContext));
             
             if (currentSet.length === 0) {
-                triggerToast("No ledger records parameters mapped inside selection constraints.");
+                triggerToast("No records mapped inside selection month.");
                 return;
             }
 
@@ -753,13 +951,13 @@
             const netSavingsDiff = calculatedMonthlyIncome - calculatedMonthlyExpense;
             
             const stringMessageText = encodeURIComponent(
-                `📊 *FinTrack Neon SQL Financial Statement [${pickedMonthContext}]*\n` +
+                `📊 *FinTrack Statement [${pickedMonthContext}]*\n` +
                 `----------------------------------------\n` +
-                `💰 Total Income Checked: ₹${calculatedMonthlyIncome.toFixed(2)}\n` +
-                `📉 Total Expenses Outflows: ₹${calculatedMonthlyExpense.toFixed(2)}\n` +
-                `⚖️ Monthly Net Savings Position: ₹${netSavingsDiff.toFixed(2)}\n\n` +
-                `*Detailed Ledger Records Register:* ${lineItemReports}\n\n` +
-                `_Generated dynamically via Neon Serverless Postgres Client Sync Engine._`
+                `💰 Monthly Income: ₹${calculatedMonthlyIncome.toFixed(2)}\n` +
+                `📉 Total Expenses: ₹${calculatedMonthlyExpense.toFixed(2)}\n` +
+                `⚖️ Monthly Savings: ₹${netSavingsDiff.toFixed(2)}\n\n` +
+                `*Ledger Records Register:* ${lineItemReports}\n\n` +
+                `_Generated dynamically via FinTrack Multi-Sync._`
             );
 
             const potentialPhoneTarget = document.getElementById('whatsappPhone').value.trim();
@@ -771,47 +969,72 @@
             window.open(finalUrlTarget, '_blank');
         };
 
-        window.toggleSyncModal = function(showFlag) {
-            syncModal.classList.toggle('hidden', !showFlag);
+        window.syncNeon = function() {
+            fetchAndSyncNeonData();
+            triggerToast("Synced parameters successfully.");
         };
 
         window.triggerResetConfirmation = function() {
-            confirmModal.classList.remove('hidden');
+            document.getElementById('confirmModal').classList.remove('hidden');
         };
 
         window.closeConfirmation = function() {
-            confirmModal.classList.add('hidden');
+            document.getElementById('confirmModal').classList.add('hidden');
         };
 
         window.executeResetData = async function() {
-            confirmModal.classList.add('hidden');
-            if (isNeonConnected) {
+            document.getElementById('confirmModal').classList.add('hidden');
+            if (isNeonConnected && currentUser && currentUser !== "sandbox") {
                 try {
-                    triggerToast("Issuing SQL DELETE constraint queries drop actions...");
-                    const clearSpaceQueryString = `DELETE FROM fintrack_ledger WHERE user_space = $1;`;
-                    await runNeonQueryExchange(clearSpaceQueryString, [currentWorkspaceSpaceId]);
-                    triggerToast("Neon cloud tables rows dropped cleanly.");
-                    await fetchAndSyncNeonData();
+                    const clearSpaceQueryString = `DELETE FROM fintrack_ledger WHERE username = $1;`;
+                    await runNeonQueryExchange(clearSpaceQueryString, [currentUser]);
+                    triggerToast("Account cloud data cleared.");
+                    await fetchAndSyncNeonData(true);
                 } catch (e) {
-                    console.error("SQL deletion exception:", e);
-                    triggerToast("Neon database engine query execution problem.");
+                    console.error("Cloud wipe operation failed:", e);
+                    wipeLocalStorage();
                 }
             } else {
-                transactions = [];
-                localStorage.removeItem('fintrack_neon_local_backup');
-                triggerToast("Local application cache logs cleared cleanly.");
-                renderDashboard();
+                wipeLocalStorage();
             }
         };
 
-        // UI trigger event bindings maps updates
-        form.addEventListener('submit', commitFormSubmissionData);
-        monthFilterInput.addEventListener('change', renderDashboard);
-        searchInput.addEventListener('input', renderDashboard);
+        function wipeLocalStorage() {
+            transactions = [];
+            const storeKey = currentUser ? ('fintrack_local_ledger_' + currentUser) : 'fintrack_local_ledger';
+            localStorage.removeItem(storeKey);
+            triggerToast("Dashboard cleared.");
+            renderDashboard();
+        }
 
-        // Core dynamic bootstrapping launch sequences
-        document.getElementById('syncKeyDisplay').value = currentWorkspaceSpaceId;
-        fetchAndSyncNeonData();
+        // Event listener setups
+        document.getElementById('transactionForm').addEventListener('submit', commitFormSubmissionData);
+        document.getElementById('monthFilter').addEventListener('change', renderDashboard);
+        document.getElementById('recordSearch').addEventListener('input', renderDashboard);
+
+        // Core dynamic bootstrapping sequences
+        window.onload = async function() {
+            // Setup default date settings
+            const todayStr = `${year}-${month}-${day}`;
+            document.getElementById('date').value = todayStr;
+
+            // Pre-create dynamic Toast targets before database queries execute
+            triggerToast("Loading cloud sync configurations...");
+
+            // Try to initialize Postgres database schema
+            await initializeDatabaseSchema();
+
+            // Load existing profile or default to local storage anonymous state
+            if (currentUser) {
+                performLoginState(currentUser);
+            } else {
+                document.getElementById('emailAuthBanner').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.add('hidden');
+                document.getElementById('userSyncStatusCard').classList.add('hidden');
+                updateCloudStatusVisuals(false);
+                fetchAndSyncNeonData();
+            }
+        };
     </script>
 </body>
 </html>
