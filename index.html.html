@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinTrack - Cloud Personal Finance</title>
+    <title>FinTrack - Neon Serverless SQL Finance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
@@ -47,8 +47,8 @@
         <header class="bg-[#120c0a]/95 backdrop-blur-md sticky top-0 z-40 px-5 py-4 border-b border-[#241715]">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5" onclick="window.toggleSyncModal(true)" class="cursor-pointer">
-                    <div class="w-9 h-9 bg-[#f05123] rounded-xl flex items-center justify-center shadow-lg shadow-[#f05123]/20">
-                        <i data-lucide="wallet" class="w-5 h-5 text-white"></i>
+                    <div class="w-9 h-9 bg-[#00e599] rounded-xl flex items-center justify-center shadow-lg shadow-[#00e599]/20">
+                        <i data-lucide="database" class="w-5 h-5 text-black"></i>
                     </div>
                     <div>
                         <h1 class="text-base font-bold text-white tracking-tight">FinTrack</h1>
@@ -59,38 +59,34 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <button id="googleAuthBtn" onclick="window.toggleSyncModal(true)" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#f05123] relative flex items-center gap-1.5 text-xs font-semibold" title="Cloud Database Settings">
+                    <button id="dbAuthBtn" onclick="window.toggleSyncModal(true)" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#00e599] relative flex items-center gap-1.5 text-xs font-semibold" title="Neon Database Settings">
                         <i data-lucide="settings" class="w-4 h-4"></i>
-                        <span id="googleUserLabel" class="max-w-[80px] truncate">Setup Cloud</span>
+                        <span id="dbUserLabel" class="max-w-[80px] truncate">Neon SQL</span>
                     </button>
                     <input type="month" id="monthFilter" 
-                           class="bg-[#1c1411] hover:bg-[#281d19] text-white text-xs font-semibold rounded-xl px-2.5 py-2 border border-[#2c1d1a] focus:outline-none focus:ring-2 focus:ring-[#f05123] transition-all cursor-pointer">
+                           class="bg-[#1c1411] hover:bg-[#281d19] text-white text-xs font-semibold rounded-xl px-2.5 py-2 border border-[#2c1d1a] focus:outline-none focus:ring-2 focus:ring-[#00e599] transition-all cursor-pointer">
                 </div>
             </div>
         </header>
 
         <main class="flex-grow overflow-y-auto px-5 py-6 space-y-6 pb-28">
 
-            <div id="googleSignInBanner" class="bg-[#140e0c] rounded-2xl p-4 border border-amber-500/20 flex flex-col gap-3">
+            <div id="neonConfigBanner" class="hidden bg-[#140e0c] rounded-2xl p-4 border border-[#00e599]/20 flex flex-col gap-3">
                 <div class="flex items-start gap-3">
-                    <div class="p-2 bg-amber-500/10 text-amber-500 rounded-xl mt-0.5">
-                        <i data-lucide="cloud-lightning" class="w-4 h-4"></i>
+                    <div class="p-2 bg-[#00e599]/10 text-[#00e599] rounded-xl mt-0.5">
+                        <i data-lucide="server" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-stone-200">Real-Time Cloud Synchronization Available</h4>
-                        <p class="text-[10px] text-stone-400 mt-0.5">Link a free Firebase Web Database config parameter to access your logs from multiple laptops or smartphones instantly.</p>
+                        <h4 class="text-xs font-bold text-stone-200">Serverless Neon SQL Engine</h4>
+                        <p class="text-[10px] text-stone-400 mt-0.5">Using pre-configured pooled HTTP gateway connection parameters to interface directly with your AWS ap-southeast-1 database cluster.</p>
                     </div>
                 </div>
-                <button onclick="window.toggleSyncModal(true)" class="w-full bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-2 transition-all">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-[#f05123]"></i>
-                    Configure Firebase Cloud Space
-                </button>
             </div>
 
-            <div class="bg-gradient-to-br from-[#d44016] to-[#1e1311] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#f05123]/30">
-                <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#f05123]/10 rounded-full blur-2xl"></div>
+            <div class="bg-gradient-to-br from-[#111c18] to-[#0c0807] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#00e599]/30">
+                <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#00e599]/5 rounded-full blur-2xl"></div>
                 
-                <p class="text-xs font-semibold text-orange-200/80 uppercase tracking-wider">Remaining Balance</p>
+                <p class="text-xs font-semibold text-emerald-200/80 uppercase tracking-wider">Remaining Balance</p>
                 <h2 id="netBalance" class="text-3xl font-extrabold text-white mt-1.5 tracking-tight font-sans">₹0.00</h2>
                 
                 <div class="grid grid-cols-2 gap-4 mt-6 pt-5 border-t border-white/10">
@@ -99,7 +95,7 @@
                             <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] text-orange-200/70 font-medium">Monthly Income</p>
+                            <p class="text-[11px] text-emerald-200/70 font-medium">Monthly Income</p>
                             <p id="totalIncome" class="text-sm font-bold text-emerald-400">₹0.00</p>
                         </div>
                     </div>
@@ -108,7 +104,7 @@
                             <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] text-orange-200/70 font-medium">Total Expenses</p>
+                            <p class="text-[11px] text-emerald-200/70 font-medium">Total Expenses</p>
                             <p id="totalExpenses" class="text-sm font-bold text-rose-400">₹0.00</p>
                         </div>
                     </div>
@@ -118,40 +114,40 @@
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
-                        <i data-lucide="pie-chart" class="w-4 h-4 text-[#f05123]"></i> Analytics Breakdown
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-[#00e599]"></i> Analytics Breakdown
                     </h3>
                 </div>
                 <div class="relative w-full h-44 flex items-center justify-center">
                     <canvas id="balanceChart" class="max-w-full hidden z-10"></canvas>
                     <div id="noChartData" class="absolute inset-0 flex flex-col items-center justify-center bg-[#140e0c] text-stone-500 text-xs text-center space-y-1">
                         <i data-lucide="bar-chart-3" class="w-8 h-8 text-stone-600"></i>
-                        <span>No synchronized entries to visualize this month</span>
+                        <span>No synchronized SQL rows to visualize this month</span>
                     </div>
                 </div>
             </div>
 
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
-                    <i data-lucide="plus-circle" class="w-4 h-4 text-[#f05123]"></i> Cloud Input Ledger
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-[#00e599]"></i> Neon Input Ledger
                 </h3>
                 
                 <form id="transactionForm" class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Description</label>
-                        <input type="text" id="desc" required placeholder="e.g. Work pay, Groceries, Electricity bill" 
-                               class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
+                        <input type="text" id="desc" required placeholder="e.g. Work pay, Groceries, Utility bill" 
+                               class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Amount (₹)</label>
                             <input type="number" id="amount" step="0.01" required placeholder="0.00" 
-                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
+                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Type</label>
                             <select id="type" 
-                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
+                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 transition-all cursor-pointer">
                                 <option value="income" class="bg-[#140e0c]">Income (+)</option>
                                 <option value="expense" class="bg-[#140e0c]">Expense (-)</option>
                             </select>
@@ -162,7 +158,7 @@
                         <div>
                             <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Category</label>
                             <select id="category" 
-                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
+                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 transition-all cursor-pointer">
                                 <option value="salary">Salary / Job</option>
                                 <option value="food">Food & Diners</option>
                                 <option value="utilities">Bills & Power</option>
@@ -175,13 +171,13 @@
                         <div>
                             <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Date</label>
                             <input type="date" id="date" required 
-                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
+                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00e599] text-sm text-stone-100 transition-all cursor-pointer">
                         </div>
                     </div>
 
                     <button type="submit" 
-                            class="w-full bg-[#f05123] hover:bg-[#d44016] active:scale-[0.99] text-white font-semibold py-3.5 rounded-xl transition-all duration-150 text-sm shadow-lg shadow-[#f05123]/10 flex items-center justify-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Add Transaction
+                            class="w-full bg-[#00e599] hover:bg-[#00c685] text-black font-bold py-3.5 rounded-xl transition-all duration-150 text-sm shadow-lg shadow-[#00e599]/10 flex items-center justify-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add SQL Row Entry
                     </button>
                 </form>
             </div>
@@ -189,20 +185,23 @@
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
-                        <i data-lucide="receipt" class="w-4 h-4 text-[#f05123]"></i> Monthly Register
+                        <i data-lucide="receipt" class="w-4 h-4 text-[#00e599]"></i> Monthly Register
                     </h3>
                     <div class="flex items-center gap-2">
+                        <button onclick="window.syncNeon()" class="p-1.5 text-stone-400 hover:text-[#00e599] hover:bg-[#1c1411] rounded-lg transition-all" title="Force Refresh Neon SQL">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        </button>
                         <button onclick="window.exportCSV()" class="p-1.5 text-stone-400 hover:text-white hover:bg-[#1c1411] rounded-lg transition-all" title="Export to CSV">
                             <i data-lucide="download" class="w-4 h-4"></i>
                         </button>
-                        <span id="recordCount" class="text-[10px] bg-[#241715] text-[#f05123] font-bold px-2 py-0.5 rounded-full">0 entries</span>
+                        <span id="recordCount" class="text-[10px] bg-[#1a2c26] text-[#00e599] font-bold px-2 py-0.5 rounded-full">0 entries</span>
                     </div>
                 </div>
 
                 <div class="relative">
                     <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-stone-600"></i>
                     <input type="text" id="recordSearch" placeholder="Search entries..." 
-                           class="w-full pl-9 pr-4 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#f05123] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
+                           class="w-full pl-9 pr-4 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#00e599] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
                 </div>
 
                 <div id="transactionList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1">
@@ -237,63 +236,56 @@
         </main>
 
         <div id="toastMessage" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50">
-            <div class="w-5 h-5 bg-[#f05123]/20 rounded-full flex items-center justify-center">
-                <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#f05123]"></i>
+            <div class="w-5 h-5 bg-[#00e599]/20 rounded-full flex items-center justify-center">
+                <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#00e599]"></i>
             </div>
-            <span id="toastText">Updating ledger...</span>
+            <span id="toastText">Updating table context...</span>
         </div>
 
         <footer class="bg-[#120c0a] border-t border-[#241715] px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-40 backdrop-blur-md">
             <div>
                 <p class="text-[9px] text-stone-500 uppercase font-bold tracking-wider">All-Time Balance</p>
-                <p id="allTimeBalance" class="text-sm font-bold text-[#f05123]">₹0.00</p>
+                <p id="allTimeBalance" class="text-sm font-bold text-[#00e599]">₹0.00</p>
             </div>
             <button onclick="window.triggerResetConfirmation()" class="text-xs font-semibold text-stone-500 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-[#1c1411]">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset All Data
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Clear Workspace
             </button>
         </footer>
 
         <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6 overflow-y-auto py-8">
             <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl my-auto">
                 <div class="flex justify-between items-start">
-                    <div class="p-3 bg-[#f05123]/10 text-[#f05123] rounded-2xl">
-                        <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                    <div class="p-3 bg-[#00e599]/10 text-[#00e599] rounded-2xl">
+                        <i data-lucide="database" class="w-6 h-6"></i>
                     </div>
                     <button onclick="window.toggleSyncModal(false)" class="text-stone-500 hover:text-white transition">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
                 <div>
-                    <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Cloud Storage Settings</h4>
-                    <p class="text-xs text-stone-400 mt-1 font-sans">Set up your database to synchronize transactions between your phone and desktop instantly.</p>
+                    <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Neon Endpoint Status</h4>
+                    <p class="text-xs text-stone-400 mt-1 font-sans">Active Serverless HTTP Gateway configured to your targeted database cluster.</p>
                 </div>
 
                 <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl space-y-2 text-left">
                     <div class="flex items-center justify-between">
-                        <span class="text-[10px] text-[#f05123] font-bold uppercase tracking-wider">1. Firebase Connection</span>
-                        <span id="firebaseIndicator" class="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-400">Not Connected</span>
+                        <span class="text-[10px] text-[#00e599] font-bold uppercase tracking-wider">Database Environment</span>
+                        <span id="neonIndicator" class="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-[#00e599]/20 text-[#00e599]">Configured</span>
                     </div>
-                    <p class="text-[10px] text-stone-400 leading-relaxed">Paste your Firebase web SDK configuration JSON below. Create a Web App database for free at <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-400 hover:underline">firebase.google.com</a>.</p>
-                    <textarea id="firebaseConfigInput" rows="4" placeholder='{ "apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..." }' 
-                              class="w-full bg-[#140e0c] border border-[#2c1d1a] p-2 text-[11px] rounded-lg text-stone-300 focus:outline-none focus:border-[#f05123] font-mono"></textarea>
-                    <div class="flex gap-2">
-                        <button onclick="window.saveFirebaseConfig()" class="flex-1 py-1.5 bg-[#f05123] hover:bg-[#d44016] text-[11px] font-bold rounded-lg transition text-white">Save Config</button>
-                        <button onclick="window.clearFirebaseConfig()" class="py-1.5 px-2 bg-[#241715] hover:bg-[#3d2722] text-[11px] text-stone-400 rounded-lg transition" title="Clear configuration">Clear</button>
+                    
+                    <div class="space-y-1 mt-1 text-[11px]">
+                        <p class="text-stone-400"><span class="text-stone-500 font-medium">Host:</span> ep-dark-base-ao06jwnu-pooler</p>
+                        <p class="text-stone-400"><span class="text-stone-500 font-medium">Region:</span> AWS ap-southeast-1</p>
+                        <p class="text-stone-400"><span class="text-stone-500 font-medium">Target DB:</span> neondb</p>
                     </div>
                 </div>
 
                 <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
-                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Active Workspace Key (User Space)</label>
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Active Isolation User Space Key</label>
                     <div class="flex gap-2">
                         <input type="text" id="syncKeyDisplay" readonly class="flex-1 bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none" value="...">
-                        <button onclick="window.copySyncKey()" class="px-3 bg-[#f05123] hover:bg-[#d44016] text-xs font-semibold rounded-xl transition text-white">Copy ID</button>
+                        <button onclick="window.copySyncKey()" class="px-3 bg-[#00e599] hover:bg-[#00c685] text-black text-xs font-bold rounded-xl transition">Copy</button>
                     </div>
-                </div>
-
-                <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
-                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Switch Workspace Space ID</label>
-                    <input type="text" id="syncKeyInput" placeholder="Paste your target custom space key here" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2.5 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-[#f05123]">
-                    <button onclick="window.applySyncKey()" class="w-full mt-2 bg-[#1c1411] border border-[#3d2722] hover:bg-[#281d19] text-xs font-bold py-2.5 rounded-xl transition text-white">Connect & Sync</button>
                 </div>
             </div>
         </div>
@@ -304,40 +296,34 @@
                     <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h4 class="text-base font-bold text-stone-100 font-serif">Wipe Financial History?</h4>
-                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all cloud and local transactions for your current sync space. This action cannot be undone.</p>
+                    <h4 class="text-base font-bold text-stone-100 font-serif">Wipe SQL Financial Register rows?</h4>
+                    <p class="text-xs text-stone-400 mt-1">This will permanently issue a DELETE statement query for your active isolation context parameter row instances. This action cannot be undone.</p>
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button onclick="window.closeConfirmation()" class="flex-1 py-2.5 bg-[#1c1411] hover:bg-[#281d19] text-xs font-bold text-stone-300 rounded-xl transition-all">Cancel</button>
-                    <button onclick="window.executeResetData()" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white rounded-xl transition-all">Delete Everything</button>
+                    <button onclick="window.executeResetData()" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white rounded-xl transition-all">Execute DELETE</button>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // State control variables
-        let db = null;
-        let auth = null;
-        let isCloudAvailable = false;
-        let firebaseAppInstance = null;
-
-        // Local state backup structure
-        let transactions = JSON.parse(localStorage.getItem('fintrack_local_backup_records')) || [];
+    <script>
+        // Runtime application storage scopes
+        let transactions = JSON.parse(localStorage.getItem('fintrack_neon_local_backup')) || [];
         let analyticsChart = null;
-        
-        // Generate high entropy random sync string key if missing
-        if (!localStorage.getItem('fintrack_sync_key')) {
-            const randomId = 'ft_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            localStorage.setItem('fintrack_sync_key', randomId);
+        let isNeonConnected = false;
+
+        // Auto generation of individual unique workspace identity tag codes
+        if (!localStorage.getItem('fintrack_neon_space_id')) {
+            const secureTag = 'space_' + Math.random().toString(36).substring(2, 12);
+            localStorage.setItem('fintrack_neon_space_id', secureTag);
         }
-        let activeUserId = localStorage.getItem('fintrack_sync_key');
-        let unbindFirestoreSnapshot = null;
+        let currentWorkspaceSpaceId = localStorage.getItem('fintrack_neon_space_id');
+
+        // Neon hardcoded extraction parameters from your direct production credentials 
+        const neonApiEndpointUrl = 'https://ep-dark-base-ao06jwnu-pooler.c-2.ap-southeast-1.aws.neon.tech/v1/sql';
+        const neonAuthTokenKey = 'npg_R8l6wuoPWOXM';
 
         const categoryMeta = {
             salary: { emoji: '💰', color: 'emerald', text: 'Salary & Jobs' },
@@ -349,7 +335,7 @@
             other: { emoji: '📦', color: 'slate', text: 'Miscellaneous' }
         };
 
-        // DOM elements configuration
+        // DOM target bindings
         const form = document.getElementById('transactionForm');
         const descInput = document.getElementById('desc');
         const amountInput = document.getElementById('amount');
@@ -366,15 +352,13 @@
         const allTimeBalanceEl = document.getElementById('allTimeBalance');
         const recordCountEl = document.getElementById('recordCount');
         const cloudStatusEl = document.getElementById('cloudStatus');
-        const googleUserLabel = document.getElementById('googleUserLabel');
-        const googleSignInBanner = document.getElementById('googleSignInBanner');
-        const firebaseIndicator = document.getElementById('firebaseIndicator');
-        const firebaseConfigInput = document.getElementById('firebaseConfigInput');
-        
+        const dbUserLabel = document.getElementById('dbUserLabel');
+        const neonConfigBanner = document.getElementById('neonConfigBanner');
+        const neonIndicator = document.getElementById('neonIndicator');
         const syncModal = document.getElementById('syncModal');
         const confirmModal = document.getElementById('confirmModal');
 
-        // Set default filter state variables
+        // Preset active chronological inputs
         const rightNow = new Date();
         const year = rightNow.getFullYear();
         const month = String(rightNow.getMonth() + 1).padStart(2, '0');
@@ -383,231 +367,212 @@
         dateInput.value = `${year}-${month}-${day}`;
         monthFilterInput.value = `${year}-${month}`;
 
-        // Embedded customized Toast notifications
         function triggerToast(message) {
             const toastMessage = document.getElementById('toastMessage');
             const toastText = document.getElementById('toastText');
             toastText.innerText = message;
             toastMessage.style.opacity = '1';
-            setTimeout(() => {
-                toastMessage.style.opacity = '0';
-            }, 2500);
+            setTimeout(() => { toastMessage.style.opacity = '0'; }, 2500);
         }
 
-        // Setup local standalone safe execution
-        function enableLocalStorageFallback(reason) {
-            isCloudAvailable = false;
-            console.log("FinTrack operating mode: local storage fallback -", reason);
-            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Standalone Mode`;
+        // Standard setup configurations updates
+        function updateStandaloneModeView(statusMessage) {
+            isNeonConnected = false;
+            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Local Sandbox`;
             cloudStatusEl.className = "text-[9px] text-amber-400 font-bold tracking-wider uppercase flex items-center gap-1";
-            document.getElementById('syncKeyDisplay').value = activeUserId;
             
-            firebaseIndicator.innerText = "Offline Mode";
-            firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-400";
-            
-            googleSignInBanner.classList.remove('hidden');
-            googleUserLabel.innerText = "Setup Cloud";
+            neonIndicator.innerText = "Offline Cache";
+            neonIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-400";
+            dbUserLabel.innerText = "Setup Neon";
+            document.getElementById('syncKeyDisplay').value = currentWorkspaceSpaceId;
             renderDashboard();
         }
 
-        // Initialize Firebase system
-        async function runCloudInitialization() {
-            const savedConfigRaw = localStorage.getItem('fintrack_custom_firebase_config');
-            if (!savedConfigRaw) {
-                enableLocalStorageFallback("No Firebase configurations provided yet.");
-                return;
+        // Run HTTP Database API request engine setup
+        async function runNeonQueryExchange(rawSqlStatementQuery, queryParameters = []) {
+            const exchangePayload = {
+                sql: rawSqlStatementQuery,
+                params: queryParameters
+            };
+
+            const webResponseStream = await fetch(neonApiEndpointUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${neonAuthTokenKey}`
+                },
+                body: JSON.stringify(exchangePayload)
+            });
+
+            if (!webResponseStream.ok) {
+                const faultText = await webResponseStream.text();
+                throw new Error(`Neon Exception: ${faultText}`);
             }
 
+            return await webResponseStream.json();
+        }
+
+        // Core syncing module matching application execution flow constraints
+        async function fetchAndSyncNeonData() {
             try {
-                const firebaseConfig = JSON.parse(savedConfigRaw);
-                firebaseConfigInput.value = savedConfigRaw;
+                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span> SQL Sync...`;
                 
-                // Initialize Firebase connection
-                firebaseAppInstance = initializeApp(firebaseConfig);
-                auth = getAuth(firebaseAppInstance);
-                db = getFirestore(firebaseAppInstance);
+                // Initialize missing ledger relations storage tables structure automatically if missing
+                const initializationQuerySchema = `
+                    CREATE TABLE IF NOT EXISTS fintrack_ledger (
+                        id TEXT PRIMARY KEY,
+                        description TEXT,
+                        amount NUMERIC,
+                        type TEXT,
+                        category TEXT,
+                        date TEXT,
+                        user_space TEXT
+                    );
+                `;
+                await runNeonQueryExchange(initializationQuerySchema);
+
+                // Target isolation rows mapped matching user workspace tokens
+                const selectionQueryStatement = `SELECT id, description, amount, type, category, date FROM fintrack_ledger WHERE user_space = $1;`;
+                const queryResultSet = await runNeonQueryExchange(selectionQueryStatement, [currentWorkspaceSpaceId]);
                 
-                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping"></span> Syncing auth...`;
-                
-                // Rule 3: Auth trigger prior to any Firestore queries
-                const credentials = await signInAnonymously(auth);
-                const authenticatedUser = credentials.user;
-                
-                if (!authenticatedUser) {
-                    enableLocalStorageFallback("Auth token reference validation failure.");
-                    return;
+                if (queryResultSet && queryResultSet.rows) {
+                    transactions = queryResultSet.rows.map(row => ({
+                        id: row.id,
+                        description: row.description,
+                        amount: parseFloat(row.amount),
+                        type: row.type,
+                        category: row.category,
+                        date: row.date
+                    }));
                 }
 
-                isCloudAvailable = true;
-                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live Cloud Sync`;
-                cloudStatusEl.className = "text-[9px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1";
+                // Update mirror fallback local registers mapping caches
+                localStorage.setItem('fintrack_neon_local_backup', JSON.stringify(transactions));
                 
-                firebaseIndicator.innerText = "Connected";
-                firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400";
-                googleSignInBanner.classList.add('hidden');
-                googleUserLabel.innerText = "Cloud Active";
-
-                document.getElementById('syncKeyDisplay').value = activeUserId;
+                isNeonConnected = true;
+                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-[#00e599]"></span> Neon AWS Cloud`;
+                cloudStatusEl.className = "text-[9px] text-[#00e599] font-bold tracking-wider uppercase flex items-center gap-1";
+                neonIndicator.innerText = "Connected";
+                neonIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-[#00e599]/20 text-[#00e599]";
+                dbUserLabel.innerText = "Neon Active";
                 
-                // Hook live updates real-time listeners
-                setupRealtimeSyncEngine();
-                
-            } catch (err) {
-                console.error("Firebase initiation mistake detected: ", err);
-                enableLocalStorageFallback("Initialization parameter or network handshake mismatch.");
-            }
-        }
-
-        // Rule 1 & Rule 2 compliance sync listener setup
-        function setupRealtimeSyncEngine() {
-            if (unbindFirestoreSnapshot) unbindFirestoreSnapshot();
-            if (!isCloudAvailable || !db) return;
-
-            // Strict rule 1 path: Using /artifacts/fintrack/users/{userId}/transactions pattern
-            const targetCollectionRef = collection(db, "artifacts", "fintrack", "users", activeUserId, "transactions");
-            
-            // Rule 2 check: Fetch raw set data securely without compound filters or orderBy parameters
-            unbindFirestoreSnapshot = onSnapshot(targetCollectionRef, (querySnapshot) => {
-                const temporaryStore = [];
-                querySnapshot.forEach((documentReference) => {
-                    temporaryStore.push(documentReference.data());
-                });
-                
-                // Perform filtering and sorting actions entirely inside runtime memory
-                transactions = temporaryStore;
-                localStorage.setItem('fintrack_local_backup_records', JSON.stringify(transactions));
                 renderDashboard();
-            }, (error) => {
-                console.error("Firestore snapshot retrieval problem: ", error);
-                triggerToast("Cloud synchronizing connection failed.");
-            });
+            } catch (err) {
+                console.error("Neon communication error:", err);
+                triggerToast("Neon API database mismatch.");
+                updateStandaloneModeView("Handshake connection failure event.");
+            }
         }
 
-        // Render functions inside main execution pipeline
+        // Functional rendering interface update methods executed internally in memory structures
         function renderDashboard() {
-            const chosenTargetMonth = monthFilterInput.value; // Expected string format: "YYYY-MM"
-            const explicitSearchTerm = searchInput.value.trim().toLowerCase();
-            
-            let filteredSet = transactions;
-            
-            // Perform date analysis parsing in memory
-            if (chosenTargetMonth) {
-                filteredSet = filteredSet.filter(item => item.date && item.date.startsWith(chosenTargetMonth));
+            const pickedMonthContext = monthFilterInput.value; 
+            const trackingSearchParameterStr = searchInput.value.trim().toLowerCase();
+
+            let displayedSetArray = [...transactions];
+
+            if (pickedMonthContext) {
+                displayedSetArray = displayedSetArray.filter(t => t.date && t.date.startsWith(pickedMonthContext));
             }
-            
-            // Perform text tracking search queries in memory
-            if (explicitSearchTerm) {
-                filteredSet = filteredSet.filter(item => 
-                    (item.description && item.description.toLowerCase().includes(explicitSearchTerm)) ||
-                    (item.category && item.category.toLowerCase().includes(explicitSearchTerm))
+
+            if (trackingSearchParameterStr) {
+                displayedSetArray = displayedSetArray.filter(t => 
+                    (t.description && t.description.toLowerCase().includes(trackingSearchParameterStr)) ||
+                    (t.category && t.category.toLowerCase().includes(trackingSearchParameterStr))
                 );
             }
 
-            // Memory execution of sorting (Newest dates show first)
-            filteredSet.sort((first, second) => new Date(second.date) - new Date(first.date));
-            
-            // Calculate status aggregates via in-memory data
-            let calculatedMonthlyIncome = 0;
-            let calculatedMonthlyExpense = 0;
-            let calculatedAllTimeBalance = 0;
+            // In-Memory chronological list sorting processes
+            displayedSetArray.sort((alpha, beta) => new Date(beta.date) - new Date(alpha.date));
 
-            // Loop all-time data metrics safely
-            transactions.forEach(item => {
-                const numericalAmount = parseFloat(item.amount) || 0;
-                if (item.type === 'income') {
-                    calculatedAllTimeBalance += numericalAmount;
-                } else {
-                    calculatedAllTimeBalance -= numericalAmount;
-                }
+            let computedMonthlyIncome = 0;
+            let computedMonthlyExpense = 0;
+            let computedAllTimeBalanceTotal = 0;
+
+            transactions.forEach(row => {
+                const parsedVal = parseFloat(row.amount) || 0;
+                if (row.type === 'income') computedAllTimeBalanceTotal += parsedVal;
+                else computedAllTimeBalanceTotal -= parsedVal;
             });
 
-            // Loop filtered month data metrics safely
-            filteredSet.forEach(item => {
-                const numericalAmount = parseFloat(item.amount) || 0;
-                if (item.type === 'income') {
-                    calculatedMonthlyIncome += numericalAmount;
-                } else {
-                    calculatedMonthlyExpense += numericalAmount;
-                }
+            displayedSetArray.forEach(row => {
+                const parsedVal = parseFloat(row.amount) || 0;
+                if (row.type === 'income') computedMonthlyIncome += parsedVal;
+                else computedMonthlyExpense += parsedVal;
             });
 
-            const computedMonthlyNet = calculatedMonthlyIncome - calculatedMonthlyExpense;
+            const internalNetDiff = computedMonthlyIncome - computedMonthlyExpense;
 
-            // Render view calculations
-            netBalanceEl.innerText = `₹${computedMonthlyNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            totalIncomeEl.innerText = `₹${calculatedMonthlyIncome.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            totalExpensesEl.innerText = `₹${calculatedMonthlyExpense.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            allTimeBalanceEl.innerText = `₹${calculatedAllTimeBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            recordCountEl.innerText = `${filteredSet.length} entries`;
+            netBalanceEl.innerText = `₹${internalNetDiff.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            totalIncomeEl.innerText = `₹${computedMonthlyIncome.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            totalExpensesEl.innerText = `₹${computedMonthlyExpense.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            allTimeBalanceEl.innerText = `₹${computedAllTimeBalanceTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            recordCountEl.innerText = `${displayedSetArray.length} rows`;
 
-            // Clear layout table entries cleanly
             transactionListEl.innerHTML = '';
 
-            if (filteredSet.length === 0) {
+            if (displayedSetArray.length === 0) {
                 transactionListEl.innerHTML = `
                     <div class="text-center py-8 text-stone-600 text-xs flex flex-col items-center justify-center space-y-2">
                         <i data-lucide="folder-open" class="w-6 h-6 stroke-[1.5]"></i>
-                        <span>No transactions recorded inside this view filter parameters.</span>
+                        <span>No records located inside this active filter parameter context.</span>
                     </div>
                 `;
                 lucide.createIcons();
-                updateVisualizationCharts({}, calculatedMonthlyIncome, calculatedMonthlyExpense);
+                updateChartsLayout({}, computedMonthlyIncome, computedMonthlyExpense);
                 return;
             }
 
-            // Track category charts metrics safely
-            const chartCategoriesMap = {};
+            const categoriesChartDistributionMap = {};
 
-            filteredSet.forEach(txn => {
-                const meta = categoryMeta[txn.category] || categoryMeta.other;
-                const txAmount = parseFloat(txn.amount) || 0;
-                
-                if (txn.type === 'expense') {
-                    chartCategoriesMap[meta.text] = (chartCategoriesMap[meta.text] || 0) + txAmount;
+            displayedSetArray.forEach(record => {
+                const visualDataMeta = categoryMeta[record.category] || categoryMeta.other;
+                const valueNum = parseFloat(record.amount) || 0;
+
+                if (record.type === 'expense') {
+                    categoriesChartDistributionMap[visualDataMeta.text] = (categoriesChartDistributionMap[visualDataMeta.text] || 0) + valueNum;
                 }
 
-                const transactionRowItem = document.createElement('div');
-                transactionRowItem.className = "flex items-center justify-between p-3.5 bg-[#0c0807] border border-[#1f1412] hover:border-[#2c1d1a] rounded-xl transition-all group";
-                transactionRowItem.innerHTML = `
+                const visualNodeRow = document.createElement('div');
+                visualNodeRow.className = "flex items-center justify-between p-3.5 bg-[#0c0807] border border-[#1f1412] hover:border-[#2c1d1a] rounded-xl transition-all group";
+                visualNodeRow.innerHTML = `
                     <div class="flex items-center space-x-3 min-w-0">
                         <div class="w-9 h-9 rounded-xl bg-[#140e0c] flex items-center justify-center text-base border border-[#241715]">
-                            ${meta.emoji}
+                            ${visualDataMeta.emoji}
                         </div>
                         <div class="min-w-0">
-                            <p class="text-xs font-bold text-stone-200 truncate pr-2">${txn.description}</p>
-                            <span class="text-[9px] text-stone-500 font-semibold uppercase tracking-wider block mt-0.5">${meta.text} • ${txn.date}</span>
+                            <p class="text-xs font-bold text-stone-200 truncate pr-2">${record.description}</p>
+                            <span class="text-[9px] text-stone-500 font-semibold uppercase tracking-wider block mt-0.5">${visualDataMeta.text} • ${record.date}</span>
                         </div>
                     </div>
                     <div class="flex items-center space-x-2.5 shrink-0">
-                        <span class="text-xs font-bold ${txn.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
-                            ${txn.type === 'income' ? '+' : '-'} ₹${txAmount.toFixed(2)}
+                        <span class="text-xs font-bold ${record.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${record.type === 'income' ? '+' : '-'} ₹${valueNum.toFixed(2)}
                         </span>
-                        <button class="p-1 text-stone-600 hover:text-rose-400 hover:bg-[#241715] rounded-md opacity-0 group-hover:opacity-100 transition-all duration-150" title="Delete record entry">
+                        <button class="p-1 text-stone-600 hover:text-rose-400 hover:bg-[#241715] rounded-md opacity-0 group-hover:opacity-100 transition-all duration-150" title="Delete record entry row">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
                 `;
 
-                // Bind functional record delete event safely without inline script injections
-                transactionRowItem.querySelector('button').addEventListener('click', async () => {
-                    await removeTransactionEntry(txn.id);
+                visualNodeRow.querySelector('button').addEventListener('click', async () => {
+                    await issueDeleteRowTransaction(record.id);
                 });
 
-                transactionListEl.appendChild(transactionRowItem);
+                transactionListEl.appendChild(visualNodeRow);
             });
 
             lucide.createIcons();
-            updateVisualizationCharts(chartCategoriesMap, calculatedMonthlyIncome, calculatedMonthlyExpense);
+            updateChartsLayout(categoriesChartDistributionMap, computedMonthlyIncome, computedMonthlyExpense);
         }
 
         // Render updates to Chart.js interface safely
-        function updateVisualizationCharts(categoryExpensesMap, incomeValue, expenseValue) {
+        function updateChartsLayout(categoryExpensesMap, incomeValue, expenseValue) {
             const graphCanvas = document.getElementById('balanceChart');
             const noChartPlaceholder = document.getElementById('noChartData');
-            
-            const categoryKeys = Object.keys(categoryExpensesMap);
-            
-            if (categoryKeys.length === 0 && incomeValue === 0) {
+            const keyIndicators = Object.keys(categoryExpensesMap);
+
+            if (keyIndicators.length === 0 && incomeValue === 0) {
                 graphCanvas.classList.add('hidden');
                 noChartPlaceholder.classList.remove('hidden');
                 return;
@@ -616,23 +581,18 @@
             graphCanvas.classList.remove('hidden');
             noChartPlaceholder.classList.add('hidden');
 
-            // Collect variables for representation
-            let chartLabels = [];
-            let chartDataValues = [];
-            let chartBackgroundColors = [];
+            let calculatedLabels = [];
+            let renderedValuesData = [];
+            let thematicBackgroundColors = [];
 
-            if (categoryKeys.length > 0) {
-                // Visualize categories breakdown of expenses
-                chartLabels = categoryKeys;
-                chartDataValues = Object.values(categoryExpensesMap);
-                chartBackgroundColors = [
-                    '#f05123', '#34d399', '#60a5fa', '#f472b6', '#38bdf8', '#c084fc', '#94a3b8'
-                ];
+            if (keyIndicators.length > 0) {
+                calculatedLabels = keyIndicators;
+                renderedValuesData = Object.values(categoryExpensesMap);
+                thematicBackgroundColors = ['#00e599', '#34d399', '#60a5fa', '#f472b6', '#38bdf8', '#c084fc', '#94a3b8'];
             } else {
-                // Fallback to simplistic income vs expense tracking visualization
-                chartLabels = ['Income Total', 'Expenses Total'];
-                chartDataValues = [incomeValue, expenseValue];
-                chartBackgroundColors = ['#10b981', '#f43f5e'];
+                calculatedLabels = ['Income Total', 'Expenses Outflow'];
+                renderedValuesData = [incomeValue, expenseValue];
+                thematicBackgroundColors = ['#10b981', '#f43f5e'];
             }
 
             if (analyticsChart) {
@@ -642,10 +602,10 @@
             analyticsChart = new Chart(graphCanvas, {
                 type: 'doughnut',
                 data: {
-                    labels: chartLabels,
+                    labels: calculatedLabels,
                     datasets: [{
-                        data: chartDataValues,
-                        backgroundColor: chartBackgroundColors,
+                        data: renderedValuesData,
+                        backgroundColor: thematicBackgroundColors,
                         borderWidth: 2,
                         borderColor: '#140e0c'
                     }]
@@ -668,139 +628,112 @@
             });
         }
 
-        // Write operation complying with strict safety paths
-        async function commitTransactionSubmission(event) {
+        // Form pipeline submission implementation targeting Neon Postgres queries row writes
+        async function commitFormSubmissionData(event) {
             event.preventDefault();
-            
-            const randomDocUuid = 'tx_' + Date.now() + Math.random().toString(36).substring(2, 7);
-            const structureData = {
-                id: randomDocUuid,
+
+            const uniqueRowId = 'row_' + Date.now() + Math.random().toString(36).substring(2, 6);
+            const itemPayloadData = {
+                id: uniqueRowId,
                 description: descInput.value.trim(),
                 amount: parseFloat(amountInput.value) || 0,
                 type: typeInput.value,
                 category: categoryInput.value,
-                date: dateInput.value,
-                timestamp: Date.now()
+                date: dateInput.value
             };
 
-            if (isCloudAvailable && db) {
+            if (isNeonConnected) {
                 try {
-                    // Safe path pattern alignment
-                    const userDocReference = doc(db, "artifacts", "fintrack", "users", activeUserId, "transactions", randomDocUuid);
-                    await setDoc(userDocReference, structureData);
-                    triggerToast("Entry synced to Cloud successfully.");
+                    const insertStatementSql = `
+                        INSERT INTO fintrack_ledger (id, description, amount, type, category, date, user_space)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7);
+                    `;
+                    await runNeonQueryExchange(insertStatementSql, [
+                        itemPayloadData.id,
+                        itemPayloadData.description,
+                        itemPayloadData.amount,
+                        itemPayloadData.type,
+                        itemPayloadData.category,
+                        itemPayloadData.date,
+                        currentWorkspaceSpaceId
+                    ]);
+                    triggerToast("Row entry appended to Neon Postgres.");
+                    await fetchAndSyncNeonData();
                 } catch (err) {
-                    console.error("Firestore push error encountered: ", err);
-                    triggerToast("Failed syncing entry to Cloud.");
+                    console.error("Neon write error:", err);
+                    triggerToast("SQL Insertion error.");
                 }
             } else {
-                // Synchronize using local backup offline state
-                transactions.push(structureData);
-                localStorage.setItem('fintrack_local_backup_records', JSON.stringify(transactions));
-                triggerToast("Entry recorded locally.");
+                transactions.push(itemPayloadData);
+                localStorage.setItem('fintrack_neon_local_backup', JSON.stringify(transactions));
+                triggerToast("Row stored inside local fallback cache sandbox.");
                 renderDashboard();
             }
 
-            // Reset input values nicely
             descInput.value = '';
             amountInput.value = '';
         }
 
-        // Remove operations path alignment code
-        async function removeTransactionEntry(id) {
-            if (isCloudAvailable && db) {
+        // Delete execution paths alignment
+        async function issueDeleteRowTransaction(id) {
+            if (isNeonConnected) {
                 try {
-                    const documentPointer = doc(db, "artifacts", "fintrack", "users", activeUserId, "transactions", id);
-                    await deleteDoc(documentPointer);
-                    triggerToast("Record removed from Cloud storage.");
+                    const removalQueryString = `DELETE FROM fintrack_ledger WHERE id = $1 AND user_space = $2;`;
+                    await runNeonQueryExchange(removalQueryString, [id, currentWorkspaceSpaceId]);
+                    triggerToast("Row dropped from Neon SQL.");
+                    await fetchAndSyncNeonData();
                 } catch (err) {
-                    console.error("Cloud record erasure failed: ", err);
-                    triggerToast("Cloud removal command rejected.");
+                    console.error("SQL deletion fault:", err);
+                    triggerToast("Failed dropping table row.");
                 }
             } else {
-                transactions = transactions.filter(txn => txn.id !== id);
-                localStorage.setItem('fintrack_local_backup_records', JSON.stringify(transactions));
-                triggerToast("Record removed from offline space.");
+                transactions = transactions.filter(t => t.id !== id);
+                localStorage.setItem('fintrack_neon_local_backup', JSON.stringify(transactions));
+                triggerToast("Row removed from local execution frame cache.");
                 renderDashboard();
             }
         }
 
-        // Global context configuration scopes
-        window.saveFirebaseConfig = function() {
-            const rawTextJsonInput = firebaseConfigInput.value.trim();
-            if (!rawTextJsonInput) {
-                triggerToast("Please provide clean configuration code.");
-                return;
-            }
-            try {
-                JSON.parse(rawTextJsonInput);
-                localStorage.setItem('fintrack_custom_firebase_config', rawTextJsonInput);
-                window.toggleSyncModal(false);
-                triggerToast("Cloud spaces updated. Refreshing components...");
-                setTimeout(() => { window.location.reload(); }, 1000);
-            } catch (e) {
-                triggerToast("Invalid JSON markup syntax. Check formatting parameters.");
-            }
-        };
-
-        window.clearFirebaseConfig = function() {
-            localStorage.removeItem('fintrack_custom_firebase_config');
-            triggerToast("Configurations wiped clean.");
-            setTimeout(() => { window.location.reload(); }, 1000);
-        };
-
         window.copySyncKey = function() {
-            const referenceKeyField = document.getElementById('syncKeyDisplay');
-            referenceKeyField.select();
-            navigator.clipboard.writeText(referenceKeyField.value);
-            triggerToast("Workspace key path targeted to clipboard.");
+            const displayFieldRef = document.getElementById('syncKeyDisplay');
+            displayFieldRef.select();
+            navigator.clipboard.writeText(displayFieldRef.value);
+            triggerToast("Isolation user space string token path assigned to clipboard.");
         };
 
-        window.applySyncKey = function() {
-            const targetedKeyString = document.getElementById('syncKeyInput').value.trim();
-            if (!targetedKeyString) {
-                triggerToast("Please inputs an active Workspace Key parameter first.");
-                return;
-            }
-            localStorage.setItem('fintrack_sync_key', targetedKeyString);
-            activeUserId = targetedKeyString;
-            window.toggleSyncModal(false);
-            triggerToast("Workspace context swapped. Initializing variables...");
-            if (isCloudAvailable) {
-                setupRealtimeSyncEngine();
-            } else {
-                renderDashboard();
-            }
+        window.syncNeon = function() {
+            fetchAndSyncNeonData();
+            triggerToast("SQL query pulled requested row updates.");
         };
 
         window.exportCSV = function() {
             if (transactions.length === 0) {
-                triggerToast("No ledger records parameters ready to be compiled.");
+                triggerToast("No current matrix row elements ready to export.");
                 return;
             }
-            
-            let dataStringRows = ["ID,Description,Amount,Type,Category,Date"];
+
+            let csvCompilationRows = ["Row ID,Description,Amount Value,Transaction Type,Category Mapping,Date Logged"];
             transactions.forEach(t => {
-                dataStringRows.push(`"${t.id}","${t.description.replace(/"/g, '""')}",${t.amount},"${t.type}","${t.category}","${t.date}"`);
+                csvCompilationRows.push(`"${t.id}","${t.description.replace(/"/g, '""')}",${t.amount},"${t.type}","${t.category}","${t.date}"`);
             });
 
-            const totalCsvBufferString = dataStringRows.join("\n");
-            const dataBlobInstance = new Blob([totalCsvBufferString], { type: 'text/csv;charset=utf-8;' });
-            const anchorElement = document.createElement('a');
-            anchorElement.href = URL.createObjectURL(dataBlobInstance);
-            anchorElement.setAttribute('download', `FinTrack_Ledger_Export_${monthFilterInput.value}.csv`);
-            document.body.appendChild(anchorElement);
-            anchorElement.click();
-            document.body.removeChild(anchorElement);
-            triggerToast("Ledger breakdown CSV compilation downloaded.");
+            const bufferPayload = csvCompilationRows.join("\n");
+            const dataBlobElement = new Blob([bufferPayload], { type: 'text/csv;charset=utf-8;' });
+            const anchorTriggerElement = document.createElement('a');
+            anchorTriggerElement.href = URL.createObjectURL(dataBlobElement);
+            anchorTriggerElement.setAttribute('download', `Neon_Ledger_Export_${monthFilterInput.value}.csv`);
+            document.body.appendChild(anchorTriggerElement);
+            anchorTriggerElement.click();
+            document.body.removeChild(anchorTriggerElement);
+            triggerToast("SQL dynamic tables export file downloaded.");
         };
 
         window.generateWhatsAppReport = function() {
-            const chosenTargetMonth = monthFilterInput.value;
-            let currentSet = transactions.filter(item => item.date && item.date.startsWith(chosenTargetMonth));
+            const pickedMonthContext = monthFilterInput.value;
+            let currentSet = transactions.filter(item => item.date && item.date.startsWith(pickedMonthContext));
             
             if (currentSet.length === 0) {
-                triggerToast("No entries logged for this month context selection.");
+                triggerToast("No ledger records parameters mapped inside selection constraints.");
                 return;
             }
 
@@ -819,15 +752,14 @@
 
             const netSavingsDiff = calculatedMonthlyIncome - calculatedMonthlyExpense;
             
-            // Build text payload properly
             const stringMessageText = encodeURIComponent(
-                `📊 *FinTrack Cloud Financial Statement [${chosenTargetMonth}]*\n` +
+                `📊 *FinTrack Neon SQL Financial Statement [${pickedMonthContext}]*\n` +
                 `----------------------------------------\n` +
                 `💰 Total Income Checked: ₹${calculatedMonthlyIncome.toFixed(2)}\n` +
                 `📉 Total Expenses Outflows: ₹${calculatedMonthlyExpense.toFixed(2)}\n` +
                 `⚖️ Monthly Net Savings Position: ₹${netSavingsDiff.toFixed(2)}\n\n` +
                 `*Detailed Ledger Records Register:* ${lineItemReports}\n\n` +
-                `_Generated dynamically via FinTrack Personal Workspace Workspace Sync._`
+                `_Generated dynamically via Neon Serverless Postgres Client Sync Engine._`
             );
 
             const potentialPhoneTarget = document.getElementById('whatsappPhone').value.trim();
@@ -839,7 +771,6 @@
             window.open(finalUrlTarget, '_blank');
         };
 
-        // Embedded Modal controllers replacement for alerts/confirms
         window.toggleSyncModal = function(showFlag) {
             syncModal.classList.toggle('hidden', !showFlag);
         };
@@ -854,33 +785,33 @@
 
         window.executeResetData = async function() {
             confirmModal.classList.add('hidden');
-            if (isCloudAvailable && db) {
+            if (isNeonConnected) {
                 try {
-                    triggerToast("Wiping database entries sequentially...");
-                    for (const row of transactions) {
-                        const directDocPointer = doc(db, "artifacts", "fintrack", "users", activeUserId, "transactions", row.id);
-                        await deleteDoc(directDocPointer);
-                    }
-                    triggerToast("Cloud repository reset performed successfully.");
+                    triggerToast("Issuing SQL DELETE constraint queries drop actions...");
+                    const clearSpaceQueryString = `DELETE FROM fintrack_ledger WHERE user_space = $1;`;
+                    await runNeonQueryExchange(clearSpaceQueryString, [currentWorkspaceSpaceId]);
+                    triggerToast("Neon cloud tables rows dropped cleanly.");
+                    await fetchAndSyncNeonData();
                 } catch (e) {
-                    console.error("Wiping cloud variables issue: ", e);
-                    triggerToast("Partial failure trying to reset ledger keys.");
+                    console.error("SQL deletion exception:", e);
+                    triggerToast("Neon database engine query execution problem.");
                 }
             } else {
                 transactions = [];
-                localStorage.removeItem('fintrack_local_backup_records');
-                triggerToast("Local sandbox environment data emptied cleanly.");
+                localStorage.removeItem('fintrack_neon_local_backup');
+                triggerToast("Local application cache logs cleared cleanly.");
                 renderDashboard();
             }
         };
 
-        // Bind form entry submissions event handlers safely
-        form.addEventListener('submit', commitTransactionSubmission);
+        // UI trigger event bindings maps updates
+        form.addEventListener('submit', commitFormSubmissionData);
         monthFilterInput.addEventListener('change', renderDashboard);
         searchInput.addEventListener('input', renderDashboard);
 
-        // Run application setup
-        runCloudInitialization();
+        // Core dynamic bootstrapping launch sequences
+        document.getElementById('syncKeyDisplay').value = currentWorkspaceSpaceId;
+        fetchAndSyncNeonData();
     </script>
 </body>
 </html>
