@@ -276,8 +276,8 @@
         </footer>
 
         <!-- Device Sync / Google Sync Modal -->
-        <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6">
-            <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+        <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6 overflow-y-auto py-8">
+            <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl my-auto">
                 <div class="flex justify-between items-start">
                     <div class="p-3 bg-[#f05123]/10 text-[#f05123] rounded-2xl">
                         <i data-lucide="refresh-cw" class="w-6 h-6"></i>
@@ -287,19 +287,34 @@
                     </button>
                 </div>
                 <div>
-                    <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Cloud Storage Space</h4>
-                    <p class="text-xs text-stone-400 mt-1">Configure your cloud storage sync space securely with Google Sign-In or a dedicated device sync key.</p>
+                    <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Cloud Storage Settings</h4>
+                    <p class="text-xs text-stone-400 mt-1 font-sans">Set up your database to synchronize transactions between your phone and laptop.</p>
                 </div>
 
-                <!-- Google Auth status in sync modal -->
+                <!-- Step 1: Firebase Configuration Tool -->
+                <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl space-y-2 text-left">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] text-[#f05123] font-bold uppercase tracking-wider">1. Firebase Connection</span>
+                        <span id="firebaseIndicator" class="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-400">Not Connected</span>
+                    </div>
+                    <p class="text-[10px] text-stone-400 leading-relaxed">Paste your Firebase web SDK configuration JSON below. You can create a database for free at <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-400 hover:underline">firebase.google.com</a>.</p>
+                    <textarea id="firebaseConfigInput" rows="3" placeholder='{ "apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..." }' 
+                              class="w-full bg-[#140e0c] border border-[#2c1d1a] p-2 text-[11px] rounded-lg text-stone-300 focus:outline-none focus:border-[#f05123] font-mono"></textarea>
+                    <div class="flex gap-2">
+                        <button onclick="window.saveFirebaseConfig()" class="flex-1 py-1.5 bg-[#f05123] hover:bg-[#d44016] text-[11px] font-bold rounded-lg transition text-white">Save Config</button>
+                        <button onclick="window.clearFirebaseConfig()" class="py-1.5 px-2 bg-[#241715] hover:bg-[#3d2722] text-[11px] text-stone-400 rounded-lg transition" title="Clear configuration">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Google Auth status in sync modal -->
                 <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <div class="p-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg">
                             <i data-lucide="user" class="w-4 h-4"></i>
                         </div>
                         <div class="text-left">
-                            <p class="text-[10px] text-stone-500 font-bold uppercase leading-none">Logged In As</p>
-                            <p id="googleModalUserLabel" class="text-xs text-stone-300 font-semibold mt-1">Anonymous Mode</p>
+                            <p class="text-[10px] text-stone-500 font-bold uppercase leading-none">2. Gmail Workspace</p>
+                            <p id="googleModalUserLabel" class="text-xs text-stone-300 font-semibold mt-1.5">Local Storage Mode</p>
                         </div>
                     </div>
                     <button id="googleModalAuthAction" class="bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-[10px] text-white font-bold py-1.5 px-3 rounded-lg transition-all">
@@ -307,7 +322,7 @@
                     </button>
                 </div>
 
-                <!-- Device Sync Keys -->
+                <!-- Step 3: Device Sync Keys -->
                 <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
                     <label class="block text-[10px] font-bold text-stone-500 uppercase">Your Current Sync Key</label>
                     <div class="flex gap-2">
@@ -395,6 +410,8 @@
         const googleModalAuthAction = document.getElementById('googleModalAuthAction');
         const googleSignInBanner = document.getElementById('googleSignInBanner');
         const googleLoginAction = document.getElementById('googleLoginAction');
+        const firebaseIndicator = document.getElementById('firebaseIndicator');
+        const firebaseConfigInput = document.getElementById('firebaseConfigInput');
         
         const syncModal = document.getElementById('syncModal');
         const confirmModal = document.getElementById('confirmModal');
@@ -428,6 +445,9 @@
             cloudStatusEl.className = "text-[9px] text-amber-400 font-bold tracking-wider uppercase flex items-center gap-1";
             document.getElementById('syncKeyDisplay').value = activeUserId;
             
+            firebaseIndicator.innerText = "Not Connected";
+            firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-400";
+            
             googleSignInBanner.classList.remove('hidden');
             googleUserLabel.classList.add('hidden');
             googleModalUserLabel.innerText = "Local Database Workspace";
@@ -435,16 +455,46 @@
             renderDashboard();
         }
 
+        // Attempt to read custom configuration from storage or environment
+        function getFirebaseConfig() {
+            // First check user's custom config saved locally
+            const customConfig = localStorage.getItem('fintrack_custom_firebase_config');
+            if (customConfig) {
+                try {
+                    return JSON.parse(customConfig);
+                } catch (e) {
+                    console.error("Failed to parse stored Firebase config:", e);
+                }
+            }
+
+            // Fallback to automatic environment config if available
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    return JSON.parse(__firebase_config);
+                } catch (e) {
+                    console.error("Failed to parse default Firebase config:", e);
+                }
+            }
+
+            return null;
+        }
+
         // Initialize user session & Auth setup
         const initAuthAndSync = async () => {
             try {
-                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                const config = getFirebaseConfig();
+                if (!config) {
                     enableLocalStorageMode("Missing credentials config");
                     return;
                 }
 
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
+                // Show active config in settings text area if custom
+                const customConfigRaw = localStorage.getItem('fintrack_custom_firebase_config');
+                if (customConfigRaw) {
+                    firebaseConfigInput.value = customConfigRaw;
+                }
+
+                const app = initializeApp(config);
                 auth = getAuth(app);
                 db = getFirestore(app);
                 appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -465,6 +515,9 @@
                     if (firebaseUser) {
                         isCloudAvailable = true;
                         
+                        firebaseIndicator.innerText = "Connected";
+                        firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400";
+
                         // Check if Google Sign-In is connected or fallback to uid
                         let savedKey = localStorage.getItem('fintrack_sync_key');
                         if (!savedKey) {
@@ -511,7 +564,8 @@
         // Gmail Authentication Integration (Google Pop-up Auth)
         async function handleGoogleSignIn() {
             if (!auth) {
-                triggerToast("Cloud system is not responsive. Try again shortly.");
+                triggerToast("Cloud system is not configured. Please open sync settings to link your Firebase database.");
+                window.toggleSyncModal(true);
                 return;
             }
             const provider = new GoogleAuthProvider();
@@ -529,6 +583,46 @@
                 triggerToast("Authentication cancelled or failed.");
             }
         }
+
+        // Custom Firebase Configuration Save Utility
+        window.saveFirebaseConfig = function() {
+            const rawInput = firebaseConfigInput.value.trim();
+            if (!rawInput) {
+                triggerToast("Please enter a valid Firebase JSON configuration.");
+                return;
+            }
+
+            try {
+                // Validate if it is structurally correct JSON
+                const parsed = JSON.parse(rawInput);
+                if (!parsed.apiKey || !parsed.projectId) {
+                    triggerToast("Invalid Firebase Configuration keys. Ensure 'apiKey' and 'projectId' are present.");
+                    return;
+                }
+
+                localStorage.setItem('fintrack_custom_firebase_config', rawInput);
+                triggerToast("Configuration saved! Connecting to your database...");
+                
+                // Reboot connection engine dynamically
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+
+            } catch (e) {
+                triggerToast("Invalid JSON syntax. Please verify keys and brackets.");
+            }
+        };
+
+        // Clear custom config fallback
+        window.clearFirebaseConfig = function() {
+            localStorage.removeItem('fintrack_custom_firebase_config');
+            firebaseConfigInput.value = '';
+            triggerToast("Configuration cleared. Reverting to local storage mode.");
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        };
 
         // Attach Login triggers
         googleAuthBtn.addEventListener('click', () => window.toggleSyncModal(true));
