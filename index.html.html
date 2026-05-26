@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FinTrack - Monthly Personal Finance</title>
-    <!-- Tailwind CSS for modern aesthetics -->
+    <title>FinTrack - Cloud Personal Finance</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium Serif style matching the festival screenshots -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
                     }
                 }
             }
         }
     </script>
-    <!-- Lucide Icons for clean visuals -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js for beautiful analytical rendering -->
+    <!-- Chart.js for data analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Modern scrollbar styling for list components */
         .custom-scrollbar::-webkit-scrollbar {
             width: 4px;
         }
@@ -30,134 +32,131 @@
             background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #4a3530;
             border-radius: 4px;
         }
-        /* Mobile responsive height fixes */
         .app-container {
             max-width: 480px;
             min-height: 100vh;
         }
-        /* Prevent browser double-tap zoom delay */
         button, select, input {
             touch-action: manipulation;
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased flex justify-center min-h-screen">
+<body class="bg-[#060404] text-stone-100 font-sans antialiased flex justify-center min-h-screen">
 
-    <!-- Compact mobile-first container -->
-    <div class="app-container w-full bg-slate-950 flex flex-col justify-between shadow-2xl relative border-x border-slate-800">
+    <div class="app-container w-full bg-[#0c0807] flex flex-col justify-between shadow-2xl relative border-x border-[#241715]">
         
         <!-- Header -->
-        <header class="bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 px-5 py-4 border-b border-slate-800">
+        <header class="bg-[#120c0a]/95 backdrop-blur-md sticky top-0 z-40 px-5 py-4 border-b border-[#241715]">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
-                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <div class="w-9 h-9 bg-[#f05123] rounded-xl flex items-center justify-center shadow-lg shadow-[#f05123]/20">
                         <i data-lucide="wallet" class="w-5 h-5 text-white"></i>
                     </div>
                     <div>
                         <h1 class="text-base font-bold text-white tracking-tight">FinTrack</h1>
-                        <span class="text-[10px] text-indigo-400 font-semibold tracking-wider uppercase">Vault Storage</span>
+                        <span id="cloudStatus" class="text-[9px] text-amber-500 font-bold tracking-wider uppercase flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> Connecting...
+                        </span>
                     </div>
                 </div>
 
-                <!-- Month Picker (Fully Customizable) -->
-                <div class="relative">
+                <div class="flex items-center gap-2">
+                    <!-- Sync Button -->
+                    <button onclick="window.toggleSyncModal(true)" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#f05123] relative" title="Sync Devices">
+                        <i data-lucide="smartphone-nfc" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Month Picker -->
                     <input type="month" id="monthFilter" 
-                           class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl px-3 py-2 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
+                           class="bg-[#1c1411] hover:bg-[#281d19] text-white text-xs font-semibold rounded-xl px-2.5 py-2 border border-[#2c1d1a] focus:outline-none focus:ring-2 focus:ring-[#f05123] transition-all cursor-pointer">
                 </div>
             </div>
         </header>
 
-        <!-- Main Body Scroll Area -->
+        <!-- Main Workspace -->
         <main class="flex-grow overflow-y-auto px-5 py-6 space-y-6 pb-28">
 
-            <!-- Card: Dynamic Month Balance Dashboard -->
-            <div class="bg-gradient-to-br from-indigo-700 to-slate-900 rounded-2xl p-6 shadow-xl relative overflow-hidden border border-indigo-500/20">
-                <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl"></div>
+            <!-- Card: Balance Display (Styled with warm festival orange gradient look) -->
+            <div class="bg-gradient-to-br from-[#d44016] to-[#1e1311] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#f05123]/30">
+                <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#f05123]/10 rounded-full blur-2xl"></div>
                 
-                <p class="text-xs font-semibold text-indigo-200/80 uppercase tracking-wider">Remaining Balance</p>
-                <h2 id="netBalance" class="text-3xl font-extrabold text-white mt-1.5 tracking-tight">$0.00</h2>
+                <p class="text-xs font-semibold text-orange-200/80 uppercase tracking-wider">Remaining Balance</p>
+                <h2 id="netBalance" class="text-3xl font-extrabold text-white mt-1.5 tracking-tight font-sans">₹0.00</h2>
                 
-                <!-- Quick stats inside active month cards -->
                 <div class="grid grid-cols-2 gap-4 mt-6 pt-5 border-t border-white/10">
                     <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
+                        <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/10">
                             <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] text-indigo-200/70 font-medium">Monthly Income</p>
-                            <p id="totalIncome" class="text-sm font-bold text-emerald-400">$0.00</p>
+                            <p class="text-[11px] text-orange-200/70 font-medium">Monthly Income</p>
+                            <p id="totalIncome" class="text-sm font-bold text-emerald-400">₹0.00</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-rose-500/10 text-rose-400 rounded-xl border border-rose-500/20">
+                        <div class="p-2 bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/10">
                             <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] text-indigo-200/70 font-medium">Total Expenses</p>
-                            <p id="totalExpenses" class="text-sm font-bold text-rose-400">$0.00</p>
+                            <p class="text-[11px] text-orange-200/70 font-medium">Total Expenses</p>
+                            <p id="totalExpenses" class="text-sm font-bold text-rose-400">₹0.00</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Expandable Stats and Insights Button & Graph Block -->
-            <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800 space-y-4">
+            <!-- Graph breakdown (Sahityotsav aesthetic container) -->
+            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-                        <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i> Analytics Breakdown
+                    <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-[#f05123]"></i> Analytics Breakdown
                     </h3>
-                    <span class="text-[11px] text-slate-400">Ratio Analysis</span>
                 </div>
-                <!-- Mini Canvas Chart -->
                 <div class="relative w-full h-44 flex items-center justify-center">
                     <canvas id="balanceChart" class="max-w-full"></canvas>
-                    <div id="noChartData" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-slate-500 text-xs text-center space-y-1">
-                        <i data-lucide="bar-chart-3" class="w-8 h-8 text-slate-600"></i>
-                        <span>No visual analytic data for current selections</span>
+                    <div id="noChartData" class="absolute inset-0 flex flex-col items-center justify-center bg-[#140e0c] text-stone-500 text-xs text-center space-y-1">
+                        <i data-lucide="bar-chart-3" class="w-8 h-8 text-stone-600"></i>
+                        <span>No sync data to visualize yet</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Section: Add Transaction -->
-            <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800 space-y-4">
-                <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-                    <i data-lucide="plus-circle" class="w-4 h-4 text-indigo-400"></i> Quick Input Tool
+            <!-- Transaction quick logger (Cloud inputs styled as premium components) -->
+            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+                <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-[#f05123]"></i> Cloud Input Ledger
                 </h3>
                 
                 <form id="transactionForm" class="space-y-4">
-                    <!-- Title/Desc Input -->
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Description</label>
-                        <input type="text" id="desc" required placeholder="e.g. Salary, Utilities, Diners Club" 
-                               class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-100 placeholder:text-slate-600 transition-all">
+                        <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Description</label>
+                        <input type="text" id="desc" required placeholder="e.g. Work pay, Groceries, Electricity bill" 
+                               class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
                     </div>
                     
-                    <!-- Double block (Amount + Type Select) -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Amount ($)</label>
+                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Amount (₹)</label>
                             <input type="number" id="amount" step="0.01" required placeholder="0.00" 
-                                   class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-100 placeholder:text-slate-600 transition-all">
+                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 placeholder:text-stone-600 transition-all">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Transaction Type</label>
+                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Type</label>
                             <select id="type" 
-                                    class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-100 transition-all cursor-pointer">
-                                <option value="income" class="bg-slate-900">Income (+)</option>
-                                <option value="expense" class="bg-slate-900">Expense (-)</option>
+                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
+                                <option value="income" class="bg-[#140e0c]">Income (+)</option>
+                                <option value="expense" class="bg-[#140e0c]">Expense (-)</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- Category + Date Select -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Category</label>
+                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Category</label>
                             <select id="category" 
-                                    class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-100 transition-all cursor-pointer">
+                                    class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
                                 <option value="salary">Salary / Job</option>
                                 <option value="food">Food & Diners</option>
                                 <option value="utilities">Bills & Power</option>
@@ -168,92 +167,137 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">Record Date</label>
+                            <label class="block text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-1.5">Date</label>
                             <input type="date" id="date" required 
-                                   class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-100 transition-all cursor-pointer">
+                                   class="w-full px-3.5 py-3 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f05123] text-sm text-stone-100 transition-all cursor-pointer">
                         </div>
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" 
-                            class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-semibold py-3.5 rounded-xl transition-all duration-150 text-sm shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Add to ledger
+                            class="w-full bg-[#f05123] hover:bg-[#d44016] active:scale-[0.99] text-white font-semibold py-3.5 rounded-xl transition-all duration-150 text-sm shadow-lg shadow-[#f05123]/10 flex items-center justify-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Transaction
                     </button>
                 </form>
             </div>
 
-            <!-- Ledger Activity History -->
-            <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800 space-y-4">
+            <!-- Ledger lists -->
+            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-                        <i data-lucide="receipt" class="w-4 h-4 text-indigo-400"></i> Monthly Register
+                    <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
+                        <i data-lucide="receipt" class="w-4 h-4 text-[#f05123]"></i> Monthly Register
                     </h3>
                     <div class="flex items-center gap-2">
-                        <!-- Tiny CSV Export tool -->
-                        <button onclick="exportCSV()" class="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all" title="Export Ledger to CSV">
+                        <button onclick="window.exportCSV()" class="p-1.5 text-stone-400 hover:text-white hover:bg-[#1c1411] rounded-lg transition-all" title="Export to CSV">
                             <i data-lucide="download" class="w-4 h-4"></i>
                         </button>
-                        <span id="recordCount" class="text-[10px] bg-slate-800 text-slate-400 font-bold px-2 py-0.5 rounded-full">0 entries</span>
+                        <span id="recordCount" class="text-[10px] bg-[#241715] text-[#f05123] font-bold px-2 py-0.5 rounded-full">0 entries</span>
                     </div>
                 </div>
 
-                <!-- Realtime Filter / Search within records -->
                 <div class="relative">
-                    <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-slate-600"></i>
-                    <input type="text" id="recordSearch" placeholder="Search item description..." 
-                           class="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 text-xs text-slate-100 placeholder:text-slate-600 transition-all">
+                    <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-stone-600"></i>
+                    <input type="text" id="recordSearch" placeholder="Search entries..." 
+                           class="w-full pl-9 pr-4 py-2 bg-[#0c0807] border border-[#2c1d1a] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#f05123] text-xs text-stone-100 placeholder:text-stone-600 transition-all">
                 </div>
 
                 <div id="transactionList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1">
-                    <!-- Javascript inserts records here -->
+                    <!-- Loaded dynamically from Cloud -->
                 </div>
             </div>
 
         </main>
 
-        <!-- Dynamic Action Toasts -->
-        <div id="toastMessage" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-slate-700 opacity-0 transition-opacity duration-300 pointer-events-none z-50">
-            <i data-lucide="info" class="w-4 h-4 text-indigo-400"></i>
-            <span id="toastText">Action successful</span>
+        <!-- Toast Alerts (Matching the sleek amber/orange live notification look) -->
+        <div id="toastMessage" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+            <div class="w-5 h-5 bg-[#f05123]/20 rounded-full flex items-center justify-center">
+                <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#f05123]"></i>
+            </div>
+            <span id="toastText">Updating ledger...</span>
         </div>
 
-        <!-- Footer persistent stats bar -->
-        <footer class="bg-slate-900 border-t border-slate-800 px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-40 backdrop-blur-md">
-            <div class="text-left">
-                <p class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">All-Time Balance</p>
-                <p id="allTimeBalance" class="text-sm font-bold text-indigo-400">$0.00</p>
+        <!-- Footer -->
+        <footer class="bg-[#120c0a] border-t border-[#241715] px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-40 backdrop-blur-md">
+            <div>
+                <p class="text-[9px] text-stone-500 uppercase font-bold tracking-wider">All-Time Balance</p>
+                <p id="allTimeBalance" class="text-sm font-bold text-[#f05123]">₹0.00</p>
             </div>
-            <button onclick="triggerResetConfirmation()" class="text-xs font-semibold text-slate-500 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-slate-800/50">
+            <button onclick="window.triggerResetConfirmation()" class="text-xs font-semibold text-stone-500 hover:text-rose-400 transition-colors flex items-center gap-1.5 p-2 rounded-lg hover:bg-[#1c1411]">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset All Data
             </button>
         </footer>
 
-        <!-- Custom Confirmation Modal for resetting -->
-        <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center px-6">
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+        <!-- Device Sync Modal (Refined warm dark overlay) -->
+        <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6">
+            <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 bg-[#f05123]/10 text-[#f05123] rounded-2xl">
+                        <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                    </div>
+                    <button onclick="window.toggleSyncModal(false)" class="text-stone-500 hover:text-white transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div>
+                    <h4 class="text-base font-bold text-stone-100 font-serif">Sync with another Device</h4>
+                    <p class="text-xs text-stone-400 mt-1">Copy this secret key and enter it on your other device to access the same database.</p>
+                </div>
+
+                <!-- Current Sync Key (Copy Block) -->
+                <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Your Current Sync Key</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="syncKeyDisplay" readonly class="flex-1 bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none" value="...">
+                        <button onclick="window.copySyncKey()" class="px-3 bg-[#f05123] hover:bg-[#d44016] text-xs font-semibold rounded-xl transition text-white">Copy</button>
+                    </div>
+                </div>
+
+                <!-- Connect to another Sync Key -->
+                <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Connect to existing Sync Key</label>
+                    <input type="text" id="syncKeyInput" placeholder="Paste your target key here" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2.5 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-[#f05123]">
+                    <button onclick="window.applySyncKey()" class="w-full mt-2 bg-[#f05123] hover:bg-[#d44016] text-xs font-bold py-2.5 rounded-xl transition text-white">Connect & Pull Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Data Deletion Modal -->
+        <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6">
+            <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
                 <div class="p-3 bg-rose-500/10 text-rose-400 w-fit rounded-2xl">
                     <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h4 class="text-base font-bold text-slate-100">Reset Financial Ledger?</h4>
-                    <p class="text-xs text-slate-400 mt-1">This actions clears all logs stored in your device space forever. This cannot be undone.</p>
+                    <h4 class="text-base font-bold text-stone-100 font-serif">Wipe Financial History?</h4>
+                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all cloud transactions for your current sync key. This action cannot be undone.</p>
                 </div>
                 <div class="flex gap-3 pt-2">
-                    <button onclick="closeConfirmation()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 rounded-xl transition-all">Cancel</button>
-                    <button onclick="executeResetData()" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white rounded-xl transition-all">Wipe Everything</button>
+                    <button onclick="window.closeConfirmation()" class="flex-1 py-2.5 bg-[#1c1411] hover:bg-[#281d19] text-xs font-bold text-stone-300 rounded-xl transition-all">Cancel</button>
+                    <button onclick="window.executeResetData()" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white rounded-xl transition-all">Delete Everything</button>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Interactive script definitions -->
-    <script>
-        // Init ledger data storage locally
-        let transactions = JSON.parse(localStorage.getItem('fintrack_v1_data')) || [];
-        let analyticsChart = null;
+    <!-- Firebase Integration module -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Visual category definitions
+        // Global variables provided by host environment
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Local State
+        let transactions = [];
+        let analyticsChart = null;
+        let activeUserId = null;
+        let unsubscribeList = null;
+
         const categoryMeta = {
             salary: { emoji: '💰', color: 'emerald', text: 'Salary & Jobs' },
             food: { emoji: '🍔', color: 'amber', text: 'Food & Diners' },
@@ -264,7 +308,7 @@
             other: { emoji: '📦', color: 'slate', text: 'Miscellaneous' }
         };
 
-        // DOM target bindings
+        // DOM element cache
         const form = document.getElementById('transactionForm');
         const descInput = document.getElementById('desc');
         const amountInput = document.getElementById('amount');
@@ -280,12 +324,12 @@
         const transactionListEl = document.getElementById('transactionList');
         const allTimeBalanceEl = document.getElementById('allTimeBalance');
         const recordCountEl = document.getElementById('recordCount');
-
-        const toastMessage = document.getElementById('toastMessage');
-        const toastText = document.getElementById('toastText');
+        const cloudStatusEl = document.getElementById('cloudStatus');
+        
+        const syncModal = document.getElementById('syncModal');
         const confirmModal = document.getElementById('confirmModal');
 
-        // Setup current dates for quick startup
+        // Set default filter configuration
         const rightNow = new Date();
         const year = rightNow.getFullYear();
         const month = String(rightNow.getMonth() + 1).padStart(2, '0');
@@ -294,40 +338,82 @@
         dateInput.value = `${year}-${month}-${day}`;
         monthFilterInput.value = `${year}-${month}`;
 
-        // Initialize Application
-        function initApp() {
-            lucide.createIcons();
-            renderDashboard();
-            
-            // Re-render dashboard on month selector change or dynamic filter text inputs
-            monthFilterInput.addEventListener('change', renderDashboard);
-            searchInput.addEventListener('input', renderDashboard);
+        // Initialize user session & Auth setup
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        initAuth();
+
+        onAuthStateChanged(auth, (firebaseUser) => {
+            if (firebaseUser) {
+                // Determine Sync Key (Look in local browser override cache first)
+                let savedKey = localStorage.getItem('fintrack_sync_key');
+                if (!savedKey) {
+                    savedKey = firebaseUser.uid;
+                    localStorage.setItem('fintrack_sync_key', savedKey);
+                }
+                activeUserId = savedKey;
+                document.getElementById('syncKeyDisplay').value = activeUserId;
+                
+                // Set status bar
+                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live Sync Enabled`;
+                cloudStatusEl.className = "text-[9px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1";
+
+                setupLiveDatabaseSync();
+            } else {
+                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> Unauthenticated`;
+                cloudStatusEl.className = "text-[9px] text-rose-500 font-bold tracking-wider uppercase flex items-center gap-1";
+            }
+        });
+
+        // Setup real-time Firestore listener
+        function setupLiveDatabaseSync() {
+            if (!activeUserId) return;
+            if (unsubscribeList) unsubscribeList();
+
+            const transactionsRef = collection(db, 'artifacts', appId, 'users', activeUserId, 'transactions');
+
+            unsubscribeList = onSnapshot(transactionsRef, (snapshot) => {
+                const fetched = [];
+                snapshot.forEach(doc => {
+                    fetched.push({ id: doc.id, ...doc.data() });
+                });
+                transactions = fetched;
+                renderDashboard();
+            }, (error) => {
+                console.error("Firestore sync fail: ", error);
+                triggerToast("Sync error. Checking cloud connection...");
+            });
         }
 
-        // Main Dashboard Computation & UI Renderer
+        // Render computations & metrics
         function renderDashboard() {
-            const chosenMonth = monthFilterInput.value; // Expected form: 'YYYY-MM'
+            const chosenMonth = monthFilterInput.value;
             const searchQuery = searchInput.value.toLowerCase().trim();
 
-            // All-Time metrics calculations
+            // Calculate overall lifetime wealth (Indian Rupee)
             let grandTotal = 0;
             transactions.forEach(t => {
                 if (t.type === 'income') grandTotal += t.amount;
                 else grandTotal -= t.amount;
             });
-            allTimeBalanceEl.innerText = `$${grandTotal.toFixed(2)}`;
+            allTimeBalanceEl.innerText = `₹${grandTotal.toFixed(2)}`;
 
-            // Selected-month database query
+            // Filter data by active month selection
             const targetMonthTransactions = transactions.filter(t => t.date.startsWith(chosenMonth));
             
-            // Filter search matching
+            // Search criteria mapping
             const displayedTransactions = targetMonthTransactions.filter(t => {
-                const descMatches = t.description.toLowerCase().includes(searchQuery);
-                const categoryMatches = (categoryMeta[t.category]?.text || 'other').toLowerCase().includes(searchQuery);
-                return descMatches || categoryMatches;
+                const descMatch = t.description.toLowerCase().includes(searchQuery);
+                const categoryMatch = (categoryMeta[t.category]?.text || 'other').toLowerCase().includes(searchQuery);
+                return descMatch || categoryMatch;
             });
 
-            // Local month financial indicators
             let incomeTotal = 0;
             let expenseTotal = 0;
             const categorySums = {};
@@ -343,65 +429,59 @@
 
             const netMonthBalance = incomeTotal - expenseTotal;
 
-            // Dashboard indicators rewrite
-            netBalanceEl.innerText = `${netMonthBalance < 0 ? '-' : ''}$${Math.abs(netMonthBalance).toFixed(2)}`;
-            if (netMonthBalance < 0) {
-                netBalanceEl.className = "text-3xl font-extrabold text-rose-400 mt-1.5 tracking-tight";
-            } else {
-                netBalanceEl.className = "text-3xl font-extrabold text-white mt-1.5 tracking-tight";
-            }
+            // Render stats with Rupee formatting
+            netBalanceEl.innerText = `${netMonthBalance < 0 ? '-' : ''}₹${Math.abs(netMonthBalance).toFixed(2)}`;
+            netBalanceEl.className = `text-3xl font-extrabold mt-1.5 tracking-tight ${netMonthBalance < 0 ? 'text-rose-400' : 'text-white'}`;
 
-            totalIncomeEl.innerText = `$${incomeTotal.toFixed(2)}`;
-            totalExpensesEl.innerText = `$${expenseTotal.toFixed(2)}`;
+            totalIncomeEl.innerText = `₹${incomeTotal.toFixed(2)}`;
+            totalExpensesEl.innerText = `₹${expenseTotal.toFixed(2)}`;
             recordCountEl.innerText = `${displayedTransactions.length} entries`;
 
-            // Draw transaction list items
+            // Draw lists and visualizations
             renderLedgerList(displayedTransactions);
-
-            // Redraw breakdown graph
             updateAnalyticsChart(incomeTotal, expenseTotal, categorySums);
         }
 
-        // Ledger renderer helper
+        // List builder helper
         function renderLedgerList(records) {
             transactionListEl.innerHTML = '';
 
             if (records.length === 0) {
                 transactionListEl.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-10 text-center space-y-2 text-slate-500">
-                        <i data-lucide="info" class="w-8 h-8 text-slate-700"></i>
-                        <p class="text-xs">No transactions recorded under this selection.</p>
+                    <div class="flex flex-col items-center justify-center py-10 text-center space-y-2 text-stone-500">
+                        <i data-lucide="info" class="w-8 h-8 text-stone-700"></i>
+                        <p class="text-xs">No active transactions logged.</p>
                     </div>
                 `;
                 lucide.createIcons();
                 return;
             }
 
-            // Order logs chronologically (newest at absolute peak)
-            records.sort((x, y) => new Date(y.date) - new Date(x.date) || y.id - x.id);
+            // Order chronology descending
+            records.sort((x, y) => new Date(y.date) - new Date(x.date) || Number(y.id) - Number(x.id));
 
             records.forEach(record => {
                 const isIncome = record.type === 'income';
                 const meta = categoryMeta[record.category] || categoryMeta.other;
                 
                 const itemDiv = document.createElement('div');
-                itemDiv.className = "flex justify-between items-center p-3.5 bg-slate-950 hover:bg-slate-900 border border-slate-900 rounded-xl transition-all duration-150 group";
+                itemDiv.className = "flex justify-between items-center p-3.5 bg-[#0c0807] hover:bg-[#18100e] border border-[#241715] rounded-xl transition-all duration-150 group";
                 
                 itemDiv.innerHTML = `
                     <div class="flex items-center space-x-3 min-w-0">
-                        <div class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 text-sm border border-slate-800">
+                        <div class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#140e0c] text-sm border border-[#2c1d1a]">
                             ${meta.emoji}
                         </div>
                         <div class="min-w-0">
-                            <h4 class="text-xs font-bold text-slate-200 truncate pr-2">${record.description}</h4>
-                            <p class="text-[9px] text-slate-500 font-medium">${formatPrettyDate(record.date)} • ${meta.text}</p>
+                            <h4 class="text-xs font-bold text-stone-200 truncate pr-2">${record.description}</h4>
+                            <p class="text-[9px] text-stone-500 font-medium">${formatPrettyDate(record.date)} • ${meta.text}</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-3 shrink-0">
                         <span class="text-xs font-extrabold ${isIncome ? 'text-emerald-400' : 'text-rose-400'}">
-                            ${isIncome ? '+' : '-'}$${record.amount.toFixed(2)}
+                            ${isIncome ? '+' : '-'}\u20B9${record.amount.toFixed(2)}
                         </span>
-                        <button onclick="removeTransaction(${record.id})" class="text-slate-600 hover:text-rose-500 p-1.5 transition-colors duration-150 rounded-lg hover:bg-slate-900/80">
+                        <button onclick="window.removeTransaction('${record.id}')" class="text-stone-600 hover:text-rose-500 p-1.5 transition-colors duration-150 rounded-lg hover:bg-stone-900/80">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
@@ -412,14 +492,13 @@
             lucide.createIcons();
         }
 
-        // Graphic chart visualization tool
+        // Redraw dynamic analytical graphs with warm festival sunset hues
         function updateAnalyticsChart(income, expense, expensesByCategory) {
             const chartCanvas = document.getElementById('balanceChart');
             const placeholder = document.getElementById('noChartData');
-
-            const hasActiveData = income > 0 || expense > 0;
+            const hasData = income > 0 || expense > 0;
             
-            if (!hasActiveData) {
+            if (!hasData) {
                 chartCanvas.style.display = 'none';
                 placeholder.classList.remove('hidden');
                 return;
@@ -428,36 +507,33 @@
                 placeholder.classList.add('hidden');
             }
 
-            // Gather labels for visual charting (Income vs core categorization metrics)
-            const chartLabels = ['Monthly Income'];
+            const chartLabels = ['Income Stream'];
             const chartData = [income];
-            const chartColors = ['#10b981']; // emerald 500
+            const chartColors = ['#e04a1d']; // Premium festival orange accent
 
             Object.keys(expensesByCategory).forEach(cat => {
-                const value = expensesByCategory[cat];
-                if (value > 0) {
+                const val = expensesByCategory[cat];
+                if (val > 0) {
                     chartLabels.push(categoryMeta[cat]?.text || cat);
-                    chartData.push(value);
+                    chartData.push(val);
                     
-                    // Match Tailwind hex equivalents
+                    // Warm, chocolatey, sunset palette mapping matching the screenshots
                     const colorMap = {
-                        food: '#f59e0b',      // amber
-                        utilities: '#3b82f6', // blue
-                        shopping: '#d946ef',  // fuchsia
-                        transport: '#0ea5e9', // sky
-                        leisure: '#a855f7',   // purple
-                        other: '#64748b'      // slate
+                        food: '#f59e0b',      // gold/amber
+                        utilities: '#ff7a59', // light vermilion
+                        shopping: '#ec4899',  // rose
+                        transport: '#e67300', // deep orange
+                        leisure: '#a855f7',   // warm purple
+                        other: '#85584f'      // copper brown
                     };
-                    chartColors.push(colorMap[cat] || '#ec4899');
+                    chartColors.push(colorMap[cat] || '#b45309');
                 }
             });
 
-            // Prevent stacking memory leaks on continuous redraw
             if (analyticsChart) {
                 analyticsChart.destroy();
             }
 
-            // Draw donut representation
             analyticsChart = new Chart(chartCanvas, {
                 type: 'doughnut',
                 data: {
@@ -466,7 +542,7 @@
                         data: chartData,
                         backgroundColor: chartColors,
                         borderWidth: 2,
-                        borderColor: '#0f172a' // match slate 900
+                        borderColor: '#140e0c'
                     }]
                 },
                 options: {
@@ -477,11 +553,8 @@
                             display: true,
                             position: 'right',
                             labels: {
-                                color: '#94a3b8', // slate-400
-                                font: {
-                                    size: 9,
-                                    family: 'Inter'
-                                },
+                                color: '#a8a29e', // stone-400
+                                font: { size: 9, family: 'Inter' },
                                 boxWidth: 8,
                                 padding: 8
                             }
@@ -489,8 +562,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    const value = context.raw || 0;
-                                    return ` $${value.toFixed(2)}`;
+                                    return ` \u20B9${context.raw.toFixed(2)}`;
                                 }
                             }
                         }
@@ -500,9 +572,10 @@
             });
         }
 
-        // Create transaction execution block
-        form.addEventListener('submit', (event) => {
+        // Submission logic to Cloud Storage
+        form.addEventListener('submit', async (event) => {
             event.preventDefault();
+            if (!activeUserId) return;
 
             const description = descInput.value.trim();
             const amountVal = parseFloat(amountInput.value);
@@ -511,72 +584,104 @@
             const selectedDate = dateInput.value;
 
             if (!description || isNaN(amountVal) || amountVal <= 0) {
-                triggerToast('Please provide valid financial inputs');
+                triggerToast('Input correct parameter formats');
                 return;
             }
 
-            const record = {
-                id: Date.now(),
-                description: description,
-                amount: amountVal,
-                type: selectedType,
-                category: selectedCategory,
-                date: selectedDate
-            };
+            const transId = String(Date.now());
+            const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', transId);
 
-            transactions.push(record);
-            saveToStorage();
-            
-            // Quick UI reset maintaining continuous date
-            descInput.value = '';
-            amountInput.value = '';
-            
-            // Move month filter selector focus dynamically to entry month
-            const entryMonth = selectedDate.substring(0, 7);
-            monthFilterInput.value = entryMonth;
+            try {
+                await setDoc(docRef, {
+                    description,
+                    amount: amountVal,
+                    type: selectedType,
+                    category: selectedCategory,
+                    date: selectedDate,
+                    timestamp: new Date().toISOString()
+                });
 
-            renderDashboard();
-            triggerToast('Transaction logged securely');
+                descInput.value = '';
+                amountInput.value = '';
+
+                monthFilterInput.value = selectedDate.substring(0, 7);
+                triggerToast('Transaction Synced with Cloud');
+            } catch (err) {
+                console.error("Write error: ", err);
+                triggerToast("Sync write error. Try again");
+            }
         });
 
-        // Removal capability
-        window.removeTransaction = function(id) {
-            transactions = transactions.filter(t => t.id !== id);
-            saveToStorage();
-            renderDashboard();
-            triggerToast('Record removed from register');
+        // Removal Handler on cloud instances
+        window.removeTransaction = async function(id) {
+            if (!activeUserId) return;
+            const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(id));
+            try {
+                await deleteDoc(docRef);
+                triggerToast('Removed from database');
+            } catch (err) {
+                triggerToast('Deletion error. Try again');
+            }
         };
 
-        // Export active filtered data directly to CSV format
-        window.exportCSV = function() {
-            const currentSelection = monthFilterInput.value;
-            const filtered = transactions.filter(t => t.date.startsWith(currentSelection));
+        // Sync Modal operations
+        window.toggleSyncModal = function(show) {
+            if (show) syncModal.classList.remove('hidden');
+            else syncModal.classList.add('hidden');
+        };
 
-            if (filtered.length === 0) {
-                triggerToast('No entries recorded to export for this month.');
+        // Copy key helper
+        window.copySyncKey = function() {
+            const keyDisplay = document.getElementById('syncKeyDisplay');
+            keyDisplay.select();
+            keyDisplay.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            triggerToast('Sync Key copied to clipboard!');
+        };
+
+        // Connect new sync key logic
+        window.applySyncKey = function() {
+            const inputVal = document.getElementById('syncKeyInput').value.trim();
+            if (!inputVal || inputVal.length < 10) {
+                triggerToast('Provide a valid Sync Key');
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "ID,Date,Description,Type,Category,Amount\n";
-
-            filtered.forEach(t => {
-                const row = `"${t.id}","${t.date}","${t.description.replace(/"/g, '""')}","${t.type}","${categoryMeta[t.category]?.text || t.category}","${t.amount}"`;
-                csvContent += row + "\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const hiddenDownload = document.createElement("a");
-            hiddenDownload.setAttribute("href", encodedUri);
-            hiddenDownload.setAttribute("download", `FinTrack_Ledger_${currentSelection}.csv`);
-            document.body.appendChild(hiddenDownload);
-            hiddenDownload.click();
-            document.body.removeChild(hiddenDownload);
+            localStorage.setItem('fintrack_sync_key', inputVal);
+            activeUserId = inputVal;
+            document.getElementById('syncKeyDisplay').value = activeUserId;
+            document.getElementById('syncKeyInput').value = '';
             
-            triggerToast('CSV Ledger downloaded');
+            setupLiveDatabaseSync();
+            window.toggleSyncModal(false);
+            triggerToast('Sync pipeline established successfully!');
         };
 
-        // Confirmation Actions for clearing storage completely
+        // Local exports (using Rupee formatting)
+        window.exportCSV = function() {
+            const curMonth = monthFilterInput.value;
+            const filtered = transactions.filter(t => t.date.startsWith(curMonth));
+
+            if (filtered.length === 0) {
+                triggerToast('No entries recorded for this active month.');
+                return;
+            }
+
+            let csvText = "data:text/csv;charset=utf-8,ID,Date,Description,Type,Category,Amount(INR)\n";
+            filtered.forEach(t => {
+                csvText += `"${t.id}","${t.date}","${t.description.replace(/"/g, '""')}","${t.type}","${categoryMeta[t.category]?.text || t.category}","${t.amount}"\n`;
+            });
+
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvText));
+            link.setAttribute("download", `FinTrack_CloudLedger_${curMonth}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            triggerToast('CSV Ledger backup downloaded');
+        };
+
+        // Resets
         window.triggerResetConfirmation = function() {
             confirmModal.classList.remove('hidden');
         };
@@ -585,41 +690,45 @@
             confirmModal.classList.add('hidden');
         };
 
-        window.executeResetData = function() {
-            transactions = [];
-            saveToStorage();
-            renderDashboard();
-            closeConfirmation();
-            triggerToast('Local ledger wiped successfully');
-        };
+        window.executeResetData = async function() {
+            if (!activeUserId) return;
+            triggerToast('Wiping Cloud Repository...');
+            
+            try {
+                const deletePromises = transactions.map(t => {
+                    const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(t.id));
+                    return deleteDoc(docRef);
+                });
 
-        // Storage saving interface
-        function saveToStorage() {
-            localStorage.setItem('fintrack_v1_data', JSON.stringify(transactions));
-        }
+                await Promise.all(deletePromises);
+                closeConfirmation();
+                triggerToast('Cloud repository reset completed.');
+            } catch (err) {
+                triggerToast('Reset failed. Contact developer support.');
+            }
+        };
 
         // Notification utility
         function triggerToast(message) {
+            const toastText = document.getElementById('toastText');
             toastText.innerText = message;
-            toastMessage.className = "fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-slate-700 opacity-100 transition-opacity duration-300 pointer-events-none z-50";
+            
+            toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-100 transition-opacity duration-300 pointer-events-none z-50";
             
             setTimeout(() => {
-                toastMessage.className = "fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-slate-700 opacity-0 transition-opacity duration-300 pointer-events-none z-50";
+                toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50";
             }, 2500);
         }
 
-        // Datetime formatter
         function formatPrettyDate(dateString) {
             const parts = dateString.split('-');
             if (parts.length !== 3) return dateString;
-            const tempDate = new Date(parts[0], parts[1] - 1, parts[2]);
-            return tempDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+            return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
-        // Bootstrap on page load
-        window.onload = function() {
-            initApp();
-        };
+        // Initialize listeners
+        monthFilterInput.addEventListener('change', renderDashboard);
+        searchInput.addEventListener('input', renderDashboard);
     </script>
 </body>
 </html>
