@@ -64,9 +64,10 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <!-- Sync Button -->
-                    <button onclick="window.toggleSyncModal(true)" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#f05123] relative" title="Sync Devices">
-                        <i data-lucide="smartphone-nfc" class="w-5 h-5"></i>
+                    <!-- Google Account Status Button -->
+                    <button id="googleAuthBtn" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#f05123] relative flex items-center gap-1.5 text-xs font-semibold" title="Google Sync Space">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        <span id="googleUserLabel" class="hidden max-w-[80px] truncate">Login</span>
                     </button>
                     <!-- Month Picker -->
                     <input type="month" id="monthFilter" 
@@ -78,7 +79,29 @@
         <!-- Main Workspace -->
         <main class="flex-grow overflow-y-auto px-5 py-6 space-y-6 pb-28">
 
-            <!-- Card: Balance Display (Styled with warm festival orange gradient look) -->
+            <!-- Google Login Banner (Only shown if user is anonymous or logged out) -->
+            <div id="googleSignInBanner" class="bg-[#140e0c] rounded-2xl p-4 border border-amber-500/20 flex flex-col gap-3">
+                <div class="flex items-start gap-3">
+                    <div class="p-2 bg-amber-500/10 text-amber-500 rounded-xl mt-0.5">
+                        <i data-lucide="mail-warning" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-stone-200">Sync with your Google Account</h4>
+                        <p class="text-[10px] text-stone-400 mt-0.5">Protect your data from loss by logging in with your Gmail address.</p>
+                    </div>
+                </div>
+                <button id="googleLoginAction" class="w-full bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+
+            <!-- Card: Balance Display -->
             <div class="bg-gradient-to-br from-[#d44016] to-[#1e1311] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#f05123]/30">
                 <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#f05123]/10 rounded-full blur-2xl"></div>
                 
@@ -107,7 +130,7 @@
                 </div>
             </div>
 
-            <!-- Graph breakdown (Sahityotsav aesthetic container) -->
+            <!-- Graph breakdown -->
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
@@ -123,7 +146,7 @@
                 </div>
             </div>
 
-            <!-- Transaction quick logger (Cloud inputs styled as premium components) -->
+            <!-- Transaction quick logger -->
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
                     <i data-lucide="plus-circle" class="w-4 h-4 text-[#f05123]"></i> Cloud Input Ledger
@@ -205,9 +228,35 @@
                 </div>
             </div>
 
+            <!-- WhatsApp Monthly Report Generator Component (Moved to the end of main layout) -->
+            <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
+                <div class="flex items-start gap-3">
+                    <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
+                        <i data-lucide="share-2" class="w-5 h-5"></i>
+                    </div>
+                    <div class="space-y-0.5">
+                        <h4 class="text-sm font-bold text-stone-200 font-serif">Get Report on WhatsApp</h4>
+                        <p class="text-[11px] text-stone-400">Send an organized breakdown of this month's budget register directly to your WhatsApp storage chat or family logs.</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-[9px] font-bold text-stone-500 uppercase tracking-wider mb-1">Send to Phone (Optional)</label>
+                        <input type="tel" id="whatsappPhone" placeholder="e.g. 919876543210 (Country code first)" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <button onclick="window.generateWhatsAppReport()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.456L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.437.002 9.861-4.416 9.863-9.852.001-2.632-1.021-5.105-2.88-6.967C16.38 1.926 13.912.904 11.284.903c-5.44 0-9.863 4.418-9.865 9.854-.001 1.554.434 3.074 1.258 4.409l-.999 3.647 3.738-.979z"/>
+                        </svg>
+                        Export Monthly Report to WhatsApp
+                    </button>
+                </div>
+            </div>
+
         </main>
 
-        <!-- Toast Alerts (Matching the sleek amber/orange live notification look) -->
+        <!-- Toast Alerts -->
         <div id="toastMessage" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50">
             <div class="w-5 h-5 bg-[#f05123]/20 rounded-full flex items-center justify-center">
                 <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#f05123]"></i>
@@ -226,7 +275,7 @@
             </button>
         </footer>
 
-        <!-- Device Sync Modal (Refined warm dark overlay) -->
+        <!-- Device Sync / Google Sync Modal -->
         <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6">
             <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
                 <div class="flex justify-between items-start">
@@ -238,12 +287,28 @@
                     </button>
                 </div>
                 <div>
-                    <h4 class="text-base font-bold text-stone-100 font-serif">Sync with another Device</h4>
-                    <p class="text-xs text-stone-400 mt-1">Copy this secret key and enter it on your other device to access the same database.</p>
+                    <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Cloud Storage Space</h4>
+                    <p class="text-xs text-stone-400 mt-1">Configure your cloud storage sync space securely with Google Sign-In or a dedicated device sync key.</p>
                 </div>
 
-                <!-- Current Sync Key (Copy Block) -->
-                <div class="space-y-1.5">
+                <!-- Google Auth status in sync modal -->
+                <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="p-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-[10px] text-stone-500 font-bold uppercase leading-none">Logged In As</p>
+                            <p id="googleModalUserLabel" class="text-xs text-stone-300 font-semibold mt-1">Anonymous Mode</p>
+                        </div>
+                    </div>
+                    <button id="googleModalAuthAction" class="bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-[10px] text-white font-bold py-1.5 px-3 rounded-lg transition-all">
+                        Link Gmail
+                    </button>
+                </div>
+
+                <!-- Device Sync Keys -->
+                <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
                     <label class="block text-[10px] font-bold text-stone-500 uppercase">Your Current Sync Key</label>
                     <div class="flex gap-2">
                         <input type="text" id="syncKeyDisplay" readonly class="flex-1 bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none" value="...">
@@ -253,9 +318,9 @@
 
                 <!-- Connect to another Sync Key -->
                 <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
-                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Connect to existing Sync Key</label>
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Connect with Sync Key</label>
                     <input type="text" id="syncKeyInput" placeholder="Paste your target key here" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2.5 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-[#f05123]">
-                    <button onclick="window.applySyncKey()" class="w-full mt-2 bg-[#f05123] hover:bg-[#d44016] text-xs font-bold py-2.5 rounded-xl transition text-white">Connect & Pull Data</button>
+                    <button onclick="window.applySyncKey()" class="w-full mt-2 bg-[#f05123] hover:bg-[#d44016] text-xs font-bold py-2.5 rounded-xl transition text-white">Connect & Sync</button>
                 </div>
             </div>
         </div>
@@ -268,7 +333,7 @@
                 </div>
                 <div>
                     <h4 class="text-base font-bold text-stone-100 font-serif">Wipe Financial History?</h4>
-                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all cloud transactions for your current sync key. This action cannot be undone.</p>
+                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all cloud transactions for your current sync space. This action cannot be undone.</p>
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button onclick="window.closeConfirmation()" class="flex-1 py-2.5 bg-[#1c1411] hover:bg-[#281d19] text-xs font-bold text-stone-300 rounded-xl transition-all">Cancel</button>
@@ -282,20 +347,19 @@
     <!-- Firebase Integration module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables provided by host environment
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Global variables provided by host environment or safety fallbacks
+        let db = null;
+        let auth = null;
+        let appId = 'default-app-id';
+        let isCloudAvailable = false;
 
-        // Local State
-        let transactions = [];
+        // Local State fallback
+        let transactions = JSON.parse(localStorage.getItem('fintrack_local_backup_data')) || [];
         let analyticsChart = null;
-        let activeUserId = null;
+        let activeUserId = localStorage.getItem('fintrack_sync_key') || 'local_user_key';
         let unsubscribeList = null;
 
         const categoryMeta = {
@@ -325,6 +389,12 @@
         const allTimeBalanceEl = document.getElementById('allTimeBalance');
         const recordCountEl = document.getElementById('recordCount');
         const cloudStatusEl = document.getElementById('cloudStatus');
+        const googleAuthBtn = document.getElementById('googleAuthBtn');
+        const googleUserLabel = document.getElementById('googleUserLabel');
+        const googleModalUserLabel = document.getElementById('googleModalUserLabel');
+        const googleModalAuthAction = document.getElementById('googleModalAuthAction');
+        const googleSignInBanner = document.getElementById('googleSignInBanner');
+        const googleLoginAction = document.getElementById('googleLoginAction');
         
         const syncModal = document.getElementById('syncModal');
         const confirmModal = document.getElementById('confirmModal');
@@ -338,42 +408,155 @@
         dateInput.value = `${year}-${month}-${day}`;
         monthFilterInput.value = `${year}-${month}`;
 
+        // Toast utility
+        function triggerToast(message) {
+            const toastText = document.getElementById('toastText');
+            toastText.innerText = message;
+            
+            toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-100 transition-opacity duration-300 pointer-events-none z-50";
+            
+            setTimeout(() => {
+                toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50";
+            }, 2500);
+        }
+
+        // Setup LocalStorage Offline Fallback Mode
+        function enableLocalStorageMode(reason) {
+            isCloudAvailable = false;
+            console.log("FinTrack: Operating in Local Storage Mode -", reason);
+            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Local Storage Mode`;
+            cloudStatusEl.className = "text-[9px] text-amber-400 font-bold tracking-wider uppercase flex items-center gap-1";
+            document.getElementById('syncKeyDisplay').value = activeUserId;
+            
+            googleSignInBanner.classList.remove('hidden');
+            googleUserLabel.classList.add('hidden');
+            googleModalUserLabel.innerText = "Local Database Workspace";
+            googleModalAuthAction.innerText = "Link Gmail";
+            renderDashboard();
+        }
+
         // Initialize user session & Auth setup
-        const initAuth = async () => {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
+        const initAuthAndSync = async () => {
+            try {
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                    enableLocalStorageMode("Missing credentials config");
+                    return;
+                }
+
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                // Await auth first (Rule 3 priority)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    // Try to restore previous user context or sign in anonymously
+                    const restoredKey = localStorage.getItem('fintrack_sync_key');
+                    if (!restoredKey) {
+                        await signInAnonymously(auth);
+                    }
+                }
+
+                // Listen to active auth changes
+                onAuthStateChanged(auth, (firebaseUser) => {
+                    if (firebaseUser) {
+                        isCloudAvailable = true;
+                        
+                        // Check if Google Sign-In is connected or fallback to uid
+                        let savedKey = localStorage.getItem('fintrack_sync_key');
+                        if (!savedKey) {
+                            savedKey = firebaseUser.uid;
+                            localStorage.setItem('fintrack_sync_key', savedKey);
+                        }
+                        activeUserId = savedKey;
+                        document.getElementById('syncKeyDisplay').value = activeUserId;
+
+                        // Check Google user identity specifics
+                        if (!firebaseUser.isAnonymous && firebaseUser.email) {
+                            googleSignInBanner.classList.add('hidden');
+                            googleUserLabel.innerText = firebaseUser.displayName || firebaseUser.email;
+                            googleUserLabel.classList.remove('hidden');
+                            googleModalUserLabel.innerText = firebaseUser.email;
+                            googleModalAuthAction.innerText = "Log out";
+                            
+                            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Signed-In (${firebaseUser.email.split('@')[0]})`;
+                        } else {
+                            googleSignInBanner.classList.remove('hidden');
+                            googleUserLabel.classList.add('hidden');
+                            googleModalUserLabel.innerText = "Anonymous Cloud Workspace";
+                            googleModalAuthAction.innerText = "Link Gmail";
+
+                            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span> Anonymous Sync`;
+                        }
+                        
+                        cloudStatusEl.className = "text-[9px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1";
+                        setupLiveDatabaseSync();
+                    } else {
+                        enableLocalStorageMode("Disconnected from Cloud");
+                    }
+                });
+
+            } catch (err) {
+                console.warn("Firebase startup failed:", err);
+                enableLocalStorageMode("Network Offline");
             }
         };
 
-        initAuth();
+        // Initialize connection bootstrap
+        initAuthAndSync();
 
-        onAuthStateChanged(auth, (firebaseUser) => {
-            if (firebaseUser) {
-                // Determine Sync Key (Look in local browser override cache first)
-                let savedKey = localStorage.getItem('fintrack_sync_key');
-                if (!savedKey) {
-                    savedKey = firebaseUser.uid;
-                    localStorage.setItem('fintrack_sync_key', savedKey);
-                }
-                activeUserId = savedKey;
-                document.getElementById('syncKeyDisplay').value = activeUserId;
+        // Gmail Authentication Integration (Google Pop-up Auth)
+        async function handleGoogleSignIn() {
+            if (!auth) {
+                triggerToast("Cloud system is not responsive. Try again shortly.");
+                return;
+            }
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
                 
-                // Set status bar
-                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live Sync Enabled`;
-                cloudStatusEl.className = "text-[9px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1";
+                // Automatically switch sync scope to user's secure Gmail ID
+                localStorage.setItem('fintrack_sync_key', user.uid);
+                activeUserId = user.uid;
+                
+                triggerToast(`Signed in successfully as ${user.email}`);
+            } catch (err) {
+                console.error("Google login failed: ", err);
+                triggerToast("Authentication cancelled or failed.");
+            }
+        }
 
-                setupLiveDatabaseSync();
+        // Attach Login triggers
+        googleAuthBtn.addEventListener('click', () => window.toggleSyncModal(true));
+        googleLoginAction.addEventListener('click', handleGoogleSignIn);
+        googleModalAuthAction.addEventListener('click', async () => {
+            if (googleModalAuthAction.innerText === "Log out") {
+                try {
+                    await signOut(auth);
+                    localStorage.removeItem('fintrack_sync_key');
+                    localStorage.removeItem('fintrack_local_backup_data');
+                    activeUserId = 'local_user_key';
+                    
+                    // Force reconnect anonymously for fresh database profile
+                    await signInAnonymously(auth);
+                    triggerToast("Logged out from Google Workspace.");
+                    window.toggleSyncModal(false);
+                } catch (err) {
+                    triggerToast("Error signing out.");
+                }
             } else {
-                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> Unauthenticated`;
-                cloudStatusEl.className = "text-[9px] text-rose-500 font-bold tracking-wider uppercase flex items-center gap-1";
+                window.toggleSyncModal(false);
+                await handleGoogleSignIn();
             }
         });
 
         // Setup real-time Firestore listener
         function setupLiveDatabaseSync() {
-            if (!activeUserId) return;
+            if (!activeUserId || !isCloudAvailable) return;
             if (unsubscribeList) unsubscribeList();
 
             const transactionsRef = collection(db, 'artifacts', appId, 'users', activeUserId, 'transactions');
@@ -384,10 +567,12 @@
                     fetched.push({ id: doc.id, ...doc.data() });
                 });
                 transactions = fetched;
+                // Back up data to LocalStorage so it renders instantly next time before connection loads
+                localStorage.setItem('fintrack_local_backup_data', JSON.stringify(transactions));
                 renderDashboard();
             }, (error) => {
                 console.error("Firestore sync fail: ", error);
-                triggerToast("Sync error. Checking cloud connection...");
+                enableLocalStorageMode("Connection error fallback");
             });
         }
 
@@ -405,11 +590,11 @@
             allTimeBalanceEl.innerText = `₹${grandTotal.toFixed(2)}`;
 
             // Filter data by active month selection
-            const targetMonthTransactions = transactions.filter(t => t.date.startsWith(chosenMonth));
+            const targetMonthTransactions = transactions.filter(t => t.date && t.date.startsWith(chosenMonth));
             
             // Search criteria mapping
             const displayedTransactions = targetMonthTransactions.filter(t => {
-                const descMatch = t.description.toLowerCase().includes(searchQuery);
+                const descMatch = t.description ? t.description.toLowerCase().includes(searchQuery) : false;
                 const categoryMatch = (categoryMeta[t.category]?.text || 'other').toLowerCase().includes(searchQuery);
                 return descMatch || categoryMatch;
             });
@@ -572,10 +757,9 @@
             });
         }
 
-        // Submission logic to Cloud Storage
+        // Submission logic to Cloud Storage or LocalStorage fallback
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
-            if (!activeUserId) return;
 
             const description = descInput.value.trim();
             const amountVal = parseFloat(amountInput.value);
@@ -589,39 +773,150 @@
             }
 
             const transId = String(Date.now());
-            const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', transId);
+            const newTransaction = {
+                description,
+                amount: amountVal,
+                type: selectedType,
+                category: selectedCategory,
+                date: selectedDate,
+                timestamp: new Date().toISOString()
+            };
 
-            try {
-                await setDoc(docRef, {
-                    description,
-                    amount: amountVal,
-                    type: selectedType,
-                    category: selectedCategory,
-                    date: selectedDate,
-                    timestamp: new Date().toISOString()
-                });
-
-                descInput.value = '';
-                amountInput.value = '';
-
-                monthFilterInput.value = selectedDate.substring(0, 7);
-                triggerToast('Transaction Synced with Cloud');
-            } catch (err) {
-                console.error("Write error: ", err);
-                triggerToast("Sync write error. Try again");
+            if (isCloudAvailable && db) {
+                const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', transId);
+                try {
+                    await setDoc(docRef, newTransaction);
+                    triggerToast('Transaction Synced with Cloud');
+                } catch (err) {
+                    console.error("Write error:", err);
+                    triggerToast("Sync write error. Saving locally...");
+                    saveLocally(transId, newTransaction);
+                }
+            } else {
+                saveLocally(transId, newTransaction);
             }
+
+            descInput.value = '';
+            amountInput.value = '';
+            monthFilterInput.value = selectedDate.substring(0, 7);
         });
 
-        // Removal Handler on cloud instances
+        // Save locally utility helper
+        function saveLocally(transId, newTransaction) {
+            newTransaction.id = transId;
+            transactions.push(newTransaction);
+            localStorage.setItem('fintrack_local_backup_data', JSON.stringify(transactions));
+            renderDashboard();
+            triggerToast('Saved securely to local workspace');
+        }
+
+        // Removal Handler
         window.removeTransaction = async function(id) {
-            if (!activeUserId) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(id));
-            try {
-                await deleteDoc(docRef);
-                triggerToast('Removed from database');
-            } catch (err) {
-                triggerToast('Deletion error. Try again');
+            if (isCloudAvailable && db) {
+                const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(id));
+                try {
+                    await deleteDoc(docRef);
+                    triggerToast('Removed from database');
+                } catch (err) {
+                    removeTransactionLocally(id);
+                }
+            } else {
+                removeTransactionLocally(id);
             }
+        };
+
+        function removeTransactionLocally(id) {
+            transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
+            localStorage.setItem('fintrack_local_backup_data', JSON.stringify(transactions));
+            renderDashboard();
+            triggerToast('Removed from local workspace');
+        }
+
+        // WhatsApp Monthly Report Generation Action
+        window.generateWhatsAppReport = function() {
+            const currentSelectedMonth = monthFilterInput.value;
+            const monthFilteredTransactions = transactions.filter(t => t.date && t.date.startsWith(currentSelectedMonth));
+
+            if (monthFilteredTransactions.length === 0) {
+                triggerToast("No transaction records logged to export for this month.");
+                return;
+            }
+
+            // Calculate Month Stats
+            let incomeTotal = 0;
+            let expenseTotal = 0;
+            const expenseCategoryBreakdown = {};
+
+            monthFilteredTransactions.forEach(t => {
+                if (t.type === 'income') {
+                    incomeTotal += t.amount;
+                } else {
+                    expenseTotal += t.amount;
+                    expenseCategoryBreakdown[t.category] = (expenseCategoryBreakdown[t.category] || 0) + t.amount;
+                }
+            });
+
+            const netBalanceValue = incomeTotal - expenseTotal;
+
+            // Date processing
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const [y, m] = currentSelectedMonth.split('-');
+            const prettyMonthName = `${monthNames[parseInt(m) - 1]} ${y}`;
+
+            // Build Beautiful WhatsApp Message Body with Unicode Layout
+            let reportMsg = `📊 *FinTrack Monthly Summary Report*\n`;
+            reportMsg += `📅 *Period:* ${prettyMonthName}\n`;
+            reportMsg += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            reportMsg += `💰 *Monthly Income:* ₹${incomeTotal.toFixed(2)}\n`;
+            reportMsg += `💸 *Total Expenses:* ₹${expenseTotal.toFixed(2)}\n`;
+            reportMsg += `⚖️ *Net Savings/Balance:* *₹${netBalanceValue.toFixed(2)}*\n\n`;
+            
+            if (Object.keys(expenseCategoryBreakdown).length > 0) {
+                reportMsg += `🔺 *Expense Breakdown by Category:*\n`;
+                Object.keys(expenseCategoryBreakdown).forEach(cat => {
+                    const emoji = categoryMeta[cat]?.emoji || '📦';
+                    const title = categoryMeta[cat]?.text || cat;
+                    const amount = expenseCategoryBreakdown[cat];
+                    const percentage = ((amount / expenseTotal) * 100).toFixed(0);
+                    reportMsg += `${emoji} *${title}:* ₹${amount.toFixed(2)} (${percentage}%)\n`;
+                });
+                reportMsg += `\n`;
+            }
+
+            reportMsg += `📝 *Recent Logs for ${prettyMonthName}:*\n`;
+            // Take up to top 5 recent entries to keep WhatsApp text clean and readable
+            const sampleLogs = [...monthFilteredTransactions]
+                .sort((a,b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+
+            sampleLogs.forEach(log => {
+                const typeIndicator = log.type === 'income' ? '🟢' : '🔴';
+                reportMsg += `${typeIndicator} ${log.date.substring(8, 10)} ${log.description}: ₹${log.amount.toFixed(2)}\n`;
+            });
+
+            if (monthFilteredTransactions.length > 5) {
+                reportMsg += `_...and ${monthFilteredTransactions.length - 5} other ledger entries._\n`;
+            }
+
+            reportMsg += `\n🔗 _Securely stored on Cloud Sync with Gmail._`;
+
+            // WhatsApp link encoding
+            const phoneNumberValue = document.getElementById('whatsappPhone').value.trim().replace(/[^0-9]/g, '');
+            let whatsappApiUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(reportMsg);
+            
+            if (phoneNumberValue.length >= 10) {
+                whatsappApiUrl = `https://api.whatsapp.com/send?phone=${phoneNumberValue}&text=` + encodeURIComponent(reportMsg);
+            }
+
+            // Execute secure click trigger
+            const triggerLink = document.createElement('a');
+            triggerLink.setAttribute('href', whatsappApiUrl);
+            triggerLink.setAttribute('target', '_blank');
+            document.body.appendChild(triggerLink);
+            triggerLink.click();
+            document.body.removeChild(triggerLink);
+
+            triggerToast("WhatsApp message prepared!");
         };
 
         // Sync Modal operations
@@ -652,15 +947,19 @@
             document.getElementById('syncKeyDisplay').value = activeUserId;
             document.getElementById('syncKeyInput').value = '';
             
-            setupLiveDatabaseSync();
+            if (isCloudAvailable) {
+                setupLiveDatabaseSync();
+            } else {
+                renderDashboard();
+            }
             window.toggleSyncModal(false);
             triggerToast('Sync pipeline established successfully!');
         };
 
-        // Local exports (using Rupee formatting)
+        // Local exports
         window.exportCSV = function() {
             const curMonth = monthFilterInput.value;
-            const filtered = transactions.filter(t => t.date.startsWith(curMonth));
+            const filtered = transactions.filter(t => t.date && t.date.startsWith(curMonth));
 
             if (filtered.length === 0) {
                 triggerToast('No entries recorded for this active month.');
@@ -669,7 +968,8 @@
 
             let csvText = "data:text/csv;charset=utf-8,ID,Date,Description,Type,Category,Amount(INR)\n";
             filtered.forEach(t => {
-                csvText += `"${t.id}","${t.date}","${t.description.replace(/"/g, '""')}","${t.type}","${categoryMeta[t.category]?.text || t.category}","${t.amount}"\n`;
+                const descSafe = t.description ? t.description.replace(/"/g, '""') : '';
+                csvText += `"${t.id}","${t.date}","${descSafe}","${t.type}","${categoryMeta[t.category]?.text || t.category}","${t.amount}"\n`;
             });
 
             const link = document.createElement("a");
@@ -691,36 +991,29 @@
         };
 
         window.executeResetData = async function() {
-            if (!activeUserId) return;
-            triggerToast('Wiping Cloud Repository...');
+            triggerToast('Wiping Financial Ledger...');
             
-            try {
-                const deletePromises = transactions.map(t => {
-                    const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(t.id));
-                    return deleteDoc(docRef);
-                });
-
-                await Promise.all(deletePromises);
-                closeConfirmation();
-                triggerToast('Cloud repository reset completed.');
-            } catch (err) {
-                triggerToast('Reset failed. Contact developer support.');
+            if (isCloudAvailable && db) {
+                try {
+                    const deletePromises = transactions.map(t => {
+                        const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(t.id));
+                        return deleteDoc(docRef);
+                    });
+                    await Promise.all(deletePromises);
+                } catch (err) {
+                    console.warn("Could not wipe cloud completely:", err);
+                }
             }
+            
+            transactions = [];
+            localStorage.setItem('fintrack_local_backup_data', JSON.stringify([]));
+            renderDashboard();
+            closeConfirmation();
+            triggerToast('Wipe completed successfully.');
         };
 
-        // Notification utility
-        function triggerToast(message) {
-            const toastText = document.getElementById('toastText');
-            toastText.innerText = message;
-            
-            toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-100 transition-opacity duration-300 pointer-events-none z-50";
-            
-            setTimeout(() => {
-                toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50";
-            }, 2500);
-        }
-
         function formatPrettyDate(dateString) {
+            if (!dateString) return '';
             const parts = dateString.split('-');
             if (parts.length !== 3) return dateString;
             return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
