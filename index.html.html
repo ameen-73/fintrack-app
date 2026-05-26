@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FinTrack - Cloud Personal Finance</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for premium Serif style matching the festival screenshots -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -20,9 +18,7 @@
             }
         }
     </script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js for data analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -48,10 +44,9 @@
 
     <div class="app-container w-full bg-[#0c0807] flex flex-col justify-between shadow-2xl relative border-x border-[#241715]">
         
-        <!-- Header -->
         <header class="bg-[#120c0a]/95 backdrop-blur-md sticky top-0 z-40 px-5 py-4 border-b border-[#241715]">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2.5">
+                <div class="flex items-center space-x-2.5" onclick="window.toggleSyncModal(true)" class="cursor-pointer">
                     <div class="w-9 h-9 bg-[#f05123] rounded-xl flex items-center justify-center shadow-lg shadow-[#f05123]/20">
                         <i data-lucide="wallet" class="w-5 h-5 text-white"></i>
                     </div>
@@ -64,44 +59,34 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <!-- Google Account Status Button -->
-                    <button id="googleAuthBtn" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#f05123] relative flex items-center gap-1.5 text-xs font-semibold" title="Google Sync Space">
-                        <i data-lucide="log-in" class="w-4 h-4"></i>
-                        <span id="googleUserLabel" class="hidden max-w-[80px] truncate">Login</span>
+                    <button id="googleAuthBtn" onclick="window.toggleSyncModal(true)" class="p-2 hover:bg-[#1c1411] rounded-xl transition text-stone-300 hover:text-[#f05123] relative flex items-center gap-1.5 text-xs font-semibold" title="Cloud Database Settings">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                        <span id="googleUserLabel" class="max-w-[80px] truncate">Setup Cloud</span>
                     </button>
-                    <!-- Month Picker -->
                     <input type="month" id="monthFilter" 
                            class="bg-[#1c1411] hover:bg-[#281d19] text-white text-xs font-semibold rounded-xl px-2.5 py-2 border border-[#2c1d1a] focus:outline-none focus:ring-2 focus:ring-[#f05123] transition-all cursor-pointer">
                 </div>
             </div>
         </header>
 
-        <!-- Main Workspace -->
         <main class="flex-grow overflow-y-auto px-5 py-6 space-y-6 pb-28">
 
-            <!-- Google Login Banner (Only shown if user is anonymous or logged out) -->
             <div id="googleSignInBanner" class="bg-[#140e0c] rounded-2xl p-4 border border-amber-500/20 flex flex-col gap-3">
                 <div class="flex items-start gap-3">
                     <div class="p-2 bg-amber-500/10 text-amber-500 rounded-xl mt-0.5">
-                        <i data-lucide="mail-warning" class="w-4 h-4"></i>
+                        <i data-lucide="cloud-lightning" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-stone-200">Sync with your Google Account</h4>
-                        <p class="text-[10px] text-stone-400 mt-0.5">Protect your data from loss by logging in with your Gmail address.</p>
+                        <h4 class="text-xs font-bold text-stone-200">Real-Time Cloud Synchronization Available</h4>
+                        <p class="text-[10px] text-stone-400 mt-0.5">Link a free Firebase Web Database config parameter to access your logs from multiple laptops or smartphones instantly.</p>
                     </div>
                 </div>
-                <button id="googleLoginAction" class="w-full bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-2 transition-all">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
-                    </svg>
-                    Sign in with Google
+                <button onclick="window.toggleSyncModal(true)" class="w-full bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-[#f05123]"></i>
+                    Configure Firebase Cloud Space
                 </button>
             </div>
 
-            <!-- Card: Balance Display -->
             <div class="bg-gradient-to-br from-[#d44016] to-[#1e1311] rounded-2xl p-6 shadow-xl relative overflow-hidden border border-[#f05123]/30">
                 <div class="absolute right-0 top-0 -mr-12 -mt-12 w-40 h-40 bg-[#f05123]/10 rounded-full blur-2xl"></div>
                 
@@ -130,7 +115,6 @@
                 </div>
             </div>
 
-            <!-- Graph breakdown -->
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
@@ -138,15 +122,14 @@
                     </h3>
                 </div>
                 <div class="relative w-full h-44 flex items-center justify-center">
-                    <canvas id="balanceChart" class="max-w-full"></canvas>
+                    <canvas id="balanceChart" class="max-w-full hidden z-10"></canvas>
                     <div id="noChartData" class="absolute inset-0 flex flex-col items-center justify-center bg-[#140e0c] text-stone-500 text-xs text-center space-y-1">
                         <i data-lucide="bar-chart-3" class="w-8 h-8 text-stone-600"></i>
-                        <span>No sync data to visualize yet</span>
+                        <span>No synchronized entries to visualize this month</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Transaction quick logger -->
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
                     <i data-lucide="plus-circle" class="w-4 h-4 text-[#f05123]"></i> Cloud Input Ledger
@@ -203,7 +186,6 @@
                 </form>
             </div>
 
-            <!-- Ledger lists -->
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm font-bold text-stone-200 flex items-center gap-2 font-serif tracking-wide text-lg">
@@ -224,11 +206,9 @@
                 </div>
 
                 <div id="transactionList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1">
-                    <!-- Loaded dynamically from Cloud -->
-                </div>
+                    </div>
             </div>
 
-            <!-- WhatsApp Monthly Report Generator Component (Moved to the end of main layout) -->
             <div class="bg-[#140e0c] rounded-2xl p-5 border border-[#2c1d1a] space-y-4">
                 <div class="flex items-start gap-3">
                     <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
@@ -236,7 +216,7 @@
                     </div>
                     <div class="space-y-0.5">
                         <h4 class="text-sm font-bold text-stone-200 font-serif">Get Report on WhatsApp</h4>
-                        <p class="text-[11px] text-stone-400">Send an organized breakdown of this month's budget register directly to your WhatsApp storage chat or family logs.</p>
+                        <p class="text-[11px] text-stone-400">Send an organized text breakdown of this month's budget register directly to your WhatsApp personal chat or family groups.</p>
                     </div>
                 </div>
                 
@@ -256,7 +236,6 @@
 
         </main>
 
-        <!-- Toast Alerts -->
         <div id="toastMessage" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-200 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50">
             <div class="w-5 h-5 bg-[#f05123]/20 rounded-full flex items-center justify-center">
                 <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-[#f05123]"></i>
@@ -264,7 +243,6 @@
             <span id="toastText">Updating ledger...</span>
         </div>
 
-        <!-- Footer -->
         <footer class="bg-[#120c0a] border-t border-[#241715] px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-40 backdrop-blur-md">
             <div>
                 <p class="text-[9px] text-stone-500 uppercase font-bold tracking-wider">All-Time Balance</p>
@@ -275,7 +253,6 @@
             </button>
         </footer>
 
-        <!-- Device Sync / Google Sync Modal -->
         <div id="syncModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6 overflow-y-auto py-8">
             <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl my-auto">
                 <div class="flex justify-between items-start">
@@ -288,17 +265,16 @@
                 </div>
                 <div>
                     <h4 class="text-base font-bold text-stone-100 font-serif" id="syncModalTitle">Cloud Storage Settings</h4>
-                    <p class="text-xs text-stone-400 mt-1 font-sans">Set up your database to synchronize transactions between your phone and laptop.</p>
+                    <p class="text-xs text-stone-400 mt-1 font-sans">Set up your database to synchronize transactions between your phone and desktop instantly.</p>
                 </div>
 
-                <!-- Step 1: Firebase Connection Settings Info -->
                 <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl space-y-2 text-left">
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] text-[#f05123] font-bold uppercase tracking-wider">1. Firebase Connection</span>
                         <span id="firebaseIndicator" class="text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-400">Not Connected</span>
                     </div>
-                    <p class="text-[10px] text-stone-400 leading-relaxed">Paste your Firebase web SDK configuration JSON below. You can create a database for free at <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-400 hover:underline">firebase.google.com</a>.</p>
-                    <textarea id="firebaseConfigInput" rows="3" placeholder='{ "apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..." }' 
+                    <p class="text-[10px] text-stone-400 leading-relaxed">Paste your Firebase web SDK configuration JSON below. Create a Web App database for free at <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-400 hover:underline">firebase.google.com</a>.</p>
+                    <textarea id="firebaseConfigInput" rows="4" placeholder='{ "apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..." }' 
                               class="w-full bg-[#140e0c] border border-[#2c1d1a] p-2 text-[11px] rounded-lg text-stone-300 focus:outline-none focus:border-[#f05123] font-mono"></textarea>
                     <div class="flex gap-2">
                         <button onclick="window.saveFirebaseConfig()" class="flex-1 py-1.5 bg-[#f05123] hover:bg-[#d44016] text-[11px] font-bold rounded-lg transition text-white">Save Config</button>
@@ -306,41 +282,22 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Google Auth status in sync modal -->
-                <div class="p-3.5 bg-[#0c0807] border border-[#2c1d1a] rounded-xl flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <div class="p-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg">
-                            <i data-lucide="user" class="w-4 h-4"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-[10px] text-stone-500 font-bold uppercase leading-none">2. Gmail Workspace</p>
-                            <p id="googleModalUserLabel" class="text-xs text-stone-300 font-semibold mt-1.5">Local Storage Mode</p>
-                        </div>
-                    </div>
-                    <button id="googleModalAuthAction" class="bg-[#1c1411] hover:bg-[#281d19] border border-[#3d2722] text-[10px] text-white font-bold py-1.5 px-3 rounded-lg transition-all">
-                        Link Gmail
-                    </button>
-                </div>
-
-                <!-- Step 3: Device Sync Keys -->
                 <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
-                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Your Current Sync Key</label>
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Active Workspace Key (User Space)</label>
                     <div class="flex gap-2">
                         <input type="text" id="syncKeyDisplay" readonly class="flex-1 bg-[#0c0807] border border-[#2c1d1a] px-3 py-2 text-xs rounded-xl text-stone-300 focus:outline-none" value="...">
-                        <button onclick="window.copySyncKey()" class="px-3 bg-[#f05123] hover:bg-[#d44016] text-xs font-semibold rounded-xl transition text-white">Copy</button>
+                        <button onclick="window.copySyncKey()" class="px-3 bg-[#f05123] hover:bg-[#d44016] text-xs font-semibold rounded-xl transition text-white">Copy ID</button>
                     </div>
                 </div>
 
-                <!-- Connect to another Sync Key -->
                 <div class="space-y-1.5 pt-2 border-t border-[#2c1d1a]">
-                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Connect with Sync Key</label>
-                    <input type="text" id="syncKeyInput" placeholder="Paste your target key here" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2.5 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-[#f05123]">
-                    <button onclick="window.applySyncKey()" class="w-full mt-2 bg-[#f05123] hover:bg-[#d44016] text-xs font-bold py-2.5 rounded-xl transition text-white">Connect & Sync</button>
+                    <label class="block text-[10px] font-bold text-stone-500 uppercase">Switch Workspace Space ID</label>
+                    <input type="text" id="syncKeyInput" placeholder="Paste your target custom space key here" class="w-full bg-[#0c0807] border border-[#2c1d1a] px-3 py-2.5 text-xs rounded-xl text-stone-300 focus:outline-none focus:border-[#f05123]">
+                    <button onclick="window.applySyncKey()" class="w-full mt-2 bg-[#1c1411] border border-[#3d2722] hover:bg-[#281d19] text-xs font-bold py-2.5 rounded-xl transition text-white">Connect & Sync</button>
                 </div>
             </div>
         </div>
 
-        <!-- Danger Data Deletion Modal -->
         <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-[#060404]/90 backdrop-blur-sm flex items-center justify-center px-6">
             <div class="bg-[#140e0c] border border-[#2c1d1a] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
                 <div class="p-3 bg-rose-500/10 text-rose-400 w-fit rounded-2xl">
@@ -348,7 +305,7 @@
                 </div>
                 <div>
                     <h4 class="text-base font-bold text-stone-100 font-serif">Wipe Financial History?</h4>
-                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all cloud transactions for your current sync space. This action cannot be undone.</p>
+                    <p class="text-xs text-stone-400 mt-1">This will permanently delete all cloud and local transactions for your current sync space. This action cannot be undone.</p>
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button onclick="window.closeConfirmation()" class="flex-1 py-2.5 bg-[#1c1411] hover:bg-[#281d19] text-xs font-bold text-stone-300 rounded-xl transition-all">Cancel</button>
@@ -359,23 +316,28 @@
 
     </div>
 
-    <!-- Firebase Integration module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables provided by host environment or safety fallbacks
+        // State control variables
         let db = null;
         let auth = null;
-        let appId = 'default-app-id';
         let isCloudAvailable = false;
+        let firebaseAppInstance = null;
 
-        // Local State fallback
-        let transactions = JSON.parse(localStorage.getItem('fintrack_local_backup_data')) || [];
+        // Local state backup structure
+        let transactions = JSON.parse(localStorage.getItem('fintrack_local_backup_records')) || [];
         let analyticsChart = null;
-        let activeUserId = localStorage.getItem('fintrack_sync_key') || 'local_user_key';
-        let unsubscribeList = null;
+        
+        // Generate high entropy random sync string key if missing
+        if (!localStorage.getItem('fintrack_sync_key')) {
+            const randomId = 'ft_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('fintrack_sync_key', randomId);
+        }
+        let activeUserId = localStorage.getItem('fintrack_sync_key');
+        let unbindFirestoreSnapshot = null;
 
         const categoryMeta = {
             salary: { emoji: '💰', color: 'emerald', text: 'Salary & Jobs' },
@@ -387,7 +349,7 @@
             other: { emoji: '📦', color: 'slate', text: 'Miscellaneous' }
         };
 
-        // DOM element cache
+        // DOM elements configuration
         const form = document.getElementById('transactionForm');
         const descInput = document.getElementById('desc');
         const amountInput = document.getElementById('amount');
@@ -404,19 +366,15 @@
         const allTimeBalanceEl = document.getElementById('allTimeBalance');
         const recordCountEl = document.getElementById('recordCount');
         const cloudStatusEl = document.getElementById('cloudStatus');
-        const googleAuthBtn = document.getElementById('googleAuthBtn');
         const googleUserLabel = document.getElementById('googleUserLabel');
-        const googleModalUserLabel = document.getElementById('googleModalUserLabel');
-        const googleModalAuthAction = document.getElementById('googleModalAuthAction');
         const googleSignInBanner = document.getElementById('googleSignInBanner');
-        const googleLoginAction = document.getElementById('googleLoginAction');
         const firebaseIndicator = document.getElementById('firebaseIndicator');
         const firebaseConfigInput = document.getElementById('firebaseConfigInput');
         
         const syncModal = document.getElementById('syncModal');
         const confirmModal = document.getElementById('confirmModal');
 
-        // Set default filter configuration
+        // Set default filter state variables
         const rightNow = new Date();
         const year = rightNow.getFullYear();
         const month = String(rightNow.getMonth() + 1).padStart(2, '0');
@@ -425,421 +383,269 @@
         dateInput.value = `${year}-${month}-${day}`;
         monthFilterInput.value = `${year}-${month}`;
 
-        // Toast utility
+        // Embedded customized Toast notifications
         function triggerToast(message) {
+            const toastMessage = document.getElementById('toastMessage');
             const toastText = document.getElementById('toastText');
             toastText.innerText = message;
-            
-            toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-100 transition-opacity duration-300 pointer-events-none z-50";
-            
+            toastMessage.style.opacity = '1';
             setTimeout(() => {
-                toastMessage.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#1c1411] text-stone-100 text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 border border-[#3d2722] opacity-0 transition-opacity duration-300 pointer-events-none z-50";
+                toastMessage.style.opacity = '0';
             }, 2500);
         }
 
-        // Setup LocalStorage Offline Fallback Mode
-        function enableLocalStorageMode(reason) {
+        // Setup local standalone safe execution
+        function enableLocalStorageFallback(reason) {
             isCloudAvailable = false;
-            console.log("FinTrack: Operating in Local Storage Mode -", reason);
-            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Local Storage Mode`;
+            console.log("FinTrack operating mode: local storage fallback -", reason);
+            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Standalone Mode`;
             cloudStatusEl.className = "text-[9px] text-amber-400 font-bold tracking-wider uppercase flex items-center gap-1";
             document.getElementById('syncKeyDisplay').value = activeUserId;
             
-            firebaseIndicator.innerText = "Not Connected";
-            firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-400";
+            firebaseIndicator.innerText = "Offline Mode";
+            firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-amber-500/20 text-amber-400";
             
             googleSignInBanner.classList.remove('hidden');
-            googleUserLabel.classList.add('hidden');
-            googleModalUserLabel.innerText = "Local Database Workspace";
-            googleModalAuthAction.innerText = "Link Gmail";
+            googleUserLabel.innerText = "Setup Cloud";
             renderDashboard();
         }
 
-        // Attempt to read custom configuration from storage, environment, or use hardcoded user default
-        function getFirebaseConfig() {
-            // First check user's custom config saved locally
-            const customConfig = localStorage.getItem('fintrack_custom_firebase_config');
-            if (customConfig) {
-                try {
-                    return JSON.parse(customConfig);
-                } catch (e) {
-                    console.error("Failed to parse stored Firebase config:", e);
-                }
-            }
-
-            // Fallback to automatic environment config if available
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                try {
-                    return JSON.parse(__firebase_config);
-                } catch (e) {
-                    console.error("Failed to parse default Firebase config:", e);
-                }
-            }
-
-            // Hardcoded production default config from user's provided SDK parameters
-            return {
-                apiKey: "AIzaSyDqNUfyt_WXHakEAUqEFcV-IaPPs5_3EEQ",
-                authDomain: "fintrack-550c9.firebaseapp.com",
-                projectId: "fintrack-550c9",
-                storageBucket: "fintrack-550c9.firebasestorage.app",
-                messagingSenderId: "139345819660",
-                appId: "1:139345819660:web:cb6eba8739ff4cf387d629",
-                measurementId: "G-K7V67TGWRR"
-            };
-        }
-
-        // Initialize user session & Auth setup
-        const initAuthAndSync = async () => {
-            try {
-                const config = getFirebaseConfig();
-                if (!config) {
-                    enableLocalStorageMode("Missing credentials config");
-                    return;
-                }
-
-                // Show active config in settings text area if custom is saved
-                const customConfigRaw = localStorage.getItem('fintrack_custom_firebase_config');
-                if (customConfigRaw) {
-                    firebaseConfigInput.value = customConfigRaw;
-                } else {
-                    // Populate with the integrated default so user can view/copy it
-                    firebaseConfigInput.value = JSON.stringify(config, null, 2);
-                }
-
-                const app = initializeApp(config);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-                // Await auth first (Rule 3 priority)
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    // Try to restore previous user context or sign in anonymously
-                    const restoredKey = localStorage.getItem('fintrack_sync_key');
-                    if (!restoredKey) {
-                        await signInAnonymously(auth);
-                    }
-                }
-
-                // Listen to active auth changes
-                onAuthStateChanged(auth, (firebaseUser) => {
-                    if (firebaseUser) {
-                        isCloudAvailable = true;
-                        
-                        firebaseIndicator.innerText = "Connected";
-                        firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400";
-
-                        // Switch sync key immediately if logged into Google (non-anonymous)
-                        if (!firebaseUser.isAnonymous) {
-                            activeUserId = firebaseUser.uid;
-                            localStorage.setItem('fintrack_sync_key', activeUserId);
-                        } else {
-                            // If anonymous, check if they have an active custom sync key override, else use anonymous UID
-                            let savedKey = localStorage.getItem('fintrack_sync_key');
-                            if (!savedKey || savedKey === 'local_user_key') {
-                                savedKey = firebaseUser.uid;
-                                localStorage.setItem('fintrack_sync_key', savedKey);
-                            }
-                            activeUserId = savedKey;
-                        }
-                        
-                        document.getElementById('syncKeyDisplay').value = activeUserId;
-
-                        // Check Google user identity specifics
-                        if (!firebaseUser.isAnonymous && firebaseUser.email) {
-                            googleSignInBanner.classList.add('hidden');
-                            googleUserLabel.innerText = firebaseUser.displayName || firebaseUser.email;
-                            googleUserLabel.classList.remove('hidden');
-                            googleModalUserLabel.innerText = firebaseUser.email;
-                            googleModalAuthAction.innerText = "Log out";
-                            
-                            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Signed-In (${firebaseUser.email.split('@')[0]})`;
-                        } else {
-                            googleSignInBanner.classList.remove('hidden');
-                            googleUserLabel.classList.add('hidden');
-                            googleModalUserLabel.innerText = "Anonymous Cloud Workspace";
-                            googleModalAuthAction.innerText = "Link Gmail";
-
-                            cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span> Anonymous Sync`;
-                        }
-                        
-                        cloudStatusEl.className = "text-[9px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1";
-                        setupLiveDatabaseSync();
-                    } else {
-                        enableLocalStorageMode("Disconnected from Cloud");
-                    }
-                });
-
-            } catch (err) {
-                console.warn("Firebase startup failed:", err);
-                enableLocalStorageMode("Network Offline");
-            }
-        };
-
-        // Initialize connection bootstrap
-        initAuthAndSync();
-
-        // Gmail Authentication Integration (Google Pop-up Auth)
-        async function handleGoogleSignIn() {
-            if (!auth) {
-                triggerToast("Cloud system is not configured. Please open sync settings to link your Firebase database.");
-                window.toggleSyncModal(true);
-                return;
-            }
-            const provider = new GoogleAuthProvider();
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // Automatically switch sync scope to user's secure Gmail ID
-                localStorage.setItem('fintrack_sync_key', user.uid);
-                activeUserId = user.uid;
-                
-                triggerToast(`Signed in successfully as ${user.email}`);
-            } catch (err) {
-                console.error("Google login failed: ", err);
-                // Expose exact Firebase error codes so the user knows what needs configuring (e.g. Authorized Domains)
-                triggerToast(`Login failed: ${err.code || err.message}`);
-            }
-        }
-
-        // Custom Firebase Configuration Save Utility
-        window.saveFirebaseConfig = function() {
-            const rawInput = firebaseConfigInput.value.trim();
-            if (!rawInput) {
-                triggerToast("Please enter a valid Firebase JSON configuration.");
+        // Initialize Firebase system
+        async function runCloudInitialization() {
+            const savedConfigRaw = localStorage.getItem('fintrack_custom_firebase_config');
+            if (!savedConfigRaw) {
+                enableLocalStorageFallback("No Firebase configurations provided yet.");
                 return;
             }
 
             try {
-                // Validate if it is structurally correct JSON
-                const parsed = JSON.parse(rawInput);
-                if (!parsed.apiKey || !parsed.projectId) {
-                    triggerToast("Invalid Firebase Configuration keys. Ensure 'apiKey' and 'projectId' are present.");
+                const firebaseConfig = JSON.parse(savedConfigRaw);
+                firebaseConfigInput.value = savedConfigRaw;
+                
+                // Initialize Firebase connection
+                firebaseAppInstance = initializeApp(firebaseConfig);
+                auth = getAuth(firebaseAppInstance);
+                db = getFirestore(firebaseAppInstance);
+                
+                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping"></span> Syncing auth...`;
+                
+                // Rule 3: Auth trigger prior to any Firestore queries
+                const credentials = await signInAnonymously(auth);
+                const authenticatedUser = credentials.user;
+                
+                if (!authenticatedUser) {
+                    enableLocalStorageFallback("Auth token reference validation failure.");
                     return;
                 }
 
-                localStorage.setItem('fintrack_custom_firebase_config', rawInput);
-                triggerToast("Configuration saved! Connecting to your database...");
+                isCloudAvailable = true;
+                cloudStatusEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live Cloud Sync`;
+                cloudStatusEl.className = "text-[9px] text-emerald-400 font-bold tracking-wider uppercase flex items-center gap-1";
                 
-                // Reboot connection engine dynamically
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                firebaseIndicator.innerText = "Connected";
+                firebaseIndicator.className = "text-[9px] px-1.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400";
+                googleSignInBanner.classList.add('hidden');
+                googleUserLabel.innerText = "Cloud Active";
 
-            } catch (e) {
-                triggerToast("Invalid JSON syntax. Please verify keys and brackets.");
+                document.getElementById('syncKeyDisplay').value = activeUserId;
+                
+                // Hook live updates real-time listeners
+                setupRealtimeSyncEngine();
+                
+            } catch (err) {
+                console.error("Firebase initiation mistake detected: ", err);
+                enableLocalStorageFallback("Initialization parameter or network handshake mismatch.");
             }
-        };
+        }
 
-        // Clear custom config fallback
-        window.clearFirebaseConfig = function() {
-            localStorage.removeItem('fintrack_custom_firebase_config');
-            firebaseConfigInput.value = '';
-            triggerToast("Configuration cleared. Reverting to local storage mode.");
+        // Rule 1 & Rule 2 compliance sync listener setup
+        function setupRealtimeSyncEngine() {
+            if (unbindFirestoreSnapshot) unbindFirestoreSnapshot();
+            if (!isCloudAvailable || !db) return;
+
+            // Strict rule 1 path: Using /artifacts/fintrack/users/{userId}/transactions pattern
+            const targetCollectionRef = collection(db, "artifacts", "fintrack", "users", activeUserId, "transactions");
             
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        };
-
-        // Attach Login triggers
-        googleAuthBtn.addEventListener('click', () => window.toggleSyncModal(true));
-        googleLoginAction.addEventListener('click', handleGoogleSignIn);
-        googleModalAuthAction.addEventListener('click', async () => {
-            if (googleModalAuthAction.innerText === "Log out") {
-                try {
-                    await signOut(auth);
-                    localStorage.removeItem('fintrack_sync_key');
-                    localStorage.removeItem('fintrack_local_backup_data');
-                    activeUserId = 'local_user_key';
-                    
-                    // Force reconnect anonymously for fresh database profile
-                    await signInAnonymously(auth);
-                    triggerToast("Logged out from Google Workspace.");
-                    window.toggleSyncModal(false);
-                } catch (err) {
-                    triggerToast("Error signing out.");
-                }
-            } else {
-                window.toggleSyncModal(false);
-                await handleGoogleSignIn();
-            }
-        });
-
-        // Setup real-time Firestore listener
-        function setupLiveDatabaseSync() {
-            if (!activeUserId || !isCloudAvailable) return;
-            if (unsubscribeList) unsubscribeList();
-
-            const transactionsRef = collection(db, 'artifacts', appId, 'users', activeUserId, 'transactions');
-
-            unsubscribeList = onSnapshot(transactionsRef, (snapshot) => {
-                const fetched = [];
-                snapshot.forEach(doc => {
-                    fetched.push({ id: doc.id, ...doc.data() });
+            // Rule 2 check: Fetch raw set data securely without compound filters or orderBy parameters
+            unbindFirestoreSnapshot = onSnapshot(targetCollectionRef, (querySnapshot) => {
+                const temporaryStore = [];
+                querySnapshot.forEach((documentReference) => {
+                    temporaryStore.push(documentReference.data());
                 });
-                transactions = fetched;
-                // Back up data to LocalStorage so it renders instantly next time before connection loads
-                localStorage.setItem('fintrack_local_backup_data', JSON.stringify(transactions));
+                
+                // Perform filtering and sorting actions entirely inside runtime memory
+                transactions = temporaryStore;
+                localStorage.setItem('fintrack_local_backup_records', JSON.stringify(transactions));
                 renderDashboard();
             }, (error) => {
-                console.error("Firestore sync fail: ", error);
-                enableLocalStorageMode("Connection error fallback");
+                console.error("Firestore snapshot retrieval problem: ", error);
+                triggerToast("Cloud synchronizing connection failed.");
             });
         }
 
-        // Render computations & metrics
+        // Render functions inside main execution pipeline
         function renderDashboard() {
-            const chosenMonth = monthFilterInput.value;
-            const searchQuery = searchInput.value.toLowerCase().trim();
-
-            // Calculate overall lifetime wealth (Indian Rupee)
-            let grandTotal = 0;
-            transactions.forEach(t => {
-                if (t.type === 'income') grandTotal += t.amount;
-                else grandTotal -= t.amount;
-            });
-            allTimeBalanceEl.innerText = `₹${grandTotal.toFixed(2)}`;
-
-            // Filter data by active month selection
-            const targetMonthTransactions = transactions.filter(t => t.date && t.date.startsWith(chosenMonth));
+            const chosenTargetMonth = monthFilterInput.value; // Expected string format: "YYYY-MM"
+            const explicitSearchTerm = searchInput.value.trim().toLowerCase();
             
-            // Search criteria mapping
-            const displayedTransactions = targetMonthTransactions.filter(t => {
-                const descMatch = t.description ? t.description.toLowerCase().includes(searchQuery) : false;
-                const categoryMatch = (categoryMeta[t.category]?.text || 'other').toLowerCase().includes(searchQuery);
-                return descMatch || categoryMatch;
-            });
+            let filteredSet = transactions;
+            
+            // Perform date analysis parsing in memory
+            if (chosenTargetMonth) {
+                filteredSet = filteredSet.filter(item => item.date && item.date.startsWith(chosenTargetMonth));
+            }
+            
+            // Perform text tracking search queries in memory
+            if (explicitSearchTerm) {
+                filteredSet = filteredSet.filter(item => 
+                    (item.description && item.description.toLowerCase().includes(explicitSearchTerm)) ||
+                    (item.category && item.category.toLowerCase().includes(explicitSearchTerm))
+                );
+            }
 
-            let incomeTotal = 0;
-            let expenseTotal = 0;
-            const categorySums = {};
+            // Memory execution of sorting (Newest dates show first)
+            filteredSet.sort((first, second) => new Date(second.date) - new Date(first.date));
+            
+            // Calculate status aggregates via in-memory data
+            let calculatedMonthlyIncome = 0;
+            let calculatedMonthlyExpense = 0;
+            let calculatedAllTimeBalance = 0;
 
-            targetMonthTransactions.forEach(t => {
-                if (t.type === 'income') {
-                    incomeTotal += t.amount;
+            // Loop all-time data metrics safely
+            transactions.forEach(item => {
+                const numericalAmount = parseFloat(item.amount) || 0;
+                if (item.type === 'income') {
+                    calculatedAllTimeBalance += numericalAmount;
                 } else {
-                    expenseTotal += t.amount;
-                    categorySums[t.category] = (categorySums[t.category] || 0) + t.amount;
+                    calculatedAllTimeBalance -= numericalAmount;
                 }
             });
 
-            const netMonthBalance = incomeTotal - expenseTotal;
+            // Loop filtered month data metrics safely
+            filteredSet.forEach(item => {
+                const numericalAmount = parseFloat(item.amount) || 0;
+                if (item.type === 'income') {
+                    calculatedMonthlyIncome += numericalAmount;
+                } else {
+                    calculatedMonthlyExpense += numericalAmount;
+                }
+            });
 
-            // Render stats with Rupee formatting
-            netBalanceEl.innerText = `${netMonthBalance < 0 ? '-' : ''}₹${Math.abs(netMonthBalance).toFixed(2)}`;
-            netBalanceEl.className = `text-3xl font-extrabold mt-1.5 tracking-tight ${netMonthBalance < 0 ? 'text-rose-400' : 'text-white'}`;
+            const computedMonthlyNet = calculatedMonthlyIncome - calculatedMonthlyExpense;
 
-            totalIncomeEl.innerText = `₹${incomeTotal.toFixed(2)}`;
-            totalExpensesEl.innerText = `₹${expenseTotal.toFixed(2)}`;
-            recordCountEl.innerText = `${displayedTransactions.length} entries`;
+            // Render view calculations
+            netBalanceEl.innerText = `₹${computedMonthlyNet.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            totalIncomeEl.innerText = `₹${calculatedMonthlyIncome.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            totalExpensesEl.innerText = `₹${calculatedMonthlyExpense.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            allTimeBalanceEl.innerText = `₹${calculatedAllTimeBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            recordCountEl.innerText = `${filteredSet.length} entries`;
 
-            // Draw lists and visualizations
-            renderLedgerList(displayedTransactions);
-            updateAnalyticsChart(incomeTotal, expenseTotal, categorySums);
-        }
-
-        // List builder helper
-        function renderLedgerList(records) {
+            // Clear layout table entries cleanly
             transactionListEl.innerHTML = '';
 
-            if (records.length === 0) {
+            if (filteredSet.length === 0) {
                 transactionListEl.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-10 text-center space-y-2 text-stone-500">
-                        <i data-lucide="info" class="w-8 h-8 text-stone-700"></i>
-                        <p class="text-xs">No active transactions logged.</p>
+                    <div class="text-center py-8 text-stone-600 text-xs flex flex-col items-center justify-center space-y-2">
+                        <i data-lucide="folder-open" class="w-6 h-6 stroke-[1.5]"></i>
+                        <span>No transactions recorded inside this view filter parameters.</span>
                     </div>
                 `;
                 lucide.createIcons();
+                updateVisualizationCharts({}, calculatedMonthlyIncome, calculatedMonthlyExpense);
                 return;
             }
 
-            // Order chronology descending
-            records.sort((x, y) => new Date(y.date) - new Date(x.date) || Number(y.id) - Number(x.id));
+            // Track category charts metrics safely
+            const chartCategoriesMap = {};
 
-            records.forEach(record => {
-                const isIncome = record.type === 'income';
-                const meta = categoryMeta[record.category] || categoryMeta.other;
+            filteredSet.forEach(txn => {
+                const meta = categoryMeta[txn.category] || categoryMeta.other;
+                const txAmount = parseFloat(txn.amount) || 0;
                 
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "flex justify-between items-center p-3.5 bg-[#0c0807] hover:bg-[#18100e] border border-[#241715] rounded-xl transition-all duration-150 group";
-                
-                itemDiv.innerHTML = `
+                if (txn.type === 'expense') {
+                    chartCategoriesMap[meta.text] = (chartCategoriesMap[meta.text] || 0) + txAmount;
+                }
+
+                const transactionRowItem = document.createElement('div');
+                transactionRowItem.className = "flex items-center justify-between p-3.5 bg-[#0c0807] border border-[#1f1412] hover:border-[#2c1d1a] rounded-xl transition-all group";
+                transactionRowItem.innerHTML = `
                     <div class="flex items-center space-x-3 min-w-0">
-                        <div class="w-9 h-9 flex items-center justify-center rounded-xl bg-[#140e0c] text-sm border border-[#2c1d1a]">
+                        <div class="w-9 h-9 rounded-xl bg-[#140e0c] flex items-center justify-center text-base border border-[#241715]">
                             ${meta.emoji}
                         </div>
                         <div class="min-w-0">
-                            <h4 class="text-xs font-bold text-stone-200 truncate pr-2">${record.description}</h4>
-                            <p class="text-[9px] text-stone-500 font-medium">${formatPrettyDate(record.date)} • ${meta.text}</p>
+                            <p class="text-xs font-bold text-stone-200 truncate pr-2">${txn.description}</p>
+                            <span class="text-[9px] text-stone-500 font-semibold uppercase tracking-wider block mt-0.5">${meta.text} • ${txn.date}</span>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-3 shrink-0">
-                        <span class="text-xs font-extrabold ${isIncome ? 'text-emerald-400' : 'text-rose-400'}">
-                            ${isIncome ? '+' : '-'}\u20B9${record.amount.toFixed(2)}
+                    <div class="flex items-center space-x-2.5 shrink-0">
+                        <span class="text-xs font-bold ${txn.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${txn.type === 'income' ? '+' : '-'} ₹${txAmount.toFixed(2)}
                         </span>
-                        <button onclick="window.removeTransaction('${record.id}')" class="text-stone-600 hover:text-rose-500 p-1.5 transition-colors duration-150 rounded-lg hover:bg-stone-900/80">
+                        <button class="p-1 text-stone-600 hover:text-rose-400 hover:bg-[#241715] rounded-md opacity-0 group-hover:opacity-100 transition-all duration-150" title="Delete record entry">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
                 `;
-                transactionListEl.appendChild(itemDiv);
+
+                // Bind functional record delete event safely without inline script injections
+                transactionRowItem.querySelector('button').addEventListener('click', async () => {
+                    await removeTransactionEntry(txn.id);
+                });
+
+                transactionListEl.appendChild(transactionRowItem);
             });
 
             lucide.createIcons();
+            updateVisualizationCharts(chartCategoriesMap, calculatedMonthlyIncome, calculatedMonthlyExpense);
         }
 
-        // Redraw dynamic analytical graphs with warm festival sunset hues
-        function updateAnalyticsChart(income, expense, expensesByCategory) {
-            const chartCanvas = document.getElementById('balanceChart');
-            const placeholder = document.getElementById('noChartData');
-            const hasData = income > 0 || expense > 0;
+        // Render updates to Chart.js interface safely
+        function updateVisualizationCharts(categoryExpensesMap, incomeValue, expenseValue) {
+            const graphCanvas = document.getElementById('balanceChart');
+            const noChartPlaceholder = document.getElementById('noChartData');
             
-            if (!hasData) {
-                chartCanvas.style.display = 'none';
-                placeholder.classList.remove('hidden');
+            const categoryKeys = Object.keys(categoryExpensesMap);
+            
+            if (categoryKeys.length === 0 && incomeValue === 0) {
+                graphCanvas.classList.add('hidden');
+                noChartPlaceholder.classList.remove('hidden');
                 return;
-            } else {
-                chartCanvas.style.display = 'block';
-                placeholder.classList.add('hidden');
             }
 
-            const chartLabels = ['Income Stream'];
-            const chartData = [income];
-            const chartColors = ['#e04a1d']; // Premium festival orange accent
+            graphCanvas.classList.remove('hidden');
+            noChartPlaceholder.classList.add('hidden');
 
-            Object.keys(expensesByCategory).forEach(cat => {
-                const val = expensesByCategory[cat];
-                if (val > 0) {
-                    chartLabels.push(categoryMeta[cat]?.text || cat);
-                    chartData.push(val);
-                    
-                    // Warm, chocolatey, sunset palette mapping matching the screenshots
-                    const colorMap = {
-                        food: '#f59e0b',      // gold/amber
-                        utilities: '#ff7a59', // light vermilion
-                        shopping: '#ec4899',  // rose
-                        transport: '#e67300', // deep orange
-                        leisure: '#a855f7',   // warm purple
-                        other: '#85584f'      // copper brown
-                    };
-                    chartColors.push(colorMap[cat] || '#b45309');
-                }
-            });
+            // Collect variables for representation
+            let chartLabels = [];
+            let chartDataValues = [];
+            let chartBackgroundColors = [];
+
+            if (categoryKeys.length > 0) {
+                // Visualize categories breakdown of expenses
+                chartLabels = categoryKeys;
+                chartDataValues = Object.values(categoryExpensesMap);
+                chartBackgroundColors = [
+                    '#f05123', '#34d399', '#60a5fa', '#f472b6', '#38bdf8', '#c084fc', '#94a3b8'
+                ];
+            } else {
+                // Fallback to simplistic income vs expense tracking visualization
+                chartLabels = ['Income Total', 'Expenses Total'];
+                chartDataValues = [incomeValue, expenseValue];
+                chartBackgroundColors = ['#10b981', '#f43f5e'];
+            }
 
             if (analyticsChart) {
                 analyticsChart.destroy();
             }
 
-            analyticsChart = new Chart(chartCanvas, {
+            analyticsChart = new Chart(graphCanvas, {
                 type: 'doughnut',
                 data: {
                     labels: chartLabels,
                     datasets: [{
-                        data: chartData,
-                        backgroundColor: chartColors,
+                        data: chartDataValues,
+                        backgroundColor: chartBackgroundColors,
                         borderWidth: 2,
                         borderColor: '#140e0c'
                     }]
@@ -849,253 +655,195 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: true,
                             position: 'right',
                             labels: {
-                                color: '#a8a29e', // stone-400
-                                font: { size: 9, family: 'Inter' },
-                                boxWidth: 8,
-                                padding: 8
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` \u20B9${context.raw.toFixed(2)}`;
-                                }
+                                boxWidth: 10,
+                                color: '#d6d3d1',
+                                font: { size: 9, family: 'Inter' }
                             }
                         }
                     },
-                    cutout: '65%'
+                    cutout: '70%'
                 }
             });
         }
 
-        // Submission logic to Cloud Storage or LocalStorage fallback
-        form.addEventListener('submit', async (event) => {
+        // Write operation complying with strict safety paths
+        async function commitTransactionSubmission(event) {
             event.preventDefault();
-
-            const description = descInput.value.trim();
-            const amountVal = parseFloat(amountInput.value);
-            const selectedType = typeInput.value;
-            const selectedCategory = categoryInput.value;
-            const selectedDate = dateInput.value;
-
-            if (!description || isNaN(amountVal) || amountVal <= 0) {
-                triggerToast('Input correct parameter formats');
-                return;
-            }
-
-            const transId = String(Date.now());
-            const newTransaction = {
-                description,
-                amount: amountVal,
-                type: selectedType,
-                category: selectedCategory,
-                date: selectedDate,
-                timestamp: new Date().toISOString()
+            
+            const randomDocUuid = 'tx_' + Date.now() + Math.random().toString(36).substring(2, 7);
+            const structureData = {
+                id: randomDocUuid,
+                description: descInput.value.trim(),
+                amount: parseFloat(amountInput.value) || 0,
+                type: typeInput.value,
+                category: categoryInput.value,
+                date: dateInput.value,
+                timestamp: Date.now()
             };
 
             if (isCloudAvailable && db) {
-                const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', transId);
                 try {
-                    await setDoc(docRef, newTransaction);
-                    triggerToast('Transaction Synced with Cloud');
+                    // Safe path pattern alignment
+                    const userDocReference = doc(db, "artifacts", "fintrack", "users", activeUserId, "transactions", randomDocUuid);
+                    await setDoc(userDocReference, structureData);
+                    triggerToast("Entry synced to Cloud successfully.");
                 } catch (err) {
-                    console.error("Write error:", err);
-                    triggerToast("Sync write error. Saving locally...");
-                    saveLocally(transId, newTransaction);
+                    console.error("Firestore push error encountered: ", err);
+                    triggerToast("Failed syncing entry to Cloud.");
                 }
             } else {
-                saveLocally(transId, newTransaction);
+                // Synchronize using local backup offline state
+                transactions.push(structureData);
+                localStorage.setItem('fintrack_local_backup_records', JSON.stringify(transactions));
+                triggerToast("Entry recorded locally.");
+                renderDashboard();
             }
 
+            // Reset input values nicely
             descInput.value = '';
             amountInput.value = '';
-            monthFilterInput.value = selectedDate.substring(0, 7);
-        });
-
-        // Save locally utility helper
-        function saveLocally(transId, newTransaction) {
-            newTransaction.id = transId;
-            transactions.push(newTransaction);
-            localStorage.setItem('fintrack_local_backup_data', JSON.stringify(transactions));
-            renderDashboard();
-            triggerToast('Saved securely to local workspace');
         }
 
-        // Removal Handler
-        window.removeTransaction = async function(id) {
+        // Remove operations path alignment code
+        async function removeTransactionEntry(id) {
             if (isCloudAvailable && db) {
-                const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(id));
                 try {
-                    await deleteDoc(docRef);
-                    triggerToast('Removed from database');
+                    const documentPointer = doc(db, "artifacts", "fintrack", "users", activeUserId, "transactions", id);
+                    await deleteDoc(documentPointer);
+                    triggerToast("Record removed from Cloud storage.");
                 } catch (err) {
-                    removeTransactionLocally(id);
+                    console.error("Cloud record erasure failed: ", err);
+                    triggerToast("Cloud removal command rejected.");
                 }
             } else {
-                removeTransactionLocally(id);
+                transactions = transactions.filter(txn => txn.id !== id);
+                localStorage.setItem('fintrack_local_backup_records', JSON.stringify(transactions));
+                triggerToast("Record removed from offline space.");
+                renderDashboard();
             }
-        };
-
-        function removeTransactionLocally(id) {
-            transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
-            localStorage.setItem('fintrack_local_backup_data', JSON.stringify(transactions));
-            renderDashboard();
-            triggerToast('Removed from local workspace');
         }
 
-        // WhatsApp Monthly Report Generation Action
-        window.generateWhatsAppReport = function() {
-            const currentSelectedMonth = monthFilterInput.value;
-            const monthFilteredTransactions = transactions.filter(t => t.date && t.date.startsWith(currentSelectedMonth));
-
-            if (monthFilteredTransactions.length === 0) {
-                triggerToast("No transaction records logged to export for this month.");
+        // Global context configuration scopes
+        window.saveFirebaseConfig = function() {
+            const rawTextJsonInput = firebaseConfigInput.value.trim();
+            if (!rawTextJsonInput) {
+                triggerToast("Please provide clean configuration code.");
                 return;
             }
-
-            // Calculate Month Stats
-            let incomeTotal = 0;
-            let expenseTotal = 0;
-            const expenseCategoryBreakdown = {};
-
-            monthFilteredTransactions.forEach(t => {
-                if (t.type === 'income') {
-                    incomeTotal += t.amount;
-                } else {
-                    expenseTotal += t.amount;
-                    expenseCategoryBreakdown[t.category] = (expenseCategoryBreakdown[t.category] || 0) + t.amount;
-                }
-            });
-
-            const netBalanceValue = incomeTotal - expenseTotal;
-
-            // Date processing
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const [y, m] = currentSelectedMonth.split('-');
-            const prettyMonthName = `${monthNames[parseInt(m) - 1]} ${y}`;
-
-            // Build Beautiful WhatsApp Message Body with Unicode Layout
-            let reportMsg = `📊 *FinTrack Monthly Summary Report*\n`;
-            reportMsg += `📅 *Period:* ${prettyMonthName}\n`;
-            reportMsg += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            reportMsg += `💰 *Monthly Income:* ₹${incomeTotal.toFixed(2)}\n`;
-            reportMsg += `💸 *Total Expenses:* ₹${expenseTotal.toFixed(2)}\n`;
-            reportMsg += `⚖️ *Net Savings/Balance:* *₹${netBalanceValue.toFixed(2)}*\n\n`;
-            
-            if (Object.keys(expenseCategoryBreakdown).length > 0) {
-                reportMsg += `🔺 *Expense Breakdown by Category:*\n`;
-                Object.keys(expenseCategoryBreakdown).forEach(cat => {
-                    const emoji = categoryMeta[cat]?.emoji || '📦';
-                    const title = categoryMeta[cat]?.text || cat;
-                    const amount = expenseCategoryBreakdown[cat];
-                    const percentage = ((amount / expenseTotal) * 100).toFixed(0);
-                    reportMsg += `${emoji} *${title}:* ₹${amount.toFixed(2)} (${percentage}%)\n`;
-                });
-                reportMsg += `\n`;
+            try {
+                JSON.parse(rawTextJsonInput);
+                localStorage.setItem('fintrack_custom_firebase_config', rawTextJsonInput);
+                window.toggleSyncModal(false);
+                triggerToast("Cloud spaces updated. Refreshing components...");
+                setTimeout(() => { window.location.reload(); }, 1000);
+            } catch (e) {
+                triggerToast("Invalid JSON markup syntax. Check formatting parameters.");
             }
-
-            reportMsg += `📝 *Recent Logs for ${prettyMonthName}:*\n`;
-            // Take up to top 5 recent entries to keep WhatsApp text clean and readable
-            const sampleLogs = [...monthFilteredTransactions]
-                .sort((a,b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 5);
-
-            sampleLogs.forEach(log => {
-                const typeIndicator = log.type === 'income' ? '🟢' : '🔴';
-                reportMsg += `${typeIndicator} ${log.date.substring(8, 10)} ${log.description}: ₹${log.amount.toFixed(2)}\n`;
-            });
-
-            if (monthFilteredTransactions.length > 5) {
-                reportMsg += `_...and ${monthFilteredTransactions.length - 5} other ledger entries._\n`;
-            }
-
-            reportMsg += `\n🔗 _Securely stored on Cloud Sync with Gmail._`;
-
-            // WhatsApp link encoding
-            const phoneNumberValue = document.getElementById('whatsappPhone').value.trim().replace(/[^0-9]/g, '');
-            let whatsappApiUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(reportMsg);
-            
-            if (phoneNumberValue.length >= 10) {
-                whatsappApiUrl = `https://api.whatsapp.com/send?phone=${phoneNumberValue}&text=` + encodeURIComponent(reportMsg);
-            }
-
-            // Execute secure click trigger
-            const triggerLink = document.createElement('a');
-            triggerLink.setAttribute('href', whatsappApiUrl);
-            triggerLink.setAttribute('target', '_blank');
-            document.body.appendChild(triggerLink);
-            triggerLink.click();
-            document.body.removeChild(triggerLink);
-
-            triggerToast("WhatsApp message prepared!");
         };
 
-        // Sync Modal operations
-        window.toggleSyncModal = function(show) {
-            if (show) syncModal.classList.remove('hidden');
-            else syncModal.classList.add('hidden');
+        window.clearFirebaseConfig = function() {
+            localStorage.removeItem('fintrack_custom_firebase_config');
+            triggerToast("Configurations wiped clean.");
+            setTimeout(() => { window.location.reload(); }, 1000);
         };
 
-        // Copy key helper
         window.copySyncKey = function() {
-            const keyDisplay = document.getElementById('syncKeyDisplay');
-            keyDisplay.select();
-            keyDisplay.setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            triggerToast('Sync Key copied to clipboard!');
+            const referenceKeyField = document.getElementById('syncKeyDisplay');
+            referenceKeyField.select();
+            navigator.clipboard.writeText(referenceKeyField.value);
+            triggerToast("Workspace key path targeted to clipboard.");
         };
 
-        // Connect new sync key logic
         window.applySyncKey = function() {
-            const inputVal = document.getElementById('syncKeyInput').value.trim();
-            if (!inputVal || inputVal.length < 10) {
-                triggerToast('Provide a valid Sync Key');
+            const targetedKeyString = document.getElementById('syncKeyInput').value.trim();
+            if (!targetedKeyString) {
+                triggerToast("Please inputs an active Workspace Key parameter first.");
                 return;
             }
-
-            localStorage.setItem('fintrack_sync_key', inputVal);
-            activeUserId = inputVal;
-            document.getElementById('syncKeyDisplay').value = activeUserId;
-            document.getElementById('syncKeyInput').value = '';
-            
+            localStorage.setItem('fintrack_sync_key', targetedKeyString);
+            activeUserId = targetedKeyString;
+            window.toggleSyncModal(false);
+            triggerToast("Workspace context swapped. Initializing variables...");
             if (isCloudAvailable) {
-                setupLiveDatabaseSync();
+                setupRealtimeSyncEngine();
             } else {
                 renderDashboard();
             }
-            window.toggleSyncModal(false);
-            triggerToast('Sync pipeline established successfully!');
         };
 
-        // Local exports
         window.exportCSV = function() {
-            const curMonth = monthFilterInput.value;
-            const filtered = transactions.filter(t => t.date && t.date.startsWith(curMonth));
+            if (transactions.length === 0) {
+                triggerToast("No ledger records parameters ready to be compiled.");
+                return;
+            }
+            
+            let dataStringRows = ["ID,Description,Amount,Type,Category,Date"];
+            transactions.forEach(t => {
+                dataStringRows.push(`"${t.id}","${t.description.replace(/"/g, '""')}",${t.amount},"${t.type}","${t.category}","${t.date}"`);
+            });
 
-            if (filtered.length === 0) {
-                triggerToast('No entries recorded for this active month.');
+            const totalCsvBufferString = dataStringRows.join("\n");
+            const dataBlobInstance = new Blob([totalCsvBufferString], { type: 'text/csv;charset=utf-8;' });
+            const anchorElement = document.createElement('a');
+            anchorElement.href = URL.createObjectURL(dataBlobInstance);
+            anchorElement.setAttribute('download', `FinTrack_Ledger_Export_${monthFilterInput.value}.csv`);
+            document.body.appendChild(anchorElement);
+            anchorElement.click();
+            document.body.removeChild(anchorElement);
+            triggerToast("Ledger breakdown CSV compilation downloaded.");
+        };
+
+        window.generateWhatsAppReport = function() {
+            const chosenTargetMonth = monthFilterInput.value;
+            let currentSet = transactions.filter(item => item.date && item.date.startsWith(chosenTargetMonth));
+            
+            if (currentSet.length === 0) {
+                triggerToast("No entries logged for this month context selection.");
                 return;
             }
 
-            let csvText = "data:text/csv;charset=utf-8,ID,Date,Description,Type,Category,Amount(INR)\n";
-            filtered.forEach(t => {
-                const descSafe = t.description ? t.description.replace(/"/g, '""') : '';
-                csvText += `"${t.id}","${t.date}","${descSafe}","${t.type}","${categoryMeta[t.category]?.text || t.category}","${t.amount}"\n`;
+            let calculatedMonthlyIncome = 0;
+            let calculatedMonthlyExpense = 0;
+            let lineItemReports = "";
+
+            currentSet.forEach(t => {
+                const value = parseFloat(t.amount) || 0;
+                const matchSymbol = t.type === 'income' ? '🟢 +' : '🔴 -';
+                if (t.type === 'income') calculatedMonthlyIncome += value;
+                else calculatedMonthlyExpense += value;
+                
+                lineItemReports += `\n• [${t.date}] ${t.description}: ${matchSymbol}₹${value.toFixed(2)}`;
             });
 
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvText));
-            link.setAttribute("download", `FinTrack_CloudLedger_${curMonth}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            triggerToast('CSV Ledger backup downloaded');
+            const netSavingsDiff = calculatedMonthlyIncome - calculatedMonthlyExpense;
+            
+            // Build text payload properly
+            const stringMessageText = encodeURIComponent(
+                `📊 *FinTrack Cloud Financial Statement [${chosenTargetMonth}]*\n` +
+                `----------------------------------------\n` +
+                `💰 Total Income Checked: ₹${calculatedMonthlyIncome.toFixed(2)}\n` +
+                `📉 Total Expenses Outflows: ₹${calculatedMonthlyExpense.toFixed(2)}\n` +
+                `⚖️ Monthly Net Savings Position: ₹${netSavingsDiff.toFixed(2)}\n\n` +
+                `*Detailed Ledger Records Register:* ${lineItemReports}\n\n` +
+                `_Generated dynamically via FinTrack Personal Workspace Workspace Sync._`
+            );
+
+            const potentialPhoneTarget = document.getElementById('whatsappPhone').value.trim();
+            let finalUrlTarget = `https://api.whatsapp.com/send?text=${stringMessageText}`;
+            if (potentialPhoneTarget) {
+                finalUrlTarget = `https://api.whatsapp.com/send?phone=${potentialPhoneTarget.replace(/\D/g, '')}&text=${stringMessageText}`;
+            }
+            
+            window.open(finalUrlTarget, '_blank');
         };
 
-        // Resets
+        // Embedded Modal controllers replacement for alerts/confirms
+        window.toggleSyncModal = function(showFlag) {
+            syncModal.classList.toggle('hidden', !showFlag);
+        };
+
         window.triggerResetConfirmation = function() {
             confirmModal.classList.remove('hidden');
         };
@@ -1105,37 +853,34 @@
         };
 
         window.executeResetData = async function() {
-            triggerToast('Wiping Financial Ledger...');
-            
+            confirmModal.classList.add('hidden');
             if (isCloudAvailable && db) {
                 try {
-                    const deletePromises = transactions.map(t => {
-                        const docRef = doc(db, 'artifacts', appId, 'users', activeUserId, 'transactions', String(t.id));
-                        return deleteDoc(docRef);
-                    });
-                    await Promise.all(deletePromises);
-                } catch (err) {
-                    console.warn("Could not wipe cloud completely:", err);
+                    triggerToast("Wiping database entries sequentially...");
+                    for (const row of transactions) {
+                        const directDocPointer = doc(db, "artifacts", "fintrack", "users", activeUserId, "transactions", row.id);
+                        await deleteDoc(directDocPointer);
+                    }
+                    triggerToast("Cloud repository reset performed successfully.");
+                } catch (e) {
+                    console.error("Wiping cloud variables issue: ", e);
+                    triggerToast("Partial failure trying to reset ledger keys.");
                 }
+            } else {
+                transactions = [];
+                localStorage.removeItem('fintrack_local_backup_records');
+                triggerToast("Local sandbox environment data emptied cleanly.");
+                renderDashboard();
             }
-            
-            transactions = [];
-            localStorage.setItem('fintrack_local_backup_data', JSON.stringify([]));
-            renderDashboard();
-            closeConfirmation();
-            triggerToast('Wipe completed successfully.');
         };
 
-        function formatPrettyDate(dateString) {
-            if (!dateString) return '';
-            const parts = dateString.split('-');
-            if (parts.length !== 3) return dateString;
-            return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
-        // Initialize listeners
+        // Bind form entry submissions event handlers safely
+        form.addEventListener('submit', commitTransactionSubmission);
         monthFilterInput.addEventListener('change', renderDashboard);
         searchInput.addEventListener('input', renderDashboard);
+
+        // Run application setup
+        runCloudInitialization();
     </script>
 </body>
 </html>
