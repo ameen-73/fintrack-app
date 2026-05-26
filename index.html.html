@@ -348,7 +348,8 @@
         let autoSyncIntervalId = null;
 
         // Connection parameters resolved from your exact PostgreSQL connection details
-        const neonApiEndpointUrl = 'https://ep-dark-base-ao06jwnu-pooler.c-2.ap-southeast-1.aws.neon.tech/v1/sql';
+        // Note: The HTTP endpoint for Neon's HTTP driver is host + "/sql"
+        const neonApiEndpointUrl = 'https://ep-dark-base-ao06jwnu-pooler.c-2.ap-southeast-1.aws.neon.tech/sql';
         const neonAuthTokenKey = 'npg_R8l6wuoPWOXM';
 
         const categoryMeta = {
@@ -1014,9 +1015,15 @@
 
         // Core dynamic bootstrapping sequences
         window.onload = async function() {
-            // Setup default date settings
+            // Setup default date settings properly extracting year, month and day of today
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
             const todayStr = `${year}-${month}-${day}`;
+
             document.getElementById('date').value = todayStr;
+            document.getElementById('monthFilter').value = `${year}-${month}`;
 
             // Pre-create dynamic Toast targets before database queries execute
             triggerToast("Loading cloud sync configurations...");
