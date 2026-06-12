@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+@theme {
+  --color-theme-bg: var(--bg);
+  --color-theme-panel: var(--panel);
+  --color-theme-card: var(--card);
+  --color-theme-card-dark: var(--card-dark);
+  --color-theme-text: var(--text);
+  --color-theme-text-dark-card: var(--text-dark-card);
+  --color-theme-muted: var(--muted);
+  --color-theme-border: var(--border);
+  --color-theme-border-dark: var(--border-dark);
+  --color-theme-accent: var(--accent);
+  --color-theme-accent-hover: var(--accent2);
+}
+
+:root {
+  --bg: #FAF7F2;
+  --panel: #ffffff;
+  --card: #ffffff;
+  --card-dark: #131419;
+
+  --accent: #E5A817;
+  --accent2: #F4B824;
+
+  --text: #131419;
+  --text-dark-card: #ffffff;
+  --muted: #71747D;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-dark: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------- APP LAYOUT ---------- */
+
+main {
+  width: 100%;
+  max-width: 1400px;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ---------- CARDS ---------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 18px;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.card-dark {
+  background: var(--card-dark);
+  border: 1px solid var(--border-dark);
+  color: var(--text-dark-card);
+  border-radius: 24px;
+  padding: 18px;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-dark:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- HERO ---------- */
+
+.gradient-card {
+  background: linear-gradient(135deg, #E5A817, #F4B824);
+  box-shadow: 0 10px 40px rgba(229, 168, 23, 0.15);
+}
+
+/* ---------- INPUTS ---------- */
+
+.input,
+input,
+select {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  border-radius: 16px;
+  color: var(--text);
+  outline: none;
+  transition: all 0.2s;
+}
+
+input:focus,
+select:focus {
+  border: 1px solid rgba(229, 168, 23, 0.4);
+  box-shadow: 0 0 20px rgba(229, 168, 23, 0.15);
+  background: white;
+}
+
+/* ---------- BUTTON ---------- */
+
+.button {
+  background: linear-gradient(135deg, #E5A817, #F4B824);
+  border: none;
+  padding: 12px;
+  border-radius: 16px;
+  color: #131419;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(229, 168, 23, 0.2);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 20px rgba(229, 168, 23, 0.3);
+}
+
+/* ---------- TYPO ---------- */
+
+.small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.section {
+  margin-top: 16px;
+}
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 1024px) {
+  main {
+    max-width: 100%;
+    padding: 18px;
+  }
+  .card, .card-dark {
+    padding: 16px;
+  }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 768px) {
+  main {
+    padding: 12px;
+  }
+  .card, .card-dark {
+    padding: 14px;
+    border-radius: 20px;
+  }
+  .text-7xl {
+    font-size: 3rem;
+  }
+  .text-6xl {
+    font-size: 2.4rem;
+  }
+  .text-5xl {
+    font-size: 2rem;
+  }
+  .text-4xl {
+    font-size: 1.6rem;
+  }
+  aside {
+    width: 100% !important;
+    min-height: auto !important;
+  }
+}
+
+/* ---------- SMALL MOBILE ---------- */
+
+@media (max-width: 480px) {
+  main {
+    padding: 10px;
+  }
+  .button {
+    padding: 10px;
+  }
+  input,
+  select {
+    padding: 10px;
+  }
+  .card, .card-dark {
+    padding: 12px;
+  }
+}
