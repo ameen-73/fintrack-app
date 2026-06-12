@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -962,4 +963,970 @@
     </script>
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FinTrack Pro - Premium Budget Ledger</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Playfair Display & Inter matching image_886fda.jpg -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f3edd7;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E6DEC4;
+            border-radius: 4px;
+        }
+
+        .app-container {
+            max-width: 480px;
+            min-height: 100vh;
+        }
+
+        button,
+        select,
+        input {
+            touch-action: manipulation;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f4ecd8 25%, #eae0c3 50%, #f4ecd8 75%);
+            background-size: 200% 100%;
+            animation: loading-shimmer 1.5s infinite;
+        }
+
+        @keyframes loading-shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="text-[#18191F] font-sans antialiased flex justify-center min-h-screen">
+
+    <!-- App Root Container -->
+    <div
+        class="app-container w-full bg-[#FAF6F0] flex flex-col justify-between shadow-2xl relative border-x border-[#E6DEC4]">
+
+        <!-- Interactive Toast Feedback Banner -->
+        <div id="toastNotification"
+            class="fixed top-6 left-1/2 -translate-x-1/2 bg-[#18191F] text-stone-100 text-xs px-4 py-3 rounded-full shadow-2xl flex items-center gap-2.5 z-50 transform -translate-y-12 opacity-0 transition-all duration-300 pointer-events-none">
+            <span class="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping"></span>
+            <span id="toastText">Connected in private mode.</span>
+        </div>
+
+        <div class="flex-grow flex flex-col pb-28">
+
+            <!-- Sticky Dynamic Header matching typography in image_886fda.jpg -->
+            <header
+                class="bg-[#FAF6F0]/95 backdrop-blur-md sticky top-0 z-30 px-5 py-4 border-b border-[#E6DEC4] flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2.5">
+                        <!-- Premium Gold Wallet Icon Frame -->
+                        <div
+                            class="w-9 h-9 bg-[#F59E0B] rounded-xl flex items-center justify-center shadow-lg shadow-[#F59E0B]/10">
+                            <i data-lucide="wallet" class="w-5 h-5 text-[#18191F]"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <h1 class="text-base font-extrabold text-[#18191F] tracking-tight font-serif">FinTrack
+                                </h1>
+                                <span id="syncIndicatorDot"
+                                    class="w-1.5 h-1.5 rounded-full bg-[#D97706] animate-pulse"></span>
+                            </div>
+                            <span id="scopeSubLabel"
+                                class="text-[9px] text-stone-500 font-bold tracking-wider uppercase">
+                                👤 PERSONAL SANDBOX
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right hand controller buttons -->
+                    <div class="flex items-center gap-2">
+                        <select id="currencySelector" onchange="window.updateCurrency(this.value)"
+                            class="bg-white hover:bg-stone-50 text-[#18191F] text-xs font-bold rounded-xl px-2 py-1.5 border border-[#E6DEC4] focus:outline-none focus:ring-1 focus:ring-[#F59E0B] cursor-pointer">
+                            <option value="INR">INR (₹)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                        </select>
+
+                        <button onclick="window.triggerScopeModal()"
+                            class="p-2 bg-white text-stone-600 border border-[#E6DEC4] hover:bg-stone-50 rounded-xl transition-all"
+                            title="Switch Multi-Device Sync Space">
+                            <i data-lucide="users" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Scrollable Core Content -->
+            <main class="px-5 py-5 space-y-6">
+
+                <!-- Dynamic Headline Banner mimicking the branding layout of image_886fda.jpg -->
+                <div class="space-y-1">
+                    <div
+                        class="inline-flex items-center gap-1.5 bg-[#18191F] text-stone-100 text-[9px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+                        Switching from traditional spreadsheets?
+                    </div>
+                    <h2 class="text-2xl font-black text-[#18191F] font-serif tracking-tight leading-none pt-1">
+                        Same job. Very <span
+                            class="bg-[#FEF3C7] text-[#D97706] px-1.5 py-0.5 rounded-md inline-block">different</span>
+                        balance.
+                    </h2>
+                </div>
+
+                <!-- High-contrast Deep Charcoal Balance Capsule mirroring RecurPost Card in image_886fda.jpg -->
+                <div
+                    class="bg-[#18191F] rounded-2xl p-6 shadow-xl relative overflow-hidden text-stone-100 border border-stone-800">
+                    <div class="absolute right-0 top-0 -mr-12 -mt-12 w-32 h-32 bg-[#F59E0B]/5 rounded-full blur-2xl">
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span id="cardPeriodLabel"
+                            class="text-[10px] font-black text-amber-400 uppercase tracking-widest">
+                            TOTAL STANDING
+                        </span>
+                        <div
+                            class="text-[9px] bg-white/10 px-2.5 py-1 rounded-full text-stone-200 font-bold uppercase tracking-wider">
+                            Active Scope
+                        </div>
+                    </div>
+
+                    <div class="mt-3 flex items-baseline justify-between gap-1">
+                        <h3 id="mainNetDisplay" class="text-4xl font-black text-white tracking-tight">₹0.00</h3>
+                        <span class="text-xs font-bold text-amber-400">Net Remaining</span>
+                    </div>
+
+                    <!-- Grid containing inflow/outflow metrics -->
+                    <div class="grid grid-cols-2 gap-4 mt-5 pt-5 border-t border-white/10 text-xs">
+                        <div>
+                            <p class="text-stone-400 font-bold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Income Inflow
+                            </p>
+                            <p id="inflowDisplay" class="text-sm font-black text-emerald-400 mt-1">₹0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-stone-400 font-bold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Monthly Burn
+                            </p>
+                            <p id="burnDisplay" class="text-sm font-black text-rose-400 mt-1">₹0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FinAI Pro Smart Advisor Container -->
+                <div class="bg-white rounded-2xl p-5 border border-[#E6DEC4] shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 bg-[#FEF3C7] rounded-lg flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-[#D97706]"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-[#18191F] font-serif">FinAI Pro Advisor</h3>
+                                <p class="text-[9px] text-stone-500">Intelligent ledger leak analyzer</p>
+                            </div>
+                        </div>
+                        <button onclick="window.runAiAdvisor()" id="aiBtn"
+                            class="text-[10px] font-black text-[#D97706] bg-[#FEF3C7] hover:bg-[#FDE68A] transition px-3 py-1.5 rounded-xl">
+                            Run Advisor
+                        </button>
+                    </div>
+
+                    <!-- Simulated loading shimmers -->
+                    <div id="aiLoading" class="hidden space-y-2.5 pt-1">
+                        <div class="h-4 shimmer rounded-md w-3/4"></div>
+                        <div class="h-3 shimmer rounded-md w-full"></div>
+                        <div class="h-3 shimmer rounded-md w-5/6"></div>
+                    </div>
+
+                    <!-- AI Outcome Display -->
+                    <div id="aiDisplayContent"
+                        class="hidden text-stone-700 text-xs leading-relaxed bg-[#FAF6F0] p-4 rounded-xl border border-[#E6DEC4] max-h-56 overflow-y-auto whitespace-pre-line custom-scrollbar">
+                        <!-- Loaded dynamically -->
+                    </div>
+
+                    <p id="aiIntroMessage" class="text-[10.5px] text-stone-500 leading-relaxed">
+                        Click <span class="text-[#D97706] font-extrabold">Run Advisor</span> to pass your current ledger
+                        metrics directly into the advisor system.
+                    </p>
+                </div>
+
+                <!-- Custom Doughnut SVG Vector Allocation Chart -->
+                <div class="bg-white rounded-2xl p-5 border border-[#E6DEC4] shadow-sm space-y-4">
+                    <h3 class="text-xs font-black text-[#18191F] flex items-center gap-2 font-serif text-sm">
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-[#D97706]"></i> Budget Allocation
+                    </h3>
+
+                    <!-- Vector Graphics Box -->
+                    <div id="donutChartWrapper"
+                        class="flex flex-col items-center sm:flex-row sm:justify-around gap-6 py-1">
+                        <!-- Chart generated dynamically here via JS -->
+                    </div>
+                </div>
+
+                <!-- Quick Transaction Entry Form -->
+                <div class="bg-white rounded-2xl p-5 border border-[#E6DEC4] shadow-sm space-y-4">
+                    <h3 class="text-xs font-black text-[#18191F] flex items-center gap-2 font-serif text-sm">
+                        <i data-lucide="plus" class="w-4 h-4 text-[#D97706]"></i> Log Transaction
+                    </h3>
+
+                    <form id="addTransactionForm" onsubmit="window.handleRegisterSubmit(event)" class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-[9px] font-bold text-stone-500 uppercase tracking-wide mb-1">Description</label>
+                            <input type="text" id="formDesc" required
+                                placeholder="e.g. Stipend, Grocery hub, Power bills"
+                                class="w-full px-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] placeholder:text-stone-400 transition">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label
+                                    class="block text-[9px] font-bold text-stone-500 uppercase tracking-wide mb-1">Amount</label>
+                                <input type="number" id="formAmount" step="0.01" required placeholder="0.00"
+                                    class="w-full px-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] placeholder:text-stone-400 transition">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[9px] font-bold text-stone-500 uppercase tracking-wide mb-1">Type</label>
+                                <select id="formType"
+                                    class="w-full px-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] cursor-pointer">
+                                    <option value="expense">Expense (-)</option>
+                                    <option value="income">Income (+)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label
+                                    class="block text-[9px] font-bold text-stone-500 uppercase tracking-wide mb-1">Category</label>
+                                <select id="formCategory"
+                                    class="w-full px-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] cursor-pointer">
+                                    <!-- Populated dynamically via state dictionaries -->
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[9px] font-bold text-stone-500 uppercase tracking-wide mb-1">Date</label>
+                                <input type="date" id="formDate" required
+                                    class="w-full px-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] cursor-pointer">
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-[#18191F] hover:bg-stone-800 text-stone-100 text-xs font-bold py-2.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                            <i data-lucide="plus" class="w-3.5 h-3.5 text-amber-400"></i> Save Row to Ledger
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Register History & Filters -->
+                <div class="bg-white rounded-2xl p-5 border border-[#E6DEC4] shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-black text-[#18191F] flex items-center gap-2 font-serif text-sm">
+                            <i data-lucide="notebook" class="w-4 h-4 text-[#D97706]"></i> Workspace Register
+                        </h3>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="window.exportCSV()"
+                                class="p-1.5 text-stone-500 hover:text-[#18191F] bg-[#FAF6F0] rounded-lg border border-[#E6DEC4] transition-all"
+                                title="Export Spreadsheet Sheets">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <span id="entryBadgeCount"
+                                class="text-[9px] bg-[#FEF3C7] text-[#D97706] font-bold px-2 py-0.5 rounded-full">
+                                0 Rows
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Dual Filtering Controllers -->
+                    <div class="grid grid-cols-12 gap-2">
+                        <div class="col-span-8 relative">
+                            <input type="text" id="searchFilter" oninput="window.handleSearchChange(this.value)"
+                                placeholder="Filter by description..."
+                                class="w-full pl-8 pr-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] placeholder:text-stone-400 transition">
+                            <i data-lucide="search" class="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5"></i>
+                        </div>
+                        <div class="col-span-4">
+                            <input type="month" id="monthFilter" onchange="window.handleMonthChange(this.value)"
+                                class="w-full px-2 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F] cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Dynamic List Scroller -->
+                    <div id="ledgerScroller" class="space-y-2 max-h-96 overflow-y-auto custom-scrollbar pr-1">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- WhatsApp Quick-Share Statement Card -->
+                <div class="bg-white rounded-2xl p-5 border border-[#E6DEC4] shadow-sm space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="p-3 bg-[#FEF3C7] text-[#D97706] rounded-xl border border-amber-200">
+                            <i data-lucide="share" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-black text-[#18191F] font-serif">Sync Report on WhatsApp</h4>
+                            <p class="text-[10px] text-stone-500 leading-relaxed mt-0.5">
+                                Generate and share a fully compiled text budget register statement directly to your
+                                friends or family.
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="window.sendWhatsAppReport()"
+                        class="w-full bg-[#18191F] hover:bg-stone-800 text-stone-100 text-xs font-extrabold py-2.5 rounded-xl flex items-center justify-center gap-2 transition">
+                        Export Report to WhatsApp
+                    </button>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- Dynamic Absolute Footer bar -->
+        <footer
+            class="bg-[#FAF6F0]/90 border-t border-[#E6DEC4] px-5 py-4 flex justify-between items-center absolute bottom-0 left-0 right-0 z-30 backdrop-blur-md">
+            <div>
+                <p class="text-[9px] text-stone-500 uppercase font-black tracking-wider">All-Time Standing Net</p>
+                <p id="allTimeNetDisplay" class="text-sm font-black text-[#D97706]">₹0.00</p>
+            </div>
+            <button onclick="window.triggerResetModal()"
+                class="text-[11px] font-black text-stone-500 hover:text-rose-600 transition flex items-center gap-1.5 p-2 rounded-lg hover:bg-stone-100">
+                <i data-lucide="trash" class="w-3.5 h-3.5"></i> WIPE SANDBOX
+            </button>
+        </footer>
+
+        <!-- Custom Scope Workspace Joining Modal Overlay -->
+        <div id="workspaceModal"
+            class="hidden fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center px-6">
+            <div class="bg-white border border-[#E6DEC4] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+                <div class="p-3 bg-[#FEF3C7] text-[#D97706] w-fit rounded-xl">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h4 class="text-base font-black text-[#18191F] font-serif">Collaborative Workspace ID</h4>
+                    <p class="text-xs text-stone-500 mt-1">
+                        Enter an identifier code to access or initialize a public collaborative ledger room with family.
+                    </p>
+                </div>
+                <div>
+                    <label class="block text-[9px] text-stone-500 font-bold uppercase tracking-wider mb-1">Room Code
+                        ID</label>
+                    <input type="text" id="tempRoomCode" placeholder="e.g. family-budget"
+                        class="w-full px-3 py-2 bg-[#FAF6F0] border border-[#E6DEC4] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F59E0B] text-xs text-[#18191F]">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="window.closeScopeModal('private')"
+                        class="flex-1 py-2 bg-[#FAF6F0] hover:bg-stone-100 text-xs font-bold text-stone-600 border border-[#E6DEC4] rounded-xl transition">
+                        Keep Private
+                    </button>
+                    <button onclick="window.closeScopeModal('shared')"
+                        class="flex-1 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-xs font-bold text-[#18191F] rounded-xl transition">
+                        Join & Sync
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Clear Register Confirmation Overlay Modal -->
+        <div id="resetModal"
+            class="hidden fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center px-6">
+            <div class="bg-white border border-[#E6DEC4] p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+                <div class="p-3 bg-rose-50 text-rose-600 w-fit rounded-xl border border-rose-200">
+                    <i data-lucide="triangle-alert" class="w-6 h-6 text-rose-600"></i>
+                </div>
+                <div>
+                    <h4 class="text-base font-black text-[#18191F] font-serif">Wipe Workspace Entries?</h4>
+                    <p class="text-xs text-stone-500 mt-1">
+                        You are about to completely clear all ledger records matching your active database scope view.
+                        This process cannot be reversed.
+                    </p>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="window.hideResetModal()"
+                        class="flex-1 py-2 bg-[#FAF6F0] hover:bg-stone-100 text-xs font-bold text-stone-600 border border-[#E6DEC4] rounded-xl transition">
+                        Cancel
+                    </button>
+                    <button onclick="window.executeWipe()"
+                        class="flex-1 py-2 bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white rounded-xl transition">
+                        Execute Wipe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Data dictionaries matching premium styling
+        const CATEGORIES = {
+            salary: { emoji: '💰', color: 'text-emerald-600', bg: 'bg-emerald-500/10', label: 'Salary & Jobs', border: 'border-emerald-500/20', stroke: '#10b981' },
+            food: { emoji: '🍔', color: 'text-amber-600', bg: 'bg-amber-500/10', label: 'Food & Dinners', border: 'border-amber-500/20', stroke: '#F59E0B' },
+            utilities: { emoji: '⚡', color: 'text-blue-600', bg: 'bg-blue-500/10', label: 'Bills & Power', border: 'border-blue-500/20', stroke: '#3b82f6' },
+            shopping: { emoji: '🛍️', color: 'text-fuchsia-600', bg: 'bg-fuchsia-500/10', label: 'Shopping', border: 'border-fuchsia-500/20', stroke: '#d946ef' },
+            transport: { emoji: '🚗', color: 'text-sky-600', bg: 'bg-sky-500/10', label: 'Transport', border: 'border-sky-500/20', stroke: '#0ea5e9' },
+            leisure: { emoji: '🎟️', color: 'text-purple-600', bg: 'bg-purple-500/10', label: 'Entertainment', border: 'border-purple-500/20', stroke: '#a855f7' },
+            other: { emoji: '📦', color: 'text-stone-600', bg: 'bg-stone-500/10', label: 'Miscellaneous', border: 'border-stone-500/20', stroke: '#78716c' }
+        };
+
+        const CURRENCIES = {
+            INR: { symbol: '₹', label: 'Indian Rupee' },
+            USD: { symbol: '$', label: 'US Dollar' },
+            EUR: { symbol: '€', label: 'Euro' },
+            GBP: { symbol: '£', label: 'British Pound' }
+        };
+
+        // App state variables
+        let state = {
+            transactions: [],
+            selectedCurrency: 'INR',
+            monthFilter: '',
+            searchTerm: '',
+            ledgerScope: 'private', // 'private' or 'shared'
+            workspaceId: 'family-budget'
+        };
+
+        // Initialize Default Values on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+
+            document.getElementById('formDate').value = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('monthFilter').value = `${yyyy}-${mm}`;
+            state.monthFilter = `${yyyy}-${mm}`;
+
+            // Populate category select list
+            const categorySelect = document.getElementById('formCategory');
+            categorySelect.innerHTML = '';
+            Object.entries(CATEGORIES).forEach(([key, value]) => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = `${value.emoji} ${value.label}`;
+                categorySelect.appendChild(option);
+            });
+
+            // Load initial mock records if localStorage is vacant to showcase the beautiful chart
+            const storageKey = `fintrack_pro_ledger_${state.ledgerScope}_${state.workspaceId}`;
+            let saved = localStorage.getItem(storageKey);
+            if (!saved) {
+                const sampleRecords = [
+                    { id: '1', description: 'Monthly Workspace Stipend', amount: 84000, type: 'income', category: 'salary', date: `${yyyy}-${mm}-01` },
+                    { id: '2', description: 'Cozy Diner Feast', amount: 2400, type: 'expense', category: 'food', date: `${yyyy}-${mm}-04` },
+                    { id: '3', description: 'Gigabit Internet Package', amount: 1500, type: 'expense', category: 'utilities', date: `${yyyy}-${mm}-06` },
+                    { id: '4', description: 'Comfort Jacket Shopping', amount: 4800, type: 'expense', category: 'shopping', date: `${yyyy}-${mm}-08` }
+                ];
+                localStorage.setItem(storageKey, JSON.stringify(sampleRecords));
+            }
+
+            loadLedgerData();
+            lucide.createIcons();
+        });
+
+        // Trigger safe feedback toast
+        function triggerToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const text = document.getElementById('toastText');
+            text.textContent = message;
+
+            toast.classList.remove('opacity-0', '-translate-y-12');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-12');
+            }, 3000);
+        }
+
+        // LOAD DATA FROM STORAGE
+        function loadLedgerData() {
+            const storageKey = `fintrack_pro_ledger_${state.ledgerScope}_${state.workspaceId}`;
+            const saved = localStorage.getItem(storageKey);
+            state.transactions = saved ? JSON.parse(saved) : [];
+            recompileDashboard();
+        }
+
+        // Save data to localStorage
+        function saveLedgerData() {
+            const storageKey = `fintrack_pro_ledger_${state.ledgerScope}_${state.workspaceId}`;
+            localStorage.setItem(storageKey, JSON.stringify(state.transactions));
+            recompileDashboard();
+        }
+
+        // Central Compiler UI Engine
+        function recompileDashboard() {
+            const currSymbol = CURRENCIES[state.selectedCurrency].symbol;
+
+            // Compute Filtered and Sorted list
+            let processedList = [...state.transactions];
+            if (state.monthFilter) {
+                processedList = processedList.filter(item => item.date && item.date.startsWith(state.monthFilter));
+            }
+            if (state.searchTerm.trim() !== '') {
+                const searchLower = state.searchTerm.toLowerCase();
+                processedList = processedList.filter(item =>
+                    (item.description && item.description.toLowerCase().includes(searchLower)) ||
+                    (item.category && item.category.toLowerCase().includes(searchLower))
+                );
+            }
+            // Sort: Newest First
+            processedList.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Compute Balance metrics
+            let income = 0;
+            let expense = 0;
+            let allTimeNet = 0;
+
+            // Calculate all-time metrics
+            state.transactions.forEach(item => {
+                const amt = parseFloat(item.amount) || 0;
+                if (item.type === 'income') allTimeNet += amt;
+                else allTimeNet -= amt;
+            });
+
+            // Calculate current monthly active scope metrics
+            processedList.forEach(item => {
+                const amt = parseFloat(item.amount) || 0;
+                if (item.type === 'income') income += amt;
+                else expense += amt;
+            });
+
+            const currentNetValue = income - expense;
+
+            // Render numeric metrics
+            document.getElementById('cardPeriodLabel').textContent = state.monthFilter
+                ? `${new Date(state.monthFilter + '-02').toLocaleString('default', { month: 'long' })} Statement`
+                : 'Total Standing';
+            document.getElementById('mainNetDisplay').textContent = `${currSymbol}${currentNetValue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('inflowDisplay').textContent = `${currSymbol}${income.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('burnDisplay').textContent = `${currSymbol}${expense.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('allTimeNetDisplay').textContent = `${currSymbol}${allTimeNet.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('entryBadgeCount').textContent = `${processedList.length} Rows`;
+
+            // Draw Category Doughnut Chart via custom dynamically rendered SVG
+            renderAllocationChart(processedList, expense, currSymbol);
+
+            // Render table ledger rows list
+            renderRegisterRows(processedList, currSymbol);
+        }
+
+        // Custom high-performance math vectors for SVG Doughnut
+        function renderAllocationChart(list, totalExpense, symbol) {
+            const wrapper = document.getElementById('donutChartWrapper');
+            wrapper.innerHTML = '';
+
+            // Compute distribution
+            const distribution = {};
+            list.forEach(item => {
+                if (item.type === 'expense') {
+                    const catName = item.category || 'other';
+                    distribution[catName] = (distribution[catName] || 0) + parseFloat(item.amount || 0);
+                }
+            });
+
+            if (totalExpense === 0) {
+                wrapper.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-8 text-center space-y-2 w-full">
+                        <div class="w-11 h-11 rounded-full bg-[#FAF6F0] flex items-center justify-center border border-[#E6DEC4]">
+                            <i data-lucide="info" class="w-4 h-4 text-stone-400"></i>
+                        </div>
+                        <p class="text-xs text-stone-400">No expenses logged yet under this month scope</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Build dynamic segments
+            let accumulatedPercent = 0;
+            const segments = Object.entries(distribution).map(([catKey, val]) => {
+                const percentage = (val / totalExpense) * 100;
+                const seg = {
+                    key: catKey,
+                    value: val,
+                    percentage,
+                    accumulatedPercent
+                };
+                accumulatedPercent += percentage;
+                return seg;
+            });
+
+            // Create circular paths
+            let donutSvgContent = '';
+            const r = 40;
+            const circumference = 2 * Math.PI * r;
+
+            segments.forEach((seg, idx) => {
+                const strokeDasharray = `${(seg.percentage / 100) * circumference} ${circumference}`;
+                const strokeDashoffset = -((seg.accumulatedPercent / 100) * circumference);
+                const colorHex = CATEGORIES[seg.key]?.stroke || '#78716c';
+
+                donutSvgContent += `
+                    <circle cx="50" cy="50" r="${r}" fill="transparent"
+                            stroke="${colorHex}" stroke-width="12"
+                            stroke-dasharray="${strokeDasharray}" stroke-dashoffset="${strokeDashoffset}"
+                            class="transition-all duration-300 cursor-pointer hover:stroke-[15]"
+                            onclick="triggerToast('${CATEGORIES[seg.key]?.label || seg.key}: ${seg.percentage.toFixed(0)}%')">
+                    </circle>
+                `;
+            });
+
+            const svgElementHtml = `
+                <div class="relative w-36 h-36">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="${r}" fill="transparent" stroke="#FAF6F0" stroke-width="12"></circle>
+                        ${donutSvgContent}
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                        <span class="text-[9px] uppercase tracking-wider text-stone-400 font-bold">Burn</span>
+                        <span class="text-sm font-black text-[#18191F]">${symbol}${Math.round(totalExpense).toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
+
+            // Draw Category legends right panel
+            let legendHtml = '<div class="flex-grow space-y-1 w-full max-w-[180px]">';
+            segments.forEach(seg => {
+                const meta = CATEGORIES[seg.key] || CATEGORIES.other;
+                legendHtml += `
+                    <div class="flex items-center justify-between text-xs p-1 rounded-lg hover:bg-stone-50 transition">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="text-sm">${meta.emoji}</span>
+                            <span class="text-stone-600 truncate">${meta.label}</span>
+                        </div>
+                        <span class="text-stone-900 font-black">${seg.percentage.toFixed(0)}%</span>
+                    </div>
+                `;
+            });
+            legendHtml += '</div>';
+
+            wrapper.innerHTML = svgElementHtml + legendHtml;
+        }
+
+        // Populate Register rows inside history scroller
+        function renderRegisterRows(list, symbol) {
+            const scroller = document.getElementById('ledgerScroller');
+            scroller.innerHTML = '';
+
+            if (list.length === 0) {
+                scroller.innerHTML = `
+                    <div class="text-center py-10 text-stone-400 text-xs flex flex-col items-center justify-center space-y-2">
+                        <i data-lucide="info" class="w-6 h-6 text-stone-300"></i>
+                        <span>No ledger matched filters.</span>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            list.forEach(item => {
+                const meta = CATEGORIES[item.category] || CATEGORIES.other;
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-3.5 bg-white border border-[#E6DEC4] hover:shadow-sm rounded-xl transition group";
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-8.5 h-8.5 rounded-lg ${meta.bg} flex items-center justify-center text-sm border ${meta.border}">
+                            ${meta.emoji}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-[#18191F] truncate pr-2">${item.description}</p>
+                            <span class="text-[8px] text-stone-500 font-extrabold uppercase tracking-wider block mt-0.5">
+                                ${meta.label} • ${item.date}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <span class="text-xs font-bold ${item.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}">
+                            ${item.type === 'income' ? '+' : '-'} ${symbol}${parseFloat(item.amount).toFixed(2)}
+                        </span>
+                        <button onclick="window.deleteItem('${item.id}')"
+                                class="p-1 text-stone-400 hover:text-rose-600 hover:bg-stone-50 rounded transition opacity-0 group-hover:opacity-100">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `;
+                scroller.appendChild(row);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Interactive state update handlers
+        window.updateCurrency = function (val) {
+            state.selectedCurrency = val;
+            triggerToast(`Switched currency symbol reference to: ${val}`);
+            recompileDashboard();
+        };
+
+        window.handleSearchChange = function (val) {
+            state.searchTerm = val;
+            recompileDashboard();
+        };
+
+        window.handleMonthChange = function (val) {
+            state.monthFilter = val;
+            recompileDashboard();
+        };
+
+        // Handle Add submission form
+        window.handleRegisterSubmit = function (event) {
+            event.preventDefault();
+            const desc = document.getElementById('formDesc').value.trim();
+            const amount = parseFloat(document.getElementById('formAmount').value);
+            const type = document.getElementById('formType').value;
+            const category = document.getElementById('formCategory').value;
+            const date = document.getElementById('formDate').value;
+
+            if (!desc || isNaN(amount) || amount <= 0) {
+                triggerToast("Please enter a valid description and positive amount.");
+                return;
+            }
+
+            const item = {
+                id: 'tx_' + Date.now() + Math.random().toString(36).substring(2, 6),
+                description: desc,
+                amount,
+                type,
+                category,
+                date
+            };
+
+            state.transactions.unshift(item);
+            saveLedgerData();
+            triggerToast("Transaction registered safely.");
+
+            document.getElementById('formDesc').value = '';
+            document.getElementById('formAmount').value = '';
+        };
+
+        // Remove row entry
+        window.deleteItem = function (id) {
+            state.transactions = state.transactions.filter(item => item.id !== id);
+            saveLedgerData();
+            triggerToast("Dropped entry successfully.");
+        };
+
+        // Scope workspace Modal interaction
+        window.triggerScopeModal = function () {
+            document.getElementById('workspaceModal').classList.remove('hidden');
+        };
+
+        window.closeScopeModal = function (decision) {
+            const modal = document.getElementById('workspaceModal');
+            const subLabel = document.getElementById('scopeSubLabel');
+            modal.classList.add('hidden');
+
+            if (decision === 'shared') {
+                const val = document.getElementById('tempRoomCode').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
+                if (val) {
+                    state.workspaceId = val;
+                    state.ledgerScope = 'shared';
+                    subLabel.textContent = `👥 SHARED ROOM: ${val}`;
+                    triggerToast(`Switched workspace database view to: ${val}`);
+                } else {
+                    triggerToast("Invalid room code parameter supplied.");
+                }
+            } else {
+                state.ledgerScope = 'private';
+                subLabel.textContent = '👤 PERSONAL SANDBOX';
+                triggerToast("Connected inside Personal Sandbox view.");
+            }
+
+            loadLedgerData();
+        };
+
+        // Wipe Database trigger
+        window.triggerResetModal = function () {
+            document.getElementById('resetModal').classList.remove('hidden');
+        };
+
+        window.hideResetModal = function () {
+            document.getElementById('resetModal').classList.add('hidden');
+        };
+
+        window.executeWipe = function () {
+            document.getElementById('resetModal').classList.add('hidden');
+            state.transactions = [];
+            saveLedgerData();
+            triggerToast("Workspace register wiped clean.");
+        };
+
+        // Export data directly to clean CSV
+        window.exportCSV = function () {
+            if (state.transactions.length === 0) {
+                triggerToast("No records available to export.");
+                return;
+            }
+
+            const headers = ["ID", "Description", "Amount", "Type", "Category", "Date Logged"];
+            const rows = state.transactions.map(t => [
+                t.id,
+                t.description.replace(/"/g, '""'),
+                t.amount,
+                t.type,
+                CATEGORIES[t.category]?.label || t.category,
+                t.date
+            ]);
+
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `FinTrack_Export_${state.monthFilter || 'full'}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            triggerToast("CSV spreadsheet downloaded successfully.");
+        };
+
+        // WhatsApp direct reports share generator
+        window.sendWhatsAppReport = function () {
+            let processedList = [...state.transactions];
+            if (state.monthFilter) {
+                processedList = processedList.filter(item => item.date && item.date.startsWith(state.monthFilter));
+            }
+
+            if (processedList.length === 0) {
+                triggerToast("No transactions found in this scope frame.");
+                return;
+            }
+
+            let income = 0;
+            let expense = 0;
+            let listString = "";
+
+            processedList.forEach(item => {
+                const amt = parseFloat(item.amount) || 0;
+                const emoji = item.type === 'income' ? '🟢' : '🔴';
+                if (item.type === 'income') income += amt;
+                else expense += amt;
+                listString += `\n• ${emoji} ${item.description}: ${CURRENCIES[state.selectedCurrency].symbol}${amt.toFixed(2)}`;
+            });
+
+            const statementMsg = `📊 *FinTrack Premium Budget Statement* (${state.monthFilter || 'All-Time'})\n` +
+                `----------------------------------------\n` +
+                `💰 Monthly Inflow: ${CURRENCIES[state.selectedCurrency].symbol}${income.toFixed(2)}\n` +
+                `📉 Total Outflow: ${CURRENCIES[state.selectedCurrency].symbol}${expense.toFixed(2)}\n` +
+                `⚖️ Remaining Net: ${CURRENCIES[state.selectedCurrency].symbol}${(income - expense).toFixed(2)}\n\n` +
+                `*Latest activity registered:*${listString.substring(0, 800)}`;
+
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(statementMsg)}`, '_blank');
+        };
+
+        // Mock client-side smart AI finance advisor
+        window.runAiAdvisor = function () {
+            const intro = document.getElementById('aiIntroMessage');
+            const loading = document.getElementById('aiLoading');
+            const display = document.getElementById('aiDisplayContent');
+            const btn = document.getElementById('aiBtn');
+
+            let processedList = [...state.transactions];
+            if (state.monthFilter) {
+                processedList = processedList.filter(item => item.date && item.date.startsWith(state.monthFilter));
+            }
+
+            if (processedList.length === 0) {
+                triggerToast("Log entries first to compile insights.");
+                return;
+            }
+
+            // Calculations
+            let income = 0;
+            let expense = 0;
+            const categorySpend = {};
+            processedList.forEach(item => {
+                const amt = parseFloat(item.amount) || 0;
+                if (item.type === 'income') {
+                    income += amt;
+                } else {
+                    expense += amt;
+                    categorySpend[item.category] = (categorySpend[item.category] || 0) + amt;
+                }
+            });
+
+            // Find highest spend category
+            let topCategory = 'other';
+            let maxSpend = 0;
+            Object.entries(categorySpend).forEach(([cat, val]) => {
+                if (val > maxSpend) {
+                    maxSpend = val;
+                    topCategory = cat;
+                }
+            });
+
+            const topCatLabel = CATEGORIES[topCategory]?.label || 'Miscellaneous';
+            const currencySymbol = CURRENCIES[state.selectedCurrency].symbol;
+
+            // Turn off default displays
+            intro.classList.add('hidden');
+            display.classList.add('hidden');
+            loading.classList.remove('hidden');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                display.classList.remove('hidden');
+                btn.disabled = false;
+
+                // Dynamically compile response parameters simulating rich system advice matching image_886fda.jpg high contrast premium looks
+                display.innerHTML = `
+                    <div class="space-y-3">
+                        <p class="font-extrabold text-[#D97706] text-[13px] border-b border-[#E6DEC4] pb-1">💎 FinAI Premium Strategic Report</p>
+                        
+                        <p>We analyzed your ledger rows inside the current scope frame. Your top burn parameter lies in <span class="bg-[#FEF3C7] px-1 rounded font-bold">${topCatLabel}</span> consuming a net value of ${currencySymbol}${maxSpend.toLocaleString()}. This represents a critical area of potential budget optimization.</p>
+                        
+                        <p class="font-bold">🎯 Three Customized Recommendations:</p>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-[11px]">
+                            <li><strong>Limit Unplanned Burn:</strong> Your current burn-to-income standing is ${(expense / (income || 1) * 100).toFixed(0)}%. Implement a 30% soft-cap parameters on your high-outflow ${topCatLabel} column.</li>
+                            <li><strong>Automate Sandbox Cushioning:</strong> Retain at least 15% of your incoming inflow (${currencySymbol}${(income * 0.15).toFixed(0)}) as direct workspace backup reserves.</li>
+                            <li><strong>Consolidate Utility Outflow:</strong> Audit utility parameters to reduce recurring burn overheads on subscription and electricity rows.</li>
+                        </ol>
+                    </div>
+                `;
+            }, 1500);
+        };
+    </script>
+</body>
+
+>>>>>>> f7c5b9c (Initial commit of FinTrack Premium)
 </html>
